@@ -41,9 +41,6 @@ describe LoanReportPresenter do
     end
 
     it 'should be invalid without a loan type' do
-      loan_report_presenter.loan_types = nil
-      expect(loan_report_presenter).not_to be_valid
-
       loan_report_presenter.loan_types = []
       expect(loan_report_presenter).not_to be_valid
     end
@@ -189,7 +186,7 @@ describe LoanReportPresenter do
       let(:presenter) { LoanReportPresenter.new(user) }
 
       it "doesn't set loan_types" do
-        expect(presenter.loan_types).to be_nil
+        expect(presenter.loan_types).to be_empty
       end
     end
 
