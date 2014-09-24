@@ -56,7 +56,7 @@ describe 'loan entry' do
       loan = Loan.last
 
       expect(current_path).to eq(complete_loan_entry_path(loan))
-      expect(loan.state_aid).to eq(Money.new(3_071_08, 'EUR'))
+      loan.state_aid.should == Money.new(3_098_74, 'EUR')
     end
   end
 
@@ -146,7 +146,7 @@ describe 'loan entry' do
     fill_in_valid_loan_entry_details_phase_5(loan)
 
     loan.reload
-    expect(loan.state_aid).to eq(Money.new(3_071_08, 'EUR'))
+    expect(loan.state_aid).to eq(Money.new(3_098_74, 'EUR'))
 
     fill_in "loan_entry_repayment_duration_months", with: loan.repayment_duration.total_months + 12
     click_button 'Submit'
@@ -158,7 +158,8 @@ describe 'loan entry' do
     click_button 'Submit'
 
     loan.reload
-    expect(loan.state_aid).to eq(Money.new(2_616_10, 'EUR'))
+
+    expect(loan.state_aid).to eq(Money.new(2_680_60, 'EUR'))
 
     expect(current_path).to eq(complete_loan_entry_path(loan))
   end

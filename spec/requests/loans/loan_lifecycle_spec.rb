@@ -265,7 +265,7 @@ describe 'Loan lifecycle' do
     click_link "Generate Premium Schedule"
     page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
     page.fill_in 'premium_schedule_initial_draw_amount',
-      with: Loan.last.amount.to_s
+      with: (loan.amount - Money.new(1_000_00)).to_s
     click_button 'Submit'
   end
 
