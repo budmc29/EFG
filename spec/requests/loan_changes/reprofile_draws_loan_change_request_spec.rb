@@ -3,10 +3,10 @@ require 'rails_helper'
 describe 'Reprofile draws loan change' do
   include LoanChangeSpecHelper
 
+  it_behaves_like "loan change on loan with capital repayment holiday"
+
   before do
     loan.initial_draw_change.update_column(:date_of_change, Date.new(2009, 12, 25))
-
-    visit loan_path(loan)
   end
 
   context 'when the loan has drawn its full amount' do
@@ -15,30 +15,15 @@ describe 'Reprofile draws loan change' do
     end
 
     it do
+      visit loan_path(loan)
       click_link 'Change Amount or Terms'
-
       expect(page).to_not have_content('Reprofile Draws')
     end
   end
 
   context 'when the loan has not drawn its full amount' do
     it do
-      click_link 'Change Amount or Terms'
-      click_link 'Reprofile Draws'
-
-      fill_in :date_of_change, '11/9/10'
-      fill_in :initial_capital_repayment_holiday, '3'
-      fill_in :initial_draw_amount, '65,432.10'
-      fill_in :second_draw_amount, '5,000.00'
-      fill_in :second_draw_months, '6'
-      fill_in :third_draw_amount, '5,000.00'
-      fill_in :third_draw_months, '12'
-      fill_in :fourth_draw_amount, '5,000.00'
-      fill_in :fourth_draw_months, '18'
-
-      Timecop.freeze(2010, 9, 1) do
-        click_button 'Submit'
-      end
+      dispatch
 
       loan.reload
 
@@ -62,6 +47,30 @@ describe 'Reprofile draws loan change' do
       expect(loan.modified_by).to eq(current_user)
       expect(loan.repayment_duration.total_months).to eq(60)
       expect(loan.maturity_date).to eq(Date.new(2014, 12, 25))
+    end
+  end
+
+  private
+
+  def dispatch
+    visit loan_path(loan)
+
+    click_link 'Change Amount or Terms'
+    click_link 'Reprofile Draws'
+
+    fill_in :date_of_change, '11/9/10'
+    # TODO: remove this field
+    fill_in :initial_capital_repayment_holiday, '3'
+    fill_in :initial_draw_amount, '65,432.10'
+    fill_in :second_draw_amount, '5,000.00'
+    fill_in :second_draw_months, '6'
+    fill_in :third_draw_amount, '5,000.00'
+    fill_in :third_draw_months, '12'
+    fill_in :fourth_draw_amount, '5,000.00'
+    fill_in :fourth_draw_months, '18'
+
+    Timecop.freeze(2010, 9, 1) do
+      click_button 'Submit'
     end
   end
 end

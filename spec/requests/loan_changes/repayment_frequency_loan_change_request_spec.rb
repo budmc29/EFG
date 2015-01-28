@@ -3,7 +3,8 @@ require 'rails_helper'
 describe 'Repayment frequency loan change' do
   include LoanChangeSpecHelper
 
-  it_behaves_like "loan change"
+  it_behaves_like "loan change on loan with tranche drawdowns"
+  it_behaves_like "loan change on loan with capital repayment holiday"
 
   around do |example|
     Timecop.freeze(2010, 9, 1) do
