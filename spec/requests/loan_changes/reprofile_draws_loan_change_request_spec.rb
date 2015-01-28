@@ -36,7 +36,6 @@ describe 'Reprofile draws loan change' do
       expect(premium_schedule.initial_draw_amount).to eq(Money.new(65_432_10))
       expect(premium_schedule.premium_cheque_month).to eq('12/2010')
       expect(premium_schedule.repayment_duration).to eq(48)
-      expect(premium_schedule.initial_capital_repayment_holiday).to eq(3)
       expect(premium_schedule.second_draw_amount).to eq(Money.new(5_000_00))
       expect(premium_schedule.second_draw_months).to eq(6)
       expect(premium_schedule.third_draw_amount).to eq(Money.new(5_000_00))
@@ -59,8 +58,6 @@ describe 'Reprofile draws loan change' do
     click_link 'Reprofile Draws'
 
     fill_in :date_of_change, '11/9/10'
-    # TODO: remove this field
-    fill_in :initial_capital_repayment_holiday, '3'
     fill_in :initial_draw_amount, '65,432.10'
     fill_in :second_draw_amount, '5,000.00'
     fill_in :second_draw_months, '6'
