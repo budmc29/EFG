@@ -48,7 +48,7 @@ describe 'Loan lifecycle' do
 
   %w(sflg legacy_sflg).each do |loan_type|
     context "for guaranteed #{loan_type.humanize} loan" do
-      let!(:loan) { FactoryGirl.create(:loan, loan_type.to_sym, :offered, :guaranteed, lender: lender, sortcode: '03-12-45') }
+      let!(:loan) { FactoryGirl.create(:loan, loan_type.to_sym, :offered, :guaranteed, :with_premium_schedule, lender: lender, sortcode: '03-12-45') }
 
       it "can progress through to realised" do
         visit root_path
