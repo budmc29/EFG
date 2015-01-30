@@ -6,7 +6,7 @@ describe LoanEntry do
 
   before(:each) do
     # ensure recalculate state aid validation does not fail
-    Loan.any_instance.stub(:repayment_duration_changed?).and_return(false)
+    allow_any_instance_of(Loan).to receive(:repayment_duration_changed?).and_return(false)
   end
 
   describe "validations" do
@@ -327,7 +327,7 @@ describe LoanEntry do
     context "when repayment duration is changed" do
       before(:each) do
         # ensure recalculate state aid validation fails
-        Loan.any_instance.stub(:repayment_duration_changed?).and_return(true)
+        allow_any_instance_of(Loan).to receive(:repayment_duration_changed?).and_return(true)
       end
 
       it "should require a recalculation of state aid" do
