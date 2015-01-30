@@ -5,7 +5,7 @@ describe LoanAmendmentsHelper do
     context "RepaymentFrequency" do
       let(:value) { RepaymentFrequency::Annually }
       subject { helper.format_amendment_value(value) }
-      it { should == 'Annually' }
+      it { should eq('Annually') }
     end
   end
 end
