@@ -21,8 +21,8 @@ describe DataCorrection do
       correction1 = FactoryGirl.create(:data_correction, loan: loan)
       correction2 = FactoryGirl.create(:data_correction, loan: loan)
 
-      correction1.seq.should == 0
-      correction2.seq.should == 1
+      expect(correction1.seq).to eq(0)
+      expect(correction2.seq).to eq(1)
     end
   end
 end

@@ -32,30 +32,30 @@ describe 'Generic Fields Data Correction' do
     click_button 'Submit'
 
     data_correction = loan.data_corrections.last!
-    data_correction.change_type.should == ChangeType::GenericFields
-    data_correction.created_by.should == current_user
-    data_correction.date_of_change.should == Date.current
-    data_correction.modified_date.should == Date.current
+    expect(data_correction.change_type).to eq(ChangeType::GenericFields)
+    expect(data_correction.created_by).to eq(current_user)
+    expect(data_correction.date_of_change).to eq(Date.current)
+    expect(data_correction.modified_date).to eq(Date.current)
 
-    data_correction.old_generic1.should == old_generic_value_1
-    data_correction.old_generic2.should == old_generic_value_2
-    data_correction.old_generic3.should == old_generic_value_3
-    data_correction.old_generic4.should == old_generic_value_4
-    data_correction.old_generic5.should == old_generic_value_5
+    expect(data_correction.old_generic1).to eq(old_generic_value_1)
+    expect(data_correction.old_generic2).to eq(old_generic_value_2)
+    expect(data_correction.old_generic3).to eq(old_generic_value_3)
+    expect(data_correction.old_generic4).to eq(old_generic_value_4)
+    expect(data_correction.old_generic5).to eq(old_generic_value_5)
 
-    data_correction.generic1.should == new_generic_value_1
-    data_correction.generic2.should == new_generic_value_2
-    data_correction.generic3.should == new_generic_value_3
-    data_correction.generic4.should == new_generic_value_4
-    data_correction.generic5.should == new_generic_value_5
+    expect(data_correction.generic1).to eq(new_generic_value_1)
+    expect(data_correction.generic2).to eq(new_generic_value_2)
+    expect(data_correction.generic3).to eq(new_generic_value_3)
+    expect(data_correction.generic4).to eq(new_generic_value_4)
+    expect(data_correction.generic5).to eq(new_generic_value_5)
 
     loan.reload
-    loan.generic1.should == new_generic_value_1
-    loan.generic2.should == new_generic_value_2
-    loan.generic3.should == new_generic_value_3
-    loan.generic4.should == new_generic_value_4
-    loan.generic5.should == new_generic_value_5
-    loan.modified_by.should == current_user
+    expect(loan.generic1).to eq(new_generic_value_1)
+    expect(loan.generic2).to eq(new_generic_value_2)
+    expect(loan.generic3).to eq(new_generic_value_3)
+    expect(loan.generic4).to eq(new_generic_value_4)
+    expect(loan.generic5).to eq(new_generic_value_5)
+    expect(loan.modified_by).to eq(current_user)
   end
 
 end

@@ -15,23 +15,23 @@ shared_examples_for 'a basic data correction' do |attribute, input_value, new_va
     click_button 'Submit'
 
     data_correction = loan.data_corrections.last!
-    data_correction.change_type.should == "ChangeType::#{attribute.to_s.classify}".constantize
-    data_correction.created_by.should == current_user
-    data_correction.date_of_change.should == Date.current
-    data_correction.modified_date.should == Date.current
-    data_correction.public_send("old_#{attribute}").should == old_value
-    data_correction.public_send(attribute).should == expected_new_value
+    expect(data_correction.change_type).to eq("ChangeType::#{attribute.to_s.classify}".constantize)
+    expect(data_correction.created_by).to eq(current_user)
+    expect(data_correction.date_of_change).to eq(Date.current)
+    expect(data_correction.modified_date).to eq(Date.current)
+    expect(data_correction.public_send("old_#{attribute}")).to eq(old_value)
+    expect(data_correction.public_send(attribute)).to eq(expected_new_value)
 
     loan.reload
-    loan.public_send(attribute).should == expected_new_value
-    loan.modified_by.should == current_user
+    expect(loan.public_send(attribute)).to eq(expected_new_value)
+    expect(loan.modified_by).to eq(current_user)
   end
 
   it 'with no input' do
     click_button 'Submit'
 
     loan.reload
-    loan.modified_by.should_not eql(current_user)
+    expect(loan.modified_by).not_to eql(current_user)
   end
 end
 
@@ -46,17 +46,17 @@ shared_examples_for 'a basic data correction presenter' do |attribute, input_val
     let(:presenter) { FactoryGirl.build(factory_name, loan: loan) }
 
     it 'has a valid factory' do
-      presenter.should be_valid
+      expect(presenter).to be_valid
     end
 
     it "requires a #{attribute}" do
       presenter.public_send("#{attribute}=", '')
-      presenter.should_not be_valid
+      expect(presenter).not_to be_valid
     end
 
     it "new #{attribute} value must not be the same as old value" do
       presenter.public_send("#{attribute}=", loan.public_send(attribute))
-      presenter.should_not be_valid
+      expect(presenter).not_to be_valid
     end
   end
 
@@ -77,27 +77,27 @@ shared_examples_for "loan updating data correction presenter" do |attribute, inp
     context 'success' do
       it 'creates a DataCorrection and updates the loan' do
         presenter.public_send("#{attribute}=", input_value)
-        presenter.save.should == true
+        expect(presenter.save).to eq(true)
 
         data_correction = loan.data_corrections.last!
-        data_correction.created_by.should == user
-        data_correction.change_type.should == "ChangeType::#{attribute.to_s.classify}".constantize
-        data_correction.public_send("old_#{attribute}").should == old_value
-        data_correction.public_send(attribute).should == expected_new_value
+        expect(data_correction.created_by).to eq(user)
+        expect(data_correction.change_type).to eq("ChangeType::#{attribute.to_s.classify}".constantize)
+        expect(data_correction.public_send("old_#{attribute}")).to eq(old_value)
+        expect(data_correction.public_send(attribute)).to eq(expected_new_value)
 
         loan.reload
-        loan.public_send(attribute).should == expected_new_value
-        loan.modified_by.should == user
+        expect(loan.public_send(attribute)).to eq(expected_new_value)
+        expect(loan.modified_by).to eq(user)
       end
     end
 
     context 'failure' do
       it 'does not update loan' do
         presenter.public_send("#{attribute}=", nil)
-        presenter.save.should == false
+        expect(presenter.save).to eq(false)
         loan.reload
 
-        loan.public_send(attribute).should == old_value
+        expect(loan.public_send(attribute)).to eq(old_value)
       end
     end
   end

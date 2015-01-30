@@ -10,7 +10,7 @@ describe ClaimLimitCalculator do
     end
 
     it "returns array of claim limit calculators, excluding any with 0 amount" do
-      calculators.size.should == 1
+      expect(calculators.size).to eq(1)
     end
   end
 
@@ -40,7 +40,7 @@ describe ClaimLimitCalculator do
     end
 
     it "includes the drawn amounts for all relevant loan changes" do
-      calculator.cumulative_drawn_amount.should eq(Money.new(1_111_110_00) + loan.initial_draw_change.amount_drawn)
+      expect(calculator.cumulative_drawn_amount).to eq(Money.new(1_111_110_00) + loan.initial_draw_change.amount_drawn)
     end
   end
 

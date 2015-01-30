@@ -12,9 +12,9 @@ describe CompanyRegistrationDataCorrection do
 
         it "#{legal_form.requires_company_registration ? 'requires' : 'does not require' } company registration number" do
           data_correction.company_registration = nil
-          data_correction.valid?.should eql(!legal_form.requires_company_registration)
+          expect(data_correction.valid?).to eql(!legal_form.requires_company_registration)
           data_correction.company_registration = "B1234567890"
-          data_correction.should be_valid
+          expect(data_correction).to be_valid
         end
       end
     end

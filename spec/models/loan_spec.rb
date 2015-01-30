@@ -5,7 +5,7 @@ describe Loan do
 
   describe 'validations' do
     it 'has a valid Factory' do
-      loan.should be_valid
+      expect(loan).to be_valid
     end
 
     it 'strictly requires a lender' do
@@ -49,7 +49,7 @@ describe Loan do
     let!(:loan2) { FactoryGirl.create(:loan, updated_at: 1.day.ago) }
 
     it "returns loans last updated between the specified dates" do
-      Loan.last_updated_between(2.days.ago, 1.day.ago).should == [loan2]
+      expect(Loan.last_updated_between(2.days.ago, 1.day.ago)).to eq([loan2])
     end
   end
 
@@ -62,10 +62,10 @@ describe Loan do
     it "returns loans with Eligible, Complete or Incomplete state" do
       result = Loan.not_progressed
 
-      result.should include(loan1)
-      result.should include(loan2)
-      result.should include(loan3)
-      result.should_not include(loan4)
+      expect(result).to include(loan1)
+      expect(result).to include(loan2)
+      expect(result).to include(loan3)
+      expect(result).not_to include(loan4)
     end
   end
 
@@ -78,7 +78,7 @@ describe Loan do
     let!(:loan2) { FactoryGirl.create(:loan) }
 
     it "returns loans that partially or completely match the specified reference" do
-      Loan.by_reference("ABC123").should == [loan1, loan2]
+      expect(Loan.by_reference("ABC123")).to eq([loan1, loan2])
     end
   end
 
@@ -89,25 +89,25 @@ describe Loan do
 
     context 'efg' do
       it do
-        Loan.with_scheme('efg').should == [loan1]
+        expect(Loan.with_scheme('efg')).to eq([loan1])
       end
     end
 
     context 'sflg' do
       it do
-        Loan.with_scheme('sflg').should == [loan2]
+        expect(Loan.with_scheme('sflg')).to eq([loan2])
       end
     end
 
     context 'legacy_sflg' do
       it do
-        Loan.with_scheme('legacy_sflg').should == [loan3]
+        expect(Loan.with_scheme('legacy_sflg')).to eq([loan3])
       end
     end
 
     context 'with an unknown scheme' do
       it do
-        Loan.with_scheme('foo').should == []
+        expect(Loan.with_scheme('foo')).to eq([])
       end
     end
   end
@@ -121,7 +121,7 @@ describe Loan do
     let!(:premium_schedule2) { FactoryGirl.create(:premium_schedule, loan: loan) }
 
     it "returns the most recent state aid calculation record" do
-      loan.premium_schedule.should == premium_schedule2
+      expect(loan.premium_schedule).to eq(premium_schedule2)
     end
   end
 
@@ -130,29 +130,29 @@ describe Loan do
 
     it 'conforms to the MonthDuration interface' do
       loan[:repayment_duration] = 18
-      loan.repayment_duration.should == MonthDuration.new(18)
+      expect(loan.repayment_duration).to eq(MonthDuration.new(18))
     end
 
     it 'converts year/months hash to months' do
       loan.repayment_duration = { years: 1, months: 6 }
-      loan.repayment_duration.should == MonthDuration.new(18)
+      expect(loan.repayment_duration).to eq(MonthDuration.new(18))
     end
 
     it 'does not convert blank values to zero' do
       loan.repayment_duration = { years: '', months: '' }
-      loan.repayment_duration.should be_nil
+      expect(loan.repayment_duration).to be_nil
     end
   end
 
   describe "#state_aid" do
     it "should return a EUR money object" do
       loan = FactoryGirl.build(:loan, state_aid: '100.00')
-      loan.state_aid.should == Money.new(100_00, 'EUR')
+      expect(loan.state_aid).to eq(Money.new(100_00, 'EUR'))
     end
 
     it "return nil if not set" do
       loan = FactoryGirl.build(:loan, state_aid: '')
-      loan.state_aid.should be_nil
+      expect(loan.state_aid).to be_nil
     end
   end
 
@@ -164,11 +164,11 @@ describe Loan do
     }
 
     it "should be generated when loan is created" do
-      loan.reference.should be_nil
+      expect(loan.reference).to be_nil
 
       loan.save!
 
-      loan.reference.should be_instance_of(String)
+      expect(loan.reference).to be_instance_of(String)
     end
 
     it "should be unique" do
@@ -178,13 +178,13 @@ describe Loan do
 
       loan.save!
 
-      loan.reference.should == 'GHF789'
+      expect(loan.reference).to eq('GHF789')
     end
 
     it "should not be generated if already assigned" do
       loan.reference = "custom-reference"
       loan.save!
-      loan.reload.reference.should == 'custom-reference'
+      expect(loan.reload.reference).to eq('custom-reference')
     end
   end
 
@@ -192,31 +192,31 @@ describe Loan do
     it "returns true when a loan with the next incremented loan reference exists" do
       FactoryGirl.create(:loan, reference: 'Q9HTDF7-02')
 
-      FactoryGirl.build(:loan, reference: 'Q9HTDF7-01').should be_already_transferred
+      expect(FactoryGirl.build(:loan, reference: 'Q9HTDF7-01')).to be_already_transferred
     end
 
     it "returns false when loan with next incremented loan reference does not exist" do
-      FactoryGirl.build(:loan, reference: 'Q9HTDF7-01').should_not be_already_transferred
+      expect(FactoryGirl.build(:loan, reference: 'Q9HTDF7-01')).not_to be_already_transferred
     end
 
     it "returns false when loan has no reference" do
-      Loan.new.should_not be_already_transferred
+      expect(Loan.new).not_to be_already_transferred
     end
   end
 
   describe "#created_from_transfer?" do
     it "returns true when a loan has been transferred from another loan" do
       loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-02')
-      loan.should be_created_from_transfer
+      expect(loan).to be_created_from_transfer
     end
 
     it "returns false when loan with next incremented loan reference does not exist" do
       loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-01')
-      loan.should_not be_created_from_transfer
+      expect(loan).not_to be_created_from_transfer
     end
 
     it "returns false when loan has no reference" do
-      Loan.new.should_not be_created_from_transfer
+      expect(Loan.new).to_not be_created_from_transfer
     end
   end
 
@@ -252,7 +252,7 @@ describe Loan do
       FactoryGirl.create(:initial_draw_change, loan: loan, amount_drawn: Money.new(123_45))
       FactoryGirl.create(:loan_change, loan: loan, amount_drawn: Money.new(678_90), change_type: ChangeType::RecordAgreedDraw)
 
-      loan.cumulative_drawn_amount.should == Money.new(802_35)
+      expect(loan.cumulative_drawn_amount).to eql(Money.new(802_35))
     end
   end
 
@@ -340,11 +340,11 @@ describe Loan do
       FactoryGirl.create(:loan_realisation, realised_loan: loan, realised_amount: Money.new(123_45))
       FactoryGirl.create(:loan_realisation, realised_loan: loan, realised_amount: Money.new(678_90))
 
-      loan.last_realisation_amount.should == Money.new(678_90)
+      expect(loan.last_realisation_amount).to eq(Money.new(678_90))
     end
 
     it "returns 0 money when loan has no realisations" do
-      loan.last_realisation_amount.should == Money.new(0)
+      expect(loan.last_realisation_amount).to eq(Money.new(0))
     end
   end
 
@@ -357,7 +357,7 @@ describe Loan do
       FactoryGirl.create(:initial_draw_change, loan: loan, amount_drawn: Money.new(123_45))
       FactoryGirl.create(:loan_change, loan: loan, amount_drawn: Money.new(678_90), change_type: ChangeType::RecordAgreedDraw)
 
-      loan.amount_not_yet_drawn.should == loan.amount - Money.new(802_35)
+      expect(loan.amount_not_yet_drawn).to eq(loan.amount - Money.new(802_35))
     end
   end
 
@@ -366,21 +366,21 @@ describe Loan do
       loan.loan_source = Loan::SFLG_SOURCE
       loan.loan_scheme = Loan::EFG_SCHEME
 
-      loan.should be_efg_loan
+      expect(loan).to be_efg_loan
     end
 
     it "returns false when loan source is not SFLG" do
       loan.loan_source = Loan::LEGACY_SFLG_SOURCE
       loan.loan_scheme = Loan::EFG_SCHEME
 
-      loan.should_not be_efg_loan
+      expect(loan).not_to be_efg_loan
     end
 
     it "returns false when loan source is SFLG but loan type is not EFG" do
       loan.loan_source = Loan::SFLG_SOURCE
       loan.loan_scheme = Loan::SFLG_SCHEME
 
-      loan.should_not be_efg_loan
+      expect(loan).not_to be_efg_loan
     end
   end
 
@@ -388,13 +388,13 @@ describe Loan do
     it "returns true when loan source is legacy SFLG" do
       loan.loan_source = Loan::LEGACY_SFLG_SOURCE
 
-      loan.should be_legacy_loan
+      expect(loan).to be_legacy_loan
     end
 
     it "returns false when loan source is not legacy SFLG" do
       loan.loan_source = Loan::SFLG_SOURCE
 
-      loan.should_not be_legacy_loan
+      expect(loan).not_to be_legacy_loan
     end
   end
 
@@ -404,11 +404,11 @@ describe Loan do
     let(:transferred_loan) { FactoryGirl.create(:loan, transferred_from_id: original_loan.id) }
 
     it "returns the original loan from which this loan was transferred" do
-      transferred_loan.transferred_from.should == original_loan
+      expect(transferred_loan.transferred_from).to eq(original_loan)
     end
 
     it "returns nil when loan is not a transfer" do
-      Loan.new.transferred_from.should be_nil
+      expect(Loan.new.transferred_from).to be_nil
     end
   end
 
@@ -421,31 +421,31 @@ describe Loan do
 
     it "should return all loan security types for a loan" do
       loan.loan_security_types = [ security_type1.id, security_type2.id ]
-      loan.loan_security_types.should == [ security_type1, security_type2 ]
+      expect(loan.loan_security_types).to eq([ security_type1, security_type2 ])
     end
 
     it "should ignore blank values when setting loan security types" do
       loan.loan_security_types = [ nil ]
-      loan.loan_security_types.should be_empty
+      expect(loan.loan_security_types).to be_empty
     end
 
     it "should remove existing loan securities" do
       loan.loan_security_types = [ security_type1.id ]
-      loan.loan_security_types.should == [ security_type1 ]
+      expect(loan.loan_security_types).to eq([ security_type1 ])
       loan.loan_security_types = [ security_type2.id ]
-      loan.loan_security_types.should == [ security_type2 ]
+      expect(loan.loan_security_types).to eq([ security_type2 ])
     end
   end
 
   describe "#guarantee_rate" do
     it "returns the loan's guarantee rate when present" do
       loan.guarantee_rate = 85
-      loan.guarantee_rate.should == 85
+      expect(loan.guarantee_rate).to eq(85)
     end
 
     it "falls back to the loan's phase guarantee rate" do
       loan.guarantee_rate = nil
-      loan.guarantee_rate.should == 75
+      expect(loan.guarantee_rate).to eq(75)
     end
 
     context 'phase 6' do
@@ -454,7 +454,7 @@ describe Loan do
       let(:loan) { FactoryGirl.build(:loan, guarantee_rate: nil, lending_limit: lending_limit) }
 
       it "returns the loan's category specific guarantee rate" do
-        loan.guarantee_rate.should == 75
+        expect(loan.guarantee_rate).to eq(75)
       end
     end
   end
@@ -462,12 +462,12 @@ describe Loan do
   describe "#premium_rate" do
     it "returns the loan's premium rate when present" do
       loan.premium_rate = 1.5
-      loan.premium_rate.should == 1.5
+      expect(loan.premium_rate).to eq(1.5)
     end
 
     it "falls back to the loan's phase premium rate" do
       loan.premium_rate = nil
-      loan.premium_rate.should == 2
+      expect(loan.premium_rate).to eq(2)
     end
 
     context 'phase 6' do
@@ -476,7 +476,7 @@ describe Loan do
       let(:loan) { FactoryGirl.build(:loan, premium_rate: nil, lending_limit: lending_limit, loan_category_id: LoanCategory::TypeF.id) }
 
       it "returns the loan's category specific premium rate" do
-        loan.premium_rate.should == 1.3
+        expect(loan.premium_rate).to eq(1.3)
       end
     end
   end
@@ -492,13 +492,13 @@ describe Loan do
       FactoryGirl.create(:loan_state_change, loan: loan, state: Loan::Guaranteed)
       FactoryGirl.create(:loan_state_change, loan: loan, state: Loan::Guaranteed)
 
-      loan.state_history.should == [
+      expect(loan.state_history).to eq([
         Loan::Eligible,
         Loan::Completed,
         Loan::Offered,
         Loan::Guaranteed,
         Loan::Demanded
-      ]
+      ])
     end
   end
 
@@ -525,9 +525,9 @@ describe Loan do
       }.to change(LoanStateChange, :count).by(1)
 
       state_change = loan.state_changes.last
-      state_change.state.should == Loan::AutoRemoved
-      state_change.modified_by.should == system_user
-      state_change.event.should == LoanEvent::NotDrawn
+      expect(state_change.state).to eq(Loan::AutoRemoved)
+      expect(state_change.modified_by).to eq(system_user)
+      expect(state_change.event).to eq(LoanEvent::NotDrawn)
     end
   end
 
@@ -538,11 +538,11 @@ describe Loan do
 
     it "should be true when loan has had a data correction" do
       FactoryGirl.create(:data_correction, loan: loan)
-      loan.should be_corrected
+      expect(loan).to be_corrected
     end
 
     it "should be false when loan not had a data correction" do
-      loan.should_not be_corrected
+      expect(loan).not_to be_corrected
     end
   end
 
@@ -560,7 +560,7 @@ describe Loan do
       }
 
       it "calculates dti_amount_claimed based on demand outstanding" do
-        loan.dti_amount_claimed.should == Money.new(750_00)
+        expect(loan.dti_amount_claimed).to eq(Money.new(750_00))
       end
     end
 
@@ -577,7 +577,7 @@ describe Loan do
       }
 
       it "calculates dti_amount_claimed based on demand outstanding, interest and break costs" do
-        loan.dti_amount_claimed.should == Money.new(1_275_00)
+        expect(loan.dti_amount_claimed).to eq(Money.new(1_275_00))
       end
     end
 
@@ -594,7 +594,7 @@ describe Loan do
       }
 
       it "calculates dti_amount_claimed based on demand outstanding, interest and break costs" do
-        loan.dti_amount_claimed.should == Money.new(1_275_00)
+        expect(loan.dti_amount_claimed).to eq(Money.new(1_275_00))
       end
     end
 
@@ -602,7 +602,7 @@ describe Loan do
       let(:loan) { FactoryGirl.build(:loan, guarantee_rate: 75) }
 
       it "returns 0 when relevant values are not set on loan" do
-        loan.dti_amount_claimed.should == Money.new(0)
+        expect(loan.dti_amount_claimed).to eq(Money.new(0))
       end
     end
   end
@@ -612,10 +612,7 @@ describe Loan do
 
     context 'SFLG' do
       let(:loan) { FactoryGirl.build(:loan, :sflg) }
-
-      it do
-        should == Phase5Rules
-      end
+      it { should eql(Phase5Rules) }
     end
 
     context 'EFG' do
@@ -625,18 +622,12 @@ describe Loan do
 
       context 'phase < 6' do
         let(:phase_id) { 5 }
-
-        it do
-          should == Phase5Rules
-        end
+        it { should eql(Phase5Rules) }
       end
 
       context 'phase 6' do
         let(:phase_id) { 6 }
-
-        it do
-          should == Phase6Rules
-        end
+        it { should eql(Phase6Rules) }
       end
     end
   end

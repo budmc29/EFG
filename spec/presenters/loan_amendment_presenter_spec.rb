@@ -28,7 +28,7 @@ describe LoanAmendmentPresenter do
     let(:presenters) { LoanAmendmentPresenter.for_loan(loan) }
 
     it "returns collection of presenters for each amendment" do
-      presenters.map(&:amendment).should match_array([initial_draw_change, data_correction, lump_sum_repayment])
+      expect(presenters.map(&:amendment)).to match_array([initial_draw_change, data_correction, lump_sum_repayment])
     end
   end
 
@@ -46,13 +46,13 @@ describe LoanAmendmentPresenter do
         }
 
         it "returns collection with attribute change for old and new postcode" do
-          presenter.changes.size.should == 1
+          expect(presenter.changes.size).to eq(1)
 
           attribute_change = presenter.changes.first
-          attribute_change.old_attribute.should == 'old_postcode'
-          attribute_change.old_value.should == loan.postcode
-          attribute_change.attribute.should == 'postcode'
-          attribute_change.value.should == 'E15 1LU'
+          expect(attribute_change.old_attribute).to eq('old_postcode')
+          expect(attribute_change.old_value).to eq(loan.postcode)
+          expect(attribute_change.attribute).to eq('postcode')
+          expect(attribute_change.value).to eq('E15 1LU')
         end
       end
 
@@ -70,13 +70,13 @@ describe LoanAmendmentPresenter do
         }
 
         it "returns collection with attribute change for old and new lending limit" do
-          presenter.changes.size.should == 1
+          expect(presenter.changes.size).to eq(1)
 
           attribute_change = presenter.changes.first
-          attribute_change.old_attribute.should == 'old_lending_limit'
-          attribute_change.old_value.should == lending_limit_1
-          attribute_change.attribute.should == 'lending_limit'
-          attribute_change.value.should == lending_limit_2
+          expect(attribute_change.old_attribute).to eq('old_lending_limit')
+          expect(attribute_change.old_value).to eq(lending_limit_1)
+          expect(attribute_change.attribute).to eq('lending_limit')
+          expect(attribute_change.value).to eq(lending_limit_2)
         end
       end
     end
@@ -90,24 +90,24 @@ describe LoanAmendmentPresenter do
         presenter.old_repayment_frequency_id = RepaymentFrequency::Monthly.id
         presenter.repayment_frequency_id = RepaymentFrequency::Annually.id
 
-        presenter.changes.size.should == 1
+        expect(presenter.changes.size).to eq(1)
         attribute_change = presenter.changes.first
-        attribute_change.old_attribute.should == 'old_repayment_frequency'
-        attribute_change.old_value.should == RepaymentFrequency::Monthly
-        attribute_change.attribute.should == 'repayment_frequency'
-        attribute_change.value.should == RepaymentFrequency::Annually
+        expect(attribute_change.old_attribute).to eq('old_repayment_frequency')
+        expect(attribute_change.old_value).to eq(RepaymentFrequency::Monthly)
+        expect(attribute_change.attribute).to eq('repayment_frequency')
+        expect(attribute_change.value).to eq(RepaymentFrequency::Annually)
       end
 
       it 'contains fields where the old value was NULL' do
         presenter.old_repayment_frequency_id = nil
         presenter.repayment_frequency_id = RepaymentFrequency::Quarterly.id
 
-        presenter.changes.size.should == 1
+        expect(presenter.changes.size).to eq(1)
         attribute_change = presenter.changes.first
-        attribute_change.old_attribute.should == 'old_repayment_frequency'
-        attribute_change.old_value.should == nil
-        attribute_change.attribute.should == 'repayment_frequency'
-        attribute_change.value.should == RepaymentFrequency::Quarterly
+        expect(attribute_change.old_attribute).to eq('old_repayment_frequency')
+        expect(attribute_change.old_value).to eq(nil)
+        expect(attribute_change.attribute).to eq('repayment_frequency')
+        expect(attribute_change.value).to eq(RepaymentFrequency::Quarterly)
       end
     end
   end
@@ -117,7 +117,7 @@ describe LoanAmendmentPresenter do
       let(:amendment) { loan.initial_draw_change }
 
       it "returns true" do
-        presenter.drawn_amount?.should == true
+        expect(presenter.drawn_amount?).to eq(true)
       end
     end
 
@@ -125,7 +125,7 @@ describe LoanAmendmentPresenter do
       let(:amendment) { FactoryGirl.create(:loan_change, loan: loan, amount_drawn: nil) }
 
       it "returns false" do
-        presenter.drawn_amount?.should == false
+        expect(presenter.drawn_amount?).to eq(false)
       end
     end
   end
@@ -135,7 +135,7 @@ describe LoanAmendmentPresenter do
       let(:amendment) { FactoryGirl.create(:loan_change, :lump_sum_repayment, loan: loan) }
 
       it "returns true" do
-        presenter.lump_sum_repayment?.should == true
+        expect(presenter.lump_sum_repayment?).to eq(true)
       end
     end
 
@@ -143,7 +143,7 @@ describe LoanAmendmentPresenter do
       let(:amendment) { FactoryGirl.create(:loan_change, loan: loan) }
 
       it "returns false" do
-        presenter.lump_sum_repayment?.should == false
+        expect(presenter.lump_sum_repayment?).to eq(false)
       end
     end
   end
