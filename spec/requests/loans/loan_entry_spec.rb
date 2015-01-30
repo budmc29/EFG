@@ -56,7 +56,7 @@ describe 'loan entry' do
       loan = Loan.last
 
       expect(current_path).to eq(complete_loan_entry_path(loan))
-      loan.state_aid.should == Money.new(3_098_74, 'EUR')
+      expect(loan.state_aid).to eq(Money.new(3_098_74, 'EUR'))
     end
   end
 

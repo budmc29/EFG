@@ -52,14 +52,14 @@ shared_examples_for "loan change on loan with no premium schedule" do
   context "loan has no premium schedule" do
     before do
       loan.premium_schedules.destroy_all
-      loan.premium_schedules.should be_empty
+      expect(loan.premium_schedules).to be_empty
     end
 
     it "creates a new premium schedule based on the loan change data" do
       dispatch
 
       loan.reload
-      loan.premium_schedules.count.should == 1
+      expect(loan.premium_schedules.count).to eq(1)
     end
   end
 end
