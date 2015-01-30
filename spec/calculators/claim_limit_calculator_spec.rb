@@ -57,7 +57,7 @@ describe ClaimLimitCalculator do
       FactoryGirl.create(:loan_realisation, realised_loan: loan1, realised_amount: Money.new(20_00))
       FactoryGirl.create(:loan_realisation, realised_loan: loan2, realised_amount: Money.new(50_00))
 
-      calculator.stub(:phase).and_return(lending_limit1.phase)
+      allow(calculator).to receive(:phase).and_return(lending_limit1.phase)
     end
 
     it "sums the pre-claim realisations" do
