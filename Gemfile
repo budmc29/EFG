@@ -39,7 +39,6 @@ end
 
 group :development do
   gem 'guard-rspec', '0.7.2'
-  gem 'powder', '0.1.8'
 end
 
 group :development, :test do
