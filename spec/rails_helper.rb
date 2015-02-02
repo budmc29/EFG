@@ -66,4 +66,6 @@ RSpec.configure do |config|
   config.after(:each, type: :request) do
     Warden.test_reset!
   end
+
+  config.raise_errors_for_deprecations!
 end
