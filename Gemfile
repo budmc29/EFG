@@ -37,10 +37,6 @@ group :assets do
   gem 'uglifier', '1.2.4'
 end
 
-group :development do
-  gem 'guard-rspec', '0.7.2'
-end
-
 group :development, :test do
   gem 'brakeman', '2.0.0'
   gem 'ci_reporter', '1.8.4'
