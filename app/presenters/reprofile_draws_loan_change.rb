@@ -11,6 +11,9 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
   before_save :update_loan_change
   before_validation :update_premium_schedule
 
+  validate :no_skipped_draws
+  validate :draws_have_months
+
   def initialize(loan, _)
     raise LoanAlreadyFullyDrawnError if loan.fully_drawn?
     super
@@ -54,5 +57,18 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
         ps.third_draw_months  = third_draw_months
         ps.fourth_draw_months = fourth_draw_months
       end
+    end
+
+    def draws_have_months
+      errors.add(:second_draw_months, :required) if second_draw_amount && second_draw_months.blank?
+      errors.add(:third_draw_months, :required) if third_draw_amount && third_draw_months.blank?
+      errors.add(:fourth_draw_months, :required) if fourth_draw_amount && fourth_draw_months.blank?
+    end
+
+    def no_skipped_draws
+      if (third_draw_amount or fourth_draw_amount) and not second_draw_amount
+        errors.add(:second_draw_amount, :no_skipping)
+      end
+      errors.add(:third_draw_amount, :no_skipping) if fourth_draw_amount and not third_draw_amount
     end
 end

@@ -20,6 +20,64 @@ describe ReprofileDrawsLoanChange do
     end
   end
 
+  describe "validations" do
+    context "valid factory" do
+      subject { FactoryGirl.build(:reprofile_draws_loan_change) }
+      it { is_expected.to be_valid }
+    end
+
+    context "with draw amounts" do
+      let(:draw_change) {
+        FactoryGirl.build(:reprofile_draws_loan_change,
+          second_draw_amount: Money.new(100_00), second_draw_months: 6,
+          third_draw_amount: Money.new(100_00), third_draw_months: 6,
+          fourth_draw_amount: Money.new(100_00), fourth_draw_months: 6)
+      }
+
+      specify { expect(draw_change).to be_valid }
+
+      it 'every draw amount needs a draw month' do
+        draw_change.fourth_draw_months = ''
+        expect(draw_change).not_to be_valid
+        draw_change.fourth_draw_months = 1
+
+        draw_change.third_draw_months = ''
+        expect(draw_change).not_to be_valid
+        draw_change.third_draw_months = 2
+
+        draw_change.second_draw_months = ''
+        expect(draw_change).not_to be_valid
+        draw_change.second_draw_months = 3
+
+        expect(draw_change).to be_valid
+      end
+
+      it 'second draw must not be skipped if third or fourth is present' do
+        draw_change.second_draw_amount = ''
+        expect(draw_change).not_to be_valid
+
+        draw_change.fourth_draw_amount = ''
+        expect(draw_change).not_to be_valid
+
+        draw_change.third_draw_amount = ''
+        draw_change.fourth_draw_amount = Money.new(100_00)
+        expect(draw_change).not_to be_valid
+
+        draw_change.third_draw_amount = ''
+        draw_change.fourth_draw_amount = ''
+        expect(draw_change).to be_valid
+      end
+
+      it 'third draw must not be skipped if fourth is present' do
+        draw_change.third_draw_amount = ''
+        expect(draw_change).not_to be_valid
+
+        draw_change.fourth_draw_amount = ''
+        expect(draw_change).to be_valid
+      end
+    end
+  end
+
   describe '#save' do
     let(:user) { FactoryGirl.create(:lender_user) }
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, repayment_duration: 60) }
