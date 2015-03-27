@@ -150,6 +150,8 @@ EFG::Application.routes.draw do
 
   resources :realisations_reports, only: [:new, :create]
 
+  resources :recoveries_reports, only: [:new, :create]
+
   resource :account_disabled, controller: 'account_disabled'
 
   resource :account_locked, controller: 'account_locked'

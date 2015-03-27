@@ -294,4 +294,8 @@ describe LenderUserPermissions do
   context 'RealisationsReport' do
     it { assert user.can_create?(RealisationsReport) }
   end
+
+  context 'RecoveriesReport' do
+    it { assert user.can_create?(RecoveriesReport) }
+  end
 end

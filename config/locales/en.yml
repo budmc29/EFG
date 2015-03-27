@@ -160,6 +160,13 @@ en:
             end_date:
               must_be_after_start_date: 'must be after start date'
 
+        recoveries_report_presenter:
+          attributes:
+            recovered_on_start_date:
+              must_be_before_end_date: 'must be before end date'
+            recovered_on_end_date:
+              must_be_after_start_date: 'must be after start date'
+
   activerecord:
     models:
       auditor_user:

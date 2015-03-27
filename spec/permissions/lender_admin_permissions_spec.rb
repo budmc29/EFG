@@ -294,4 +294,8 @@ describe LenderAdminPermissions do
   context 'RealisationsReport' do
     it { refute user.can_create?(RealisationsReport) }
   end
+
+  context 'RecoveriesReport' do
+    it { refute user.can_create?(RecoveriesReport) }
+  end
 end

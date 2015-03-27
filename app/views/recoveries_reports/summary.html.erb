@@ -1,0 +1,60 @@
+<%= breadcrumbs(
+  link_to('Recoveries Report', new_recoveries_report_path)
+) %>
+
+<div class="page-header">
+  <h1>Recoveries Report</h1>
+</div>
+
+<p>This page summarises the results of your Recoveries Report.</p>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <th>Report Start Date</th>
+      <td><%= @recoveries_report.recovered_on_start_date %></td>
+    </tr>
+    <tr>
+      <th>Report End Date</th>
+      <td><%= @recoveries_report.recovered_on_end_date %></td>
+    </tr>
+    <% if @recoveries_report.allowed_lenders.count > 1 %>
+      <tr>
+        <th>Lenders</th>
+        <td><%= @recoveries_report.lenders.map(&:name).join(', ') %></td>
+      </tr>
+    <% end %>
+
+  </tbody>
+</table>
+
+<p><strong>Data extract found <%= pluralize @recoveries_report.record_count, 'row' %>.</strong></p>
+
+<% if @recoveries_report.record_count > 0 %>
+
+  <p>You can download the report by clicking the Download button below.</p>
+  <%= simple_form_for(@recoveries_report, url: recoveries_reports_path(@recoveries_report.report, format: 'csv'), html: { class: 'csv-download' }) do |f| %>
+    <%= f.hidden_field :recovered_on_start_date %>
+    <%= f.hidden_field :recovered_on_end_date %>
+    <% f.object.lender_ids.each do |lender_id| %>
+      <%= f.hidden_field :lender_ids, { multiple: true, value: lender_id } %>
+    <% end %>
+    <div class="form-actions">
+      <%= f.button :submit, value: 'Download Report', class: 'btn-primary' %>
+    </div>
+  <% end %>
+
+<% else %>
+
+  <%= link_to 'Try again', new_recoveries_report_path %>
+
+<% end %>

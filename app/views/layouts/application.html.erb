@@ -89,6 +89,9 @@
             <% if current_user.can_create?(RealisationsReport) %>
               <%= dropdown.item 'Generate Realisations Report', new_realisations_report_path %>
             <% end %>
+            <% if current_user.can_create?(RecoveriesReport) %>
+              <%= dropdown.item 'Generate Recoveries Report', new_recoveries_report_path %>
+            <% end %>
           <% end %>
           <% if current_user.can_view?(Search) %>
             <%= nav.item 'Search', new_search_path %>
