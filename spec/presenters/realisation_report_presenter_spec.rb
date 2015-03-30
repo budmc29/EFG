@@ -32,8 +32,58 @@ describe RealisationReportPresenter do
   let!(:cfe_user) { FactoryGirl.create(:cfe_user) }
   let!(:lender_user) { FactoryGirl.create(:lender_user, lender: lender1) }
 
-  describe 'with valid options' do
 
+  describe 'validations' do
+    subject(:report_presenter) { RealisationReportPresenter.new(cfe_user, report_options) }
+
+    context 'with empty options' do
+      let(:report_options) { {} }
+      it { should be_invalid }
+    end
+
+    context 'with empty lender_ids' do
+      let(:report_options) {
+        { lender_ids: [],
+          realised_on_start_date: 2.days.ago,
+          realised_on_end_date: Date.today }
+      }
+
+      it { should be_invalid }
+    end
+
+    context 'with blank realised_on_start_date' do
+      let(:report_options) {
+        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
+          realised_on_start_date: '',
+          realised_on_end_date: Date.today }
+      }
+
+      it { should be_invalid }
+    end
+
+    context 'with blank realised_on_end_date' do
+      let(:report_options) {
+        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
+          realised_on_start_date: 2.days.ago,
+          realised_on_end_date: '' }
+      }
+
+      it { should be_invalid }
+    end
+
+    context 'with realised_on_end_date before realised_on_start_date' do
+      let(:report_options) {
+        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
+          realised_on_start_date: Date.today,
+          realised_on_end_date: 3.days.ago }
+      }
+
+      it { should be_invalid }
+    end
+  end
+
+
+  describe 'with valid options' do
     let(:report_options) {
       {
         lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
@@ -44,6 +94,8 @@ describe RealisationReportPresenter do
 
     context 'when user is cfe_user' do
       subject(:report_presenter) { RealisationReportPresenter.new(cfe_user, report_options) }
+
+      it { should be_valid }
 
       its(:allowed_lenders) {
         should match_array(cfe_user.lenders << RealisationReportPresenter::ALL_LENDERS_OPTION)
@@ -68,6 +120,8 @@ describe RealisationReportPresenter do
     context 'when user is lender_user' do
       subject(:report_presenter) { RealisationReportPresenter.new(lender_user, report_options) }
 
+      it { should be_valid }
+
       its(:allowed_lenders) { should match_array([lender_user.lender]) }
 
       its(:record_count) { should == 1 }
@@ -84,7 +138,6 @@ describe RealisationReportPresenter do
 ]
       }
     end
-
   end
 
 end
