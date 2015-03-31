@@ -266,4 +266,8 @@ describe AuditorUserPermissions do
     it { refute user.can_view?(SubLender) }
     it { refute user.can_destroy?(SubLender) }
   end
+
+  context 'RealisationsReport' do
+    it { refute user.can_create?(RealisationsReport) }
+  end
 end

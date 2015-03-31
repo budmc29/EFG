@@ -1,6 +1,6 @@
 require 'csv'
 
-class RealisationReport
+class RealisationsReport
 
   attr_reader :realised_on_start_date, :realised_on_end_date, :lender_ids
 

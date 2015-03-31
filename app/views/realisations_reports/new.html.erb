@@ -1,0 +1,26 @@
+<%= breadcrumbs %>
+
+<div class="page-header">
+  <h1>Realisations Report Criteria</h1>
+</div>
+
+<p>From this page you can run a Realisations Report using selected criteria.</p>
+
+<hr>
+
+<%= simple_form_for(@realisations_report, url: realisations_reports_path(@realisations_report.report, format: 'html'), html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
+  <%= render_errors_on_base(f.object.errors) %>
+
+  <%= f.input :realised_on_start_date, as: :quick_date %>
+  <%= f.input :realised_on_end_date, as: :quick_date %>
+
+  <% if @realisations_report.allowed_lenders.count == 1 %>
+    <%= f.hidden_field :lender_ids, { multiple: true, value: @realisations_report.allowed_lenders.first.id } %>
+  <% else %>
+    <%= f.input :lender_ids, as: :select, collection: @realisations_report.allowed_lenders, label_method: :name, value_method: :id, input_html: { multiple: true } %>
+  <% end %>
+
+  <div class="form-actions">
+    <%= f.button :submit, value: 'Submit', class: 'btn-primary', data: { 'disable-with' => 'Submitting...' } %>
+  </div>
+<% end %>

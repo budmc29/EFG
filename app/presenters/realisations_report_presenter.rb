@@ -1,4 +1,4 @@
-class RealisationReportPresenter
+class RealisationsReportPresenter
   include ActiveModel::Model
   include PresenterFormatterConcern
 
@@ -18,7 +18,7 @@ class RealisationReportPresenter
   def initialize(current_user, options={})
     @current_user = current_user
     super(options)
-    @report = RealisationReport.new(@realised_on_start_date, @realised_on_end_date, @lender_ids)
+    @report = RealisationsReport.new(@realised_on_start_date, @realised_on_end_date, @lender_ids)
   end
 
   def allowed_lenders

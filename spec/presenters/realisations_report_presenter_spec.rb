@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RealisationReportPresenter do
+describe RealisationsReportPresenter do
   let!(:loan_realisation1) { FactoryGirl.create(:loan_realisation, :pre,
                                                 realised_amount: Money.new(1_000_00),
                                                 realised_on: 1.day.ago) }
@@ -34,7 +34,7 @@ describe RealisationReportPresenter do
 
 
   describe 'validations' do
-    subject(:report_presenter) { RealisationReportPresenter.new(cfe_user, report_options) }
+    subject(:report_presenter) { RealisationsReportPresenter.new(cfe_user, report_options) }
 
     context 'with empty options' do
       let(:report_options) { {} }
@@ -93,12 +93,12 @@ describe RealisationReportPresenter do
     }
 
     context 'when user is cfe_user' do
-      subject(:report_presenter) { RealisationReportPresenter.new(cfe_user, report_options) }
+      subject(:report_presenter) { RealisationsReportPresenter.new(cfe_user, report_options) }
 
       it { should be_valid }
 
       its(:allowed_lenders) {
-        should match_array(cfe_user.lenders << RealisationReportPresenter::ALL_LENDERS_OPTION)
+        should match_array(cfe_user.lenders << RealisationsReportPresenter::ALL_LENDERS_OPTION)
       }
 
       its(:record_count) { should == 2 }
@@ -118,7 +118,7 @@ describe RealisationReportPresenter do
     end
 
     context 'when user is lender_user' do
-      subject(:report_presenter) { RealisationReportPresenter.new(lender_user, report_options) }
+      subject(:report_presenter) { RealisationsReportPresenter.new(lender_user, report_options) }
 
       it { should be_valid }
 

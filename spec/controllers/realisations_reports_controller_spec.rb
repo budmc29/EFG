@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RealisationReportsController do
+describe RealisationsReportsController do
 
   describe '#new' do
     def dispatch(params = {})

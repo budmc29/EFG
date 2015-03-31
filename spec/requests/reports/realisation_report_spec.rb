@@ -52,9 +52,9 @@ describe 'Realisation report' do
         report_end_date = 1.day.ago.to_date.to_s
 
         visit root_path
-        click_link 'Generate Realisation Report'
+        click_link 'Generate Realisations Report'
 
-        expect(page).to have_text 'Realisation Report Criteria'
+        expect(page).to have_text 'Realisations Report Criteria'
         click_button 'Submit' # submit with invalid form data
         expect(page).to have_text "can't be blank"
 
@@ -84,9 +84,9 @@ describe 'Realisation report' do
         all_lenders_list = Lender.all.map(&:name).join(', ')
 
         visit root_path
-        click_link 'Generate Realisation Report'
+        click_link 'Generate Realisations Report'
 
-        expect(page).to have_text 'Realisation Report Criteria'
+        expect(page).to have_text 'Realisations Report Criteria'
         click_button 'Submit' # submit with invalid form data
         expect(page).to have_text "can't be blank"
 
@@ -111,9 +111,9 @@ describe 'Realisation report' do
         report_end_date = 9.days.ago.to_date.to_s
 
         visit root_path
-        click_link 'Generate Realisation Report'
+        click_link 'Generate Realisations Report'
 
-        expect(page).to have_text 'Realisation Report Criteria'
+        expect(page).to have_text 'Realisations Report Criteria'
         click_button 'Submit' # submit with invalid form data
         expect(page).to have_text "can't be blank"
 
@@ -130,7 +130,7 @@ describe 'Realisation report' do
         expect(page).not_to have_button('Download Report')
 
         click_link 'Try again'
-        expect(page).to have_text 'Realisation Report Criteria'
+        expect(page).to have_text 'Realisations Report Criteria'
       end
     end
 
@@ -141,9 +141,9 @@ describe 'Realisation report' do
 
     it "outputs a CSV realisation report for the current user's lender" do
       visit root_path
-      click_link 'Generate Realisation Report'
+      click_link 'Generate Realisations Report'
 
-      expect(page).to have_text 'Realisation Report Criteria'
+      expect(page).to have_text 'Realisations Report Criteria'
       fill_in 'What is the start date for your report?', with: 4.days.ago.to_date.to_s
       fill_in 'What is the end date for your report?', with: 1.day.ago.to_date.to_s
       expect(page).not_to have_text('Which lenders would you like to see realisations for?')
@@ -162,9 +162,9 @@ describe 'Realisation report' do
       report_end_date = 9.days.ago.to_date.to_s
 
       visit root_path
-      click_link 'Generate Realisation Report'
+      click_link 'Generate Realisations Report'
 
-      expect(page).to have_text 'Realisation Report Criteria'
+      expect(page).to have_text 'Realisations Report Criteria'
       click_button 'Submit' # submit with invalid form data
       expect(page).to have_text "can't be blank"
 
@@ -179,7 +179,7 @@ describe 'Realisation report' do
       expect(page).not_to have_button('Download Report')
 
       click_link 'Try again'
-      expect(page).to have_text 'Realisation Report Criteria'
+      expect(page).to have_text 'Realisations Report Criteria'
     end
   end
 

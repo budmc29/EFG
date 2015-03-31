@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RealisationReport do
+describe RealisationsReport do
   let!(:loan_realisation1) { FactoryGirl.create(:loan_realisation, :pre,
                                                 realised_amount: Money.new(1_000_00),
                                                 realised_on: 1.day.ago) }
@@ -24,7 +24,7 @@ describe RealisationReport do
   let(:lender5) { loan_realisation5.realised_loan.lender }
 
   subject(:report) {
-    RealisationReport.new(2.days.ago, Date.today, [lender1.id, lender2.id, lender3.id, lender4.id])
+    RealisationsReport.new(2.days.ago, Date.today, [lender1.id, lender2.id, lender3.id, lender4.id])
   }
 
   its(:realisations) { should match_array([loan_realisation1, loan_realisation3]) }
