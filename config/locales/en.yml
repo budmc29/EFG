@@ -153,6 +153,13 @@ en:
         realisation_adjustment:
           not_greater_than_adjusted_realisations: "cannot be greater than the loan's realisations"
 
+        realisation_report_presenter:
+          attributes:
+            realised_on_start_date:
+              must_be_before_end_date: 'must be before end date'
+            realised_on_end_date:
+              must_be_after_start_date: 'must be after start date'
+
   activerecord:
     models:
       auditor_user:

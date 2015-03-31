@@ -86,6 +86,9 @@
             <% if current_user.can_create?(ClaimLimitsCsvExport) %>
               <%= dropdown.item 'Generate Claim Limits Report', claim_limits_report_path(format: :csv) %>
             <% end %>
+            <% if current_user.can_create?(RealisationReport) %>
+              <%= dropdown.item 'Generate Realisation Report', new_realisation_report_path %>
+            <% end %>
           <% end %>
           <% if current_user.can_view?(Search) %>
             <%= nav.item 'Search', new_search_path %>

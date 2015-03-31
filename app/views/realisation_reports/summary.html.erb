@@ -1,0 +1,60 @@
+<%= breadcrumbs(
+  link_to('Realisation Report', new_realisation_report_path)
+) %>
+
+<div class="page-header">
+  <h1>Realisation Report</h1>
+</div>
+
+<p>This page summarises the results of your Realisation Report.</p>
+
+<hr>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Criterion</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <th>Report Start Date</th>
+      <td><%= @realisation_report.realised_on_start_date %></td>
+    </tr>
+    <tr>
+      <th>Report End Date</th>
+      <td><%= @realisation_report.realised_on_end_date %></td>
+    </tr>
+    <% if @realisation_report.allowed_lenders.count > 1 %>
+      <tr>
+        <th>Lenders</th>
+        <td><%= @realisation_report.lenders.map(&:name).join(', ') %></td>
+      </tr>
+    <% end %>
+
+  </tbody>
+</table>
+
+<p><strong>Data extract found <%= pluralize @realisation_report.record_count, 'row' %>.</strong></p>
+
+<% if @realisation_report.record_count > 0 %>
+
+  <p>You can download the report by clicking the Download button below.</p>
+  <%= simple_form_for(@realisation_report, url: realisation_reports_path(@realisation_report.report, format: 'csv'), html: { class: 'csv-download' }) do |f| %>
+    <%= f.hidden_field :realised_on_start_date %>
+    <%= f.hidden_field :realised_on_end_date %>
+    <% f.object.lender_ids.each do |lender_id| %>
+      <%= f.hidden_field :lender_ids, { multiple: true, value: lender_id } %>
+    <% end %>
+    <div class="form-actions">
+      <%= f.button :submit, value: 'Download Report', class: 'btn-primary' %>
+    </div>
+  <% end %>
+
+<% else %>
+
+  <%= link_to 'Try again', new_realisation_report_path %>
+
+<% end %>

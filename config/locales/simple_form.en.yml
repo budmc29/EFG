@@ -286,6 +286,11 @@ en:
         lender_id: 'Lender'
         scheme: 'Loan Scheme'
 
+      realisation_report_presenter:
+        realised_on_start_date: 'What is the start date for your report?'
+        realised_on_end_date: 'What is the end date for your report?'
+        lender_ids: 'Which lenders would you like to see realisations for?'
+
       ask_an_expert:
         message: Your message
 
