@@ -49,14 +49,12 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
     end
 
     def update_premium_schedule
-      premium_schedule.tap do |ps|
-        ps.second_draw_amount = second_draw_amount
-        ps.third_draw_amount  = third_draw_amount
-        ps.fourth_draw_amount = fourth_draw_amount
-        ps.second_draw_months = second_draw_months
-        ps.third_draw_months  = third_draw_months
-        ps.fourth_draw_months = fourth_draw_months
-      end
+      premium_schedule.second_draw_amount = second_draw_amount
+      premium_schedule.second_draw_months = second_draw_months
+      premium_schedule.third_draw_amount  = third_draw_amount
+      premium_schedule.third_draw_months  = third_draw_months
+      premium_schedule.fourth_draw_amount = fourth_draw_amount
+      premium_schedule.fourth_draw_months = fourth_draw_months
     end
 
     def draws_have_months
