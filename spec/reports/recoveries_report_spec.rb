@@ -1,40 +1,42 @@
 require 'spec_helper'
 
 describe RecoveriesReport do
-  let!(:loan_realisation1) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:loan_realisation2) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(2_000_00),
-                                                realised_on: 4.day.ago) }
-  let!(:loan_realisation3) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(3_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:loan_realisation4) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 3.day.ago) }
-  let!(:loan_realisation5) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 1.day.ago) }
+  let!(:recovery1) { FactoryGirl.create(:recovery, :realised, recovered_on: 1.day.ago.to_date) }
+  let!(:recovery2) { FactoryGirl.create(:recovery, :realised, recovered_on: 4.day.ago.to_date) }
+  let!(:recovery3) { FactoryGirl.create(:recovery, :unrealised, recovered_on: 1.day.ago.to_date) }
+  let!(:recovery4) { FactoryGirl.create(:recovery, :realised, recovered_on: 3.day.ago.to_date) }
+  let!(:recovery5) { FactoryGirl.create(:recovery, :unrealised, recovered_on: 1.day.ago.to_date) }
 
-  let(:lender1) { loan_realisation1.realised_loan.lender }
-  let(:lender2) { loan_realisation2.realised_loan.lender }
-  let(:lender3) { loan_realisation3.realised_loan.lender }
-  let(:lender4) { loan_realisation4.realised_loan.lender }
-  let(:lender5) { loan_realisation5.realised_loan.lender }
+  let(:lender1) { recovery1.loan.lender }
+  let(:lender2) { recovery2.loan.lender }
+  let(:lender3) { recovery3.loan.lender }
+  let(:lender4) { recovery4.loan.lender }
+  let(:lender5) { recovery5.loan.lender }
 
-  subject(:report) {
-    RecoveriesReport.new(2.days.ago, Date.today, [lender1.id, lender2.id, lender3.id, lender4.id])
-  }
+  let(:report) { RecoveriesReport.new(2.days.ago.to_date, Date.today, [lender1.id, lender2.id, lender3.id, lender4.id]) }
 
-  its(:realisations) { should match_array([loan_realisation1, loan_realisation3]) }
+  describe '#report_recoveries' do
+    subject(:report_recoveries) { report.recoveries }
 
-  its(:to_csv) { should ==
-%Q[Loan Reference,Date of Realisation,Lender Name,Pre / Post Claim Limit
-#{loan_realisation1.realised_loan.reference},#{loan_realisation1.realised_on},#{lender1.name},pre
-#{loan_realisation3.realised_loan.reference},#{loan_realisation3.realised_on},#{lender3.name},post
-]
-  }
+    its(:size) { should == 2 }
 
+    describe 'the first record' do
+      subject { report_recoveries.first }
+
+      its(:loan_reference) { should == recovery1.loan.reference }
+      its(:recovered_on) { should == 1.day.ago.to_date }
+      its(:lender_name) { should == lender1.name }
+      its(:realised) { should == 1 }
+    end
+
+    describe 'the last record' do
+      subject { report_recoveries.last }
+
+      its(:loan_reference) { should == recovery3.loan.reference }
+      its(:recovered_on) { should == 1.day.ago.to_date }
+      its(:lender_name) { should == lender3.name }
+      its(:realised) { should == 0 }
+    end
+  end
 
 end

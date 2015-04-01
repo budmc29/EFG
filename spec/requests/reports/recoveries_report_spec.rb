@@ -1,43 +1,29 @@
 require 'rails_helper'
 
 describe 'Recoveries report' do
-  let!(:loan_realisation1) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 2.days.ago.to_date) }
-  let!(:loan_realisation1b) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_loan: loan_realisation1.realised_loan,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 3.days.ago.to_date) }
-  let!(:loan_realisation1c) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_loan: loan_realisation1.realised_loan,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: Date.today) }
-  let!(:loan_realisation1d) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_loan: loan_realisation1.realised_loan,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 5.days.ago.to_date) }
-  let!(:loan_realisation2) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(2_000_00),
-                                                realised_on: 5.days.ago.to_date) }
-  let!(:loan_realisation3) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(3_000_00),
-                                                realised_on: Date.today) }
-  let!(:loan_realisation4) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 2.days.ago.to_date) }
-  let!(:loan_realisation5) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 2.days.ago.to_date) }
+  let!(:loan1) { FactoryGirl.create(:loan, :settled, settled_on: 10.days.ago.to_date )}
+  let!(:loan2) { FactoryGirl.create(:loan, :settled, settled_on: 11.days.ago.to_date )}
+  let!(:loan3) { FactoryGirl.create(:loan, :settled, settled_on: 12.days.ago.to_date )}
+  let!(:loan4) { FactoryGirl.create(:loan, :settled, settled_on: 13.days.ago.to_date )}
+  let!(:loan5) { FactoryGirl.create(:loan, :settled, settled_on: 14.days.ago.to_date )}
 
+  let!(:recovery1) { FactoryGirl.create(:recovery, :realised, loan: loan1, recovered_on: 2.day.ago.to_date) }
+  let!(:recovery1b) { FactoryGirl.create(:recovery, :realised, loan: loan1, recovered_on: 3.day.ago.to_date) }
+  let!(:recovery1c) { FactoryGirl.create(:recovery, :realised, loan: loan1, recovered_on: Date.today) }
+  let!(:recovery1d) { FactoryGirl.create(:recovery, :realised, loan: loan1, recovered_on: 5.day.ago.to_date) }
+  let!(:recovery2) { FactoryGirl.create(:recovery, :realised, loan: loan2, recovered_on: 5.day.ago.to_date) }
+  let!(:recovery3) { FactoryGirl.create(:recovery, :unrealised, loan: loan3, recovered_on: Date.today) }
+  let!(:recovery4) { FactoryGirl.create(:recovery, :realised, loan: loan4, recovered_on: 2.day.ago.to_date) }
+  let!(:recovery5) { FactoryGirl.create(:recovery, :unrealised, loan: loan5, recovered_on: 2.day.ago.to_date) }
 
-  let(:lender1) { loan_realisation1.realised_loan.lender }
-  let(:lender2) { loan_realisation2.realised_loan.lender }
-  let(:lender3) { loan_realisation3.realised_loan.lender }
-  let(:lender4) { loan_realisation4.realised_loan.lender }
-  let(:lender5) { loan_realisation5.realised_loan.lender }
+  let(:lender1) { loan1.lender }
+  let(:lender2) { loan2.lender }
+  let(:lender3) { loan3.lender }
+  let(:lender4) { loan4.lender }
+  let(:lender5) { loan5.lender }
 
   let(:report_start_date) { 4.days.ago.to_date.to_s }
-  let(:report_end_date) { 1.day.ago.to_date.to_s }
+  let(:report_end_date) { 2.day.ago.to_date.to_s }
 
   before(:each) do
     login_as(current_user, scope: :user)
@@ -49,7 +35,7 @@ describe 'Recoveries report' do
     context 'when selecting particular lenders' do
       it 'outputs a CSV realisation report' do
         report_start_date = 4.days.ago.to_date.to_s
-        report_end_date = 1.day.ago.to_date.to_s
+        report_end_date = 2.day.ago.to_date.to_s
 
         visit root_path
         click_link 'Generate Recoveries Report'
@@ -80,7 +66,7 @@ describe 'Recoveries report' do
     context 'when selecting ALL lenders' do
       it 'outputs a CSV realisation report for all lenders' do
         report_start_date = 4.days.ago.to_date.to_s
-        report_end_date = 1.day.ago.to_date.to_s
+        report_end_date = 2.day.ago.to_date.to_s
         all_lenders_list = Lender.all.map(&:name).join(', ')
 
         visit root_path

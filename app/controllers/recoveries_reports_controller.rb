@@ -9,8 +9,14 @@ class RecoveriesReportsController < ApplicationController
     @recoveries_report = RecoveriesReportPresenter.new(current_user, params[:recoveries_report_presenter])
     if @recoveries_report.valid?
       respond_to do |format|
-        format.html { render :summary }
-        format.csv { render text: @recoveries_report.to_csv, content_type: 'text/csv' }
+        format.html do
+          render :summary
+        end
+        format.csv do
+          filename = "#{Date.current.to_s(:db)}_recovoeries_report.csv"
+          csv_export = RecoveriesReportCsvExport.new(@recoveries_report.recoveries)
+          stream_response(csv_export, filename)
+        end
       end
     else
       respond_to do |format|

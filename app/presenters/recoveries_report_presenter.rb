@@ -2,10 +2,9 @@ class RecoveriesReportPresenter
   include ActiveModel::Model
   include PresenterFormatterConcern
 
-
   ALL_LENDERS_OPTION = OpenStruct.new(id: 'ALL', name: 'All').freeze
 
-  delegate :realisations, :to_csv, to: :report
+  delegate :recoveries, to: :report
 
   format :recovered_on_start_date, with: QuickDateFormatter
   format :recovered_on_end_date, with: QuickDateFormatter
@@ -24,10 +23,6 @@ class RecoveriesReportPresenter
   def allowed_lenders
     return lenders_whitelist.order_by_name.unshift(ALL_LENDERS_OPTION) if lenders_whitelist.count > 1
     lenders_whitelist
-  end
-
-  def record_count
-    realisations.count
   end
 
   def lender_ids=(ids = [])

@@ -1,33 +1,24 @@
 require 'spec_helper'
 
 describe RecoveriesReportPresenter do
-  let!(:loan_realisation1) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:loan_realisation2) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(2_000_00),
-                                                realised_on: 4.day.ago) }
-  let!(:loan_realisation3) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(3_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:loan_realisation4) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 3.day.ago) }
-  let!(:loan_realisation5) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 1.day.ago) }
 
-  let(:loan1) { loan_realisation1.realised_loan }
-  let(:loan2) { loan_realisation2.realised_loan }
-  let(:loan3) { loan_realisation3.realised_loan }
-  let(:loan4) { loan_realisation4.realised_loan }
-  let(:loan5) { loan_realisation5.realised_loan }
+  let!(:recovery1) { FactoryGirl.create(:recovery, :realised, recovered_on: 1.day.ago.to_date) }
+  let!(:recovery2) { FactoryGirl.create(:recovery, :realised, recovered_on: 4.day.ago.to_date) }
+  let!(:recovery3) { FactoryGirl.create(:recovery, :unrealised, recovered_on: 1.day.ago.to_date) }
+  let!(:recovery4) { FactoryGirl.create(:recovery, :realised, recovered_on: 3.day.ago.to_date) }
+  let!(:recovery5) { FactoryGirl.create(:recovery, :unrealised, recovered_on: 1.day.ago.to_date) }
 
-  let(:lender1) { loan1.lender }
-  let(:lender2) { loan2.lender }
-  let(:lender3) { loan3.lender }
-  let(:lender4) { loan4.lender }
-  let(:lender5) { loan5.lender }
+  let(:loan1) { recovery1.loan }
+  let(:loan2) { recovery2.loan }
+  let(:loan3) { recovery3.loan }
+  let(:loan4) { recovery4.loan }
+  let(:loan5) { recovery5.loan }
+
+  let(:lender1) { recovery1.loan.lender }
+  let(:lender2) { recovery2.loan.lender }
+  let(:lender3) { recovery3.loan.lender }
+  let(:lender4) { recovery4.loan.lender }
+  let(:lender5) { recovery5.loan.lender }
 
   let!(:cfe_user) { FactoryGirl.create(:cfe_user) }
   let!(:lender_user) { FactoryGirl.create(:lender_user, lender: lender1) }
@@ -44,7 +35,7 @@ describe RecoveriesReportPresenter do
     context 'with empty lender_ids' do
       let(:report_options) {
         { lender_ids: [],
-          recovered_on_start_date: 2.days.ago,
+          recovered_on_start_date: 2.days.ago.to_date,
           recovered_on_end_date: Date.today }
       }
 
@@ -64,7 +55,7 @@ describe RecoveriesReportPresenter do
     context 'with blank recovered_on_end_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          recovered_on_start_date: 2.days.ago,
+          recovered_on_start_date: 2.days.ago.to_date,
           recovered_on_end_date: '' }
       }
 
@@ -75,7 +66,7 @@ describe RecoveriesReportPresenter do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
           recovered_on_start_date: Date.today,
-          recovered_on_end_date: 3.days.ago }
+          recovered_on_end_date: 3.days.ago.to_date }
       }
 
       it { should be_invalid }
@@ -87,7 +78,7 @@ describe RecoveriesReportPresenter do
     let(:report_options) {
       {
         lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-        recovered_on_start_date: 2.days.ago,
+        recovered_on_start_date: 2.days.ago.to_date,
         recovered_on_end_date: Date.today
       }
     }
@@ -101,20 +92,33 @@ describe RecoveriesReportPresenter do
         should match_array(cfe_user.lenders << RecoveriesReportPresenter::ALL_LENDERS_OPTION)
       }
 
-      its(:record_count) { should == 2 }
-
       its(:lenders) { should match_array([lender1, lender2, lender3, lender4]) }
 
       its(:lender_ids) { should match_array([lender1.id, lender2.id, lender3.id, lender4.id]) }
 
-      its(:realisations) { should match_array([loan_realisation1, loan_realisation3]) }
+      describe '#report_recoveries' do
+        subject(:report_recoveries) { report_presenter.recoveries }
 
-      its(:to_csv) { should ==
-%Q[Loan Reference,Date of Realisation,Lender Name,Pre / Post Claim Limit
-#{loan_realisation1.realised_loan.reference},#{loan_realisation1.realised_on},#{lender1.name},pre
-#{loan_realisation3.realised_loan.reference},#{loan_realisation3.realised_on},#{lender3.name},post
-]
-      }
+        its(:size) { should == 2 }
+
+        describe 'the first record' do
+          subject { report_recoveries.first }
+
+          its(:loan_reference) { should == recovery1.loan.reference }
+          its(:recovered_on) { should == 1.day.ago.to_date }
+          its(:lender_name) { should == lender1.name }
+          its(:realised) { should == 1 }
+        end
+
+        describe 'the last record' do
+          subject { report_recoveries.last }
+
+          its(:loan_reference) { should == recovery3.loan.reference }
+          its(:recovered_on) { should == 1.day.ago.to_date }
+          its(:lender_name) { should == lender3.name }
+          its(:realised) { should == 0 }
+        end
+      end
     end
 
     context 'when user is lender_user' do
@@ -124,19 +128,25 @@ describe RecoveriesReportPresenter do
 
       its(:allowed_lenders) { should match_array([lender_user.lender]) }
 
-      its(:record_count) { should == 1 }
-
       its(:lenders) { should match_array([lender_user.lender]) }
 
       its(:lender_ids) { should match_array([lender_user.lender.id]) }
 
-      its(:realisations) { should match_array([loan_realisation1]) }
+      describe '#report_recoveries' do
+        subject(:report_recoveries) { report_presenter.recoveries }
 
-      its(:to_csv) { should ==
-%Q[Loan Reference,Date of Realisation,Lender Name,Pre / Post Claim Limit
-#{loan_realisation1.realised_loan.reference},#{loan_realisation1.realised_on},#{lender1.name},pre
-]
-      }
+        its(:size) { should == 1 }
+
+        describe 'the only record' do
+          subject { report_recoveries.first }
+
+          its(:loan_reference) { should == recovery1.loan.reference }
+          its(:recovered_on) { should == 1.day.ago.to_date }
+          its(:lender_name) { should == lender1.name }
+          its(:realised) { should == 1 }
+        end
+
+      end
     end
   end
 

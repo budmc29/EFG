@@ -137,3 +137,9 @@ en:
       loan_reference: Loan Reference
       post_claim_limit: Post Claim Limit?
       scheme: Loan Scheme
+
+    recoveries_report:
+      lender_name: Lender Name
+      recovered_on: Recovered On
+      realised: Realised?
+      loan_reference: Loan Reference

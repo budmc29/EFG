@@ -14,5 +14,13 @@ FactoryGirl.define do
     after(:build) { |recovery|
       recovery.loan ||= FactoryGirl.create(:loan, :settled, settled_on: recovery.recovered_on)
     }
+
+    trait :realised do
+      realise_flag true
+    end
+
+    trait :unrealised do
+      realise_flag false
+    end
   end
 end
