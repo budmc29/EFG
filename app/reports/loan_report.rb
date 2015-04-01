@@ -72,29 +72,23 @@ class LoanReport
     scope = scope.where('loans.state IN (?)', states) if states.present?
 
     if loan_types.any? || phases.any?
-      # Tried to use Arel here, but it was segfaulting. Falling back to string
-      # concatination - what web developers do best...
-      #
-      # loans = Loan.arel_table
-      # types_conditions = loan_types.map do |type|
-      #   condition = (loans[:loan_scheme].eq(type.scheme).and(loans[:loan_source].eq(type.source)))
-      #   condition.to_sql
-      # end
-
       # If we have any phases we need to retrive a subset of EFG loans rather
       # than all EFG loans.
       if phases.any?
         loan_types.delete(LoanTypes::EFG)
       end
 
-      conditions = []
+      loans = Loan.arel_table
+      lending_limits = LendingLimit.arel_table
 
-      loan_types.each do |type|
-        conditions << "(loans.loan_scheme = '#{type.scheme}' AND loans.loan_source = '#{type.source}')"
+      conditions = loan_types.map do |type|
+        condition = (loans[:loan_scheme].eq(type.scheme).and(loans[:loan_source].eq(type.source)))
+        condition.to_sql
       end
 
-      phases.each do |phase|
-        conditions << "(loans.loan_scheme = '#{phase.type.scheme}' AND loans.loan_source = '#{phase.type.source}' AND lending_limits.phase_id = #{phase.id})"
+      conditions += phases.map do |phase|
+        condition = (loans[:loan_scheme].eq(phase.type.scheme).and(loans[:loan_source].eq(phase.type.source)).and(lending_limits[:phase_id].eq(phase.id)))
+        condition.to_sql
       end
 
       scope = scope.where(conditions.join(' OR '))

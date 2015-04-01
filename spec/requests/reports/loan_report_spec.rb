@@ -121,9 +121,7 @@ describe 'Loan report' do
       loan2.update_attribute(:lending_limit_id, phase_1_lending_limit.id)
       loan3.update_attribute(:lending_limit_id, phase_6_lending_limit.id)
 
-      within('.control-group.lender_select') do
-        check 'All'
-      end
+      select 'All', from: 'loan_report_lender_ids'
       check 'EFG'
       select 'All states', from: 'loan_report[states][]'
 

@@ -20,8 +20,6 @@ class Phase < StaticAssociation
     "Phase#{id}Rules".constantize
   end
 
-  private
-
   # The financial year for which the Phase operates for. Phase 1 is slightly
   # different, starting on 2009-01-14, but it was deemed for consistency that
   # it was acceptable to display it as FY 2009/10.
