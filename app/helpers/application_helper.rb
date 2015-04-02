@@ -5,11 +5,11 @@ module ApplicationHelper
     items.unshift(link_to('Home', root_path))
     divider = content_tag(:span, '/', class: 'divider')
 
-    list_items = items.inject(ActiveSupport::SafeBuffer.new) do |output, item|
-      output += content_tag(:li, h(item) + divider)
+    content_tag :ul, class: 'breadcrumb' do
+      items.each do |item|
+        concat content_tag(:li, h(item) + divider)
+      end
     end
-
-    content_tag :ul, list_items, class: 'breadcrumb'
   end
 
   def breadcrumbs_for_loan(loan, *extras)
