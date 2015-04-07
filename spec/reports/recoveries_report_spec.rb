@@ -24,6 +24,7 @@ describe RecoveriesReport do
       subject { report_recoveries.first }
 
       its(:loan_reference) { should == recovery1.loan.reference }
+      its(:amount_due_to_dti) { should == recovery1.amount_due_to_dti }
       its(:recovered_on) { should == 1.day.ago.to_date }
       its(:lender_name) { should == lender1.name }
       its(:realised) { should == 1 }
@@ -33,6 +34,7 @@ describe RecoveriesReport do
       subject { report_recoveries.last }
 
       its(:loan_reference) { should == recovery3.loan.reference }
+      its(:amount_due_to_dti) { should == recovery3.amount_due_to_dti }
       its(:recovered_on) { should == 1.day.ago.to_date }
       its(:lender_name) { should == lender3.name }
       its(:realised) { should == 0 }

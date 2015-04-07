@@ -15,14 +15,15 @@ describe RecoveriesReportCsvExport do
   its(:fields) { should == [
       :lender_name,
       :loan_reference,
+      :amount_due_to_dti,
       :recovered_on,
       :realised,
     ]
   }
 
-  its(:generate) { should == %Q[Lender Name,Loan Reference,Recovered On,Realised?
-#{lender1.name},#{loan1.reference},#{recovery1.recovered_on},1
-#{lender2.name},#{loan2.reference},#{recovery2.recovered_on},0
+  its(:generate) { should == %Q[Lender Name,Loan Reference,Amount,Recovered On,Realised?
+#{lender1.name},#{loan1.reference},#{recovery1.amount_due_to_dti},#{recovery1.recovered_on},1
+#{lender2.name},#{loan2.reference},#{recovery2.amount_due_to_dti},#{recovery2.recovered_on},0
 ] }
 
 end
