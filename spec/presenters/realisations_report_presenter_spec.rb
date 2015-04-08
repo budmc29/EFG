@@ -101,8 +101,6 @@ describe RealisationsReportPresenter do
         should match_array(cfe_user.lenders << RealisationsReportPresenter::ALL_LENDERS_OPTION)
       }
 
-      its(:lenders) { should match_array([lender1, lender2, lender3, lender4]) }
-
       its(:lender_ids) { should match_array([lender1.id, lender2.id, lender3.id, lender4.id]) }
 
       describe '#report_realisations' do
@@ -136,10 +134,6 @@ describe RealisationsReportPresenter do
       subject(:report_presenter) { RealisationsReportPresenter.new(lender_user, report_options) }
 
       it { should be_valid }
-
-      its(:allowed_lenders) { should match_array([lender_user.lender]) }
-
-      its(:lenders) { should match_array([lender_user.lender]) }
 
       its(:lender_ids) { should match_array([lender_user.lender.id]) }
 

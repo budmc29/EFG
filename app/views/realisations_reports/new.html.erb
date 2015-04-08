@@ -14,10 +14,8 @@
   <%= f.input :start_date, as: :quick_date %>
   <%= f.input :end_date, as: :quick_date %>
 
-  <% if @realisations_report.allowed_lenders.count == 1 %>
-    <%= f.hidden_field :lender_ids, { multiple: true, value: @realisations_report.allowed_lenders.first.id } %>
-  <% else %>
-    <%= f.input :lender_ids, as: :select, collection: @realisations_report.allowed_lenders, label_method: :name, value_method: :id, input_html: { multiple: true } %>
+  <% if @realisations_report.must_select_lenders? %>
+    <%= f.input :lender_ids, as: :select, collection: @realisations_report.allowed_lenders, input_html: { multiple: true } %>
   <% end %>
 
   <div class="form-actions">

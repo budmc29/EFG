@@ -9,7 +9,7 @@ class RealisationsReportPresenter
   format :start_date, with: QuickDateFormatter
   format :end_date, with: QuickDateFormatter
 
-  attr_reader :lenders, :report, :lender_ids
+  attr_reader :report, :lender_ids
 
   validates_presence_of :end_date
   validates_presence_of :lender_ids
@@ -18,22 +18,33 @@ class RealisationsReportPresenter
 
   def initialize(user, options={})
     @user = user
+
+    if !must_select_lenders?
+      options['lender_ids'] = [ALL_LENDERS_OPTION.id]
+    end
+
     super(options)
     @report = RealisationsReport.new(start_date, end_date, lender_ids)
   end
 
   def allowed_lenders
-    return lenders_whitelist.order_by_name.unshift(ALL_LENDERS_OPTION) if lenders_whitelist.count > 1
-    lenders_whitelist
+    user_lenders.order_by_name.unshift(ALL_LENDERS_OPTION)
   end
 
-  def lender_ids=(ids = [])
-    @lenders = if ids.include? 'ALL'
-      lenders_whitelist
+  def lender_ids=(ids)
+    @lender_ids = if ids.include?(ALL_LENDERS_OPTION.id)
+      user_lenders.pluck(:id)
     else
-      Lender.where(id: ids).select { |lender| allowed_lenders.include? lender }
+      user_lenders.where(id: ids).pluck(:id)
     end
-    @lender_ids = @lenders.map(&:id)
+  end
+
+  def lender_names
+    user_lenders.where(id: lender_ids).order_by_name.pluck(:name)
+  end
+
+  def must_select_lenders?
+    user_lenders.count > 1
   end
 
   private
@@ -47,7 +58,7 @@ class RealisationsReportPresenter
     end
   end
 
-  def lenders_whitelist
-    current_user.lenders
+  def user_lenders
+    @user_lenders ||= user.lenders
   end
 end
