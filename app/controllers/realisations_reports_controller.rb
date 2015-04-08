@@ -10,7 +10,11 @@ class RealisationsReportsController < ApplicationController
     if @realisations_report.valid?
       respond_to do |format|
         format.html { render :summary }
-        format.csv { render text: @realisations_report.to_csv, content_type: 'text/csv' }
+        format.csv do
+          filename = "#{Date.current.to_s(:db)}_realisations_report.csv"
+          csv_export = RealisationsReportCsvExport.new(@realisations_report.realisations)
+          stream_response(csv_export, filename)
+        end
       end
     else
       respond_to do |format|

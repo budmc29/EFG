@@ -129,3 +129,9 @@ en:
       pre_claim_limit_realisations: Pre-claim Limit Realisation
       claim_limit_remaining: Claim Remaining
 
+    realisations_report:
+      lender_name: Lender Name
+      realised_on: Realised On
+      realised_amount: Realised Amount
+      loan_reference: Loan Reference
+      post_claim_limit: Post Claim Limit?
