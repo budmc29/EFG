@@ -9,13 +9,13 @@ class RealisationsReportPresenter
   format :realised_on_start_date, with: QuickDateFormatter
   format :realised_on_end_date, with: QuickDateFormatter
 
-  attr_reader :lenders, :report, :current_user, :lender_ids
+  attr_reader :lenders, :report, :lender_ids
 
   validates_presence_of :realised_on_start_date, :realised_on_end_date, :lender_ids
   validate :realised_on_end_date_is_not_after_realised_on_start_date
 
-  def initialize(current_user, options={})
-    @current_user = current_user
+  def initialize(user, options={})
+    @user = user
     super(options)
     @report = RealisationsReport.new(@realised_on_start_date, @realised_on_end_date, @lender_ids)
   end
@@ -36,6 +36,8 @@ class RealisationsReportPresenter
 
   private
 
+  attr_reader :user
+
   def lenders_whitelist
     current_user.lenders
   end
@@ -48,5 +50,4 @@ class RealisationsReportPresenter
       errors.add(:realised_on_end_date, :must_be_after_start_date)
     end
   end
-
 end
