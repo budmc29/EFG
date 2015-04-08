@@ -286,7 +286,7 @@ en:
         lender_id: 'Lender'
         scheme: 'Loan Scheme'
 
-      realisations_report_presenter:
+      realisations_report:
         start_date: 'What is the start date for your report?'
         end_date: 'What is the end date for your report?'
         lender_ids: 'Which lenders would you like to see realisations for?'

@@ -8,11 +8,11 @@ describe RealisationsReportCsvExport do
   let(:loan2) { FactoryGirl.create(:loan, :realised, lender: lender2, reference: 'xyz123') }
   let(:realisations) { report.realisations }
   let(:report) {
-    RealisationsReport.new(
-      Date.new(2015, 4, 1),
-      Date.new(2015, 4, 2),
-      Lender.all
-    )
+    RealisationsReport.new(user, {
+      'end_date' => Date.new(2015, 4, 2),
+      'lender_ids' => RealisationsReport::ALL_LENDERS_OPTION.id,
+      'start_date' => Date.new(2015, 4, 1)
+    })
   }
   let(:user) { FactoryGirl.create(:cfe_user) }
 

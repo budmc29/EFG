@@ -153,7 +153,7 @@ en:
         realisation_adjustment:
           not_greater_than_adjusted_realisations: "cannot be greater than the loan's realisations"
 
-        realisations_report_presenter:
+        realisations_report:
           attributes:
             start_date:
               must_be_before_end_date: 'must be before end date'

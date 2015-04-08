@@ -2,11 +2,12 @@ class RealisationsReportsController < ApplicationController
   before_action :verify_create_permission
 
   def new
-    @realisations_report = RealisationsReportPresenter.new(current_user, {})
+    @realisations_report = RealisationsReport.new(current_user, {})
   end
 
   def create
-    @realisations_report = RealisationsReportPresenter.new(current_user, params[:realisations_report_presenter])
+    @realisations_report = RealisationsReport.new(current_user, params[:realisations_report])
+
     if @realisations_report.valid?
       respond_to do |format|
         format.html { render :summary }
@@ -28,5 +29,4 @@ class RealisationsReportsController < ApplicationController
   def verify_create_permission
     enforce_create_permission(RealisationsReport)
   end
-
 end
