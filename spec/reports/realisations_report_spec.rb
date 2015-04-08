@@ -30,9 +30,9 @@ describe RealisationsReport do
   its(:realisations) { should match_array([loan_realisation1, loan_realisation3]) }
 
   its(:to_csv) { should ==
-%Q[Loan Reference,Date of Realisation,Lender Name,Pre / Post Claim Limit
-#{loan_realisation1.realised_loan.reference},#{loan_realisation1.realised_on},#{lender1.name},pre
-#{loan_realisation3.realised_loan.reference},#{loan_realisation3.realised_on},#{lender3.name},post
+%Q[Loan Reference,Date of Realisation,Realisation Amount,Lender Name,Pre / Post Claim Limit
+#{loan_realisation1.realised_loan.reference},#{loan_realisation1.realised_on},#{loan_realisation1.realised_amount},#{lender1.name},pre
+#{loan_realisation3.realised_loan.reference},#{loan_realisation3.realised_on},#{loan_realisation3.realised_amount},#{lender3.name},post
 ]
   }
 

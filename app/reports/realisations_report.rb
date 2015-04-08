@@ -19,11 +19,12 @@ class RealisationsReport
 
   def to_csv
     CSV.generate do |csv|
-      csv << ['Loan Reference', 'Date of Realisation', 'Lender Name', 'Pre / Post Claim Limit']
+      csv << ['Loan Reference', 'Date of Realisation', 'Realisation Amount', 'Lender Name', 'Pre / Post Claim Limit']
       realisations.each do |r|
         csv << [
           r.realised_loan.reference,
           r.realised_on,
+          r.realised_amount,
           r.realised_loan.lender.name,
           r.post_claim_limit ? 'post' : 'pre'
         ]
