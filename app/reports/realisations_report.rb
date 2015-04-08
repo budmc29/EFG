@@ -28,6 +28,10 @@ class RealisationsReport
     user_lenders.order_by_name.unshift(ALL_LENDERS_OPTION)
   end
 
+  def any?
+    size > 0
+  end
+
   def lender_ids=(ids)
     @lender_ids = if ids.include?(ALL_LENDERS_OPTION.id)
       user_lenders.pluck(:id)
@@ -58,6 +62,10 @@ class RealisationsReport
       .joins(realised_loan: :lender)
       .where(realised_on: start_date..end_date)
       .where(loans: { lender_id: lender_ids })
+  end
+
+  def size
+    @size ||= realisations.size
   end
 
   private

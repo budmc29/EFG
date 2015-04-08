@@ -37,9 +37,9 @@
   </tbody>
 </table>
 
-<p><strong>Data extract found <%= pluralize @realisations_report.realisations.size, 'row' %>.</strong></p>
+<p><strong>Data extract found <%= pluralize @realisations_report.size, 'row' %>.</strong></p>
 
-<% if @realisations_report.realisations.size > 0 %>
+<% if @realisations_report.any? %>
 
   <p>You can download the report by clicking the Download button below.</p>
 
