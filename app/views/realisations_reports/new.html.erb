@@ -8,7 +8,7 @@
 
 <hr>
 
-<%= simple_form_for(@realisations_report, url: realisations_reports_path(@realisations_report.report, format: 'html'), html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
+<%= simple_form_for(@realisations_report, url: realisations_reports_path, html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
   <%= render_errors_on_base(f.object.errors) %>
 
   <%= f.input :realised_on_start_date, as: :quick_date %>

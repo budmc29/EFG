@@ -42,7 +42,7 @@
 <% if @realisations_report.realisations.size > 0 %>
 
   <p>You can download the report by clicking the Download button below.</p>
-  <%= simple_form_for(@realisations_report, url: realisations_reports_path(@realisations_report.report, format: 'csv'), html: { class: 'csv-download' }) do |f| %>
+  <%= simple_form_for(@realisations_report, url: realisations_reports_path(format: :csv)) do |f| %>
     <%= f.hidden_field :realised_on_start_date %>
     <%= f.hidden_field :realised_on_end_date %>
     <% f.object.lender_ids.each do |lender_id| %>
