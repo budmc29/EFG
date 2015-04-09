@@ -12,15 +12,6 @@ describe RealisationsReportCsvExport do
 
   subject(:export) { RealisationsReportCsvExport.new(report_realisations) }
 
-  its(:fields) { should == [
-      :lender_name,
-      :loan_reference,
-      :realised_on,
-      :realised_amount,
-      :post_claim_limit
-    ]
-  }
-
   its(:generate) { should == %Q[Lender Name,Loan Reference,Realised On,Realised Amount,Post Claim Limit?
 #{lender1.name},#{loan1.reference},#{realisation1.realised_on},#{realisation1.realised_amount},#{realisation1.post_claim_limit}
 #{lender2.name},#{loan2.reference},#{realisation2.realised_on},#{realisation2.realised_amount},#{realisation2.post_claim_limit}
