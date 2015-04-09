@@ -13,7 +13,7 @@ class RecoveriesReportsController < ApplicationController
           render :summary
         end
         format.csv do
-          filename = "#{Date.current.to_s(:db)}_recovoeries_report.csv"
+          filename = "#{Date.current.to_s(:db)}_recoveries_report.csv"
           csv_export = RecoveriesReportCsvExport.new(@recoveries_report.recoveries)
           stream_response(csv_export, filename)
         end
