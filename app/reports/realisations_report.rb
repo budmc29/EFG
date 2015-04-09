@@ -33,7 +33,7 @@ class RealisationsReport
   end
 
   def lender_ids=(ids)
-    @lender_ids = if ids.include?(ALL_LENDERS_OPTION.id)
+    @lender_ids = if Array(ids).include?(ALL_LENDERS_OPTION.id)
       user_lenders.pluck(:id)
     else
       user_lenders.where(id: ids).pluck(:id)
