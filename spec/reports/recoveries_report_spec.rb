@@ -120,10 +120,10 @@ describe RecoveriesReport do
 
       its(:lender_names) { should match_array([lender1.name, lender2.name, lender3.name, lender4.name]) }
 
+      its(:size) { should == 2 }
+
       describe '#report_recoveries' do
         subject(:report_recoveries) { report.recoveries }
-
-        its(:size) { should == 2 }
 
         describe 'the first record' do
           subject { report_recoveries.first }
@@ -154,10 +154,10 @@ describe RecoveriesReport do
 
       its(:lender_names) { should match_array([lender_user.lender.name]) }
 
+      its(:size) { should == 1 }
+
       describe '#report_recoveries' do
         subject(:report_recoveries) { report.recoveries }
-
-        its(:size) { should == 1 }
 
         describe 'the only record' do
           subject { report_recoveries.first }

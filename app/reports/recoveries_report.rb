@@ -49,6 +49,10 @@ class RecoveriesReport
       .select('recoveries.*, loans.reference AS loan_reference, lenders.name AS lender_name, realise_flag AS realised')
   end
 
+  def size
+    @size ||= recoveries.size
+  end
+
 private
 
   attr_reader :current_user
