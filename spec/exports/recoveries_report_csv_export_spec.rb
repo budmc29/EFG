@@ -37,8 +37,8 @@ describe RecoveriesReportCsvExport do
   }
 
   its(:generate) { should == %Q[Lender Name,Loan Reference,Amount,Recovered On,Realised?
-Lender 1,zyxwvu9876,345.89,2015-04-08,1
-Lender 2,abcde1234,123.45,2015-04-07,0
+Lender 1,zyxwvu9876,345.89,2015-04-08,realised
+Lender 2,abcde1234,123.45,2015-04-07,not realised
 ] }
 
 end

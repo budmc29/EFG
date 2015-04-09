@@ -12,6 +12,17 @@ class RecoveriesReportCsvExport < BaseCsvExport
 
   private
 
+  def formats
+    @formats ||= {
+      Fixnum => ->(n){
+        case n
+        when 1 then "realised"
+        when 0 then "not realised"
+        end
+      }
+    }
+  end
+
   def translation_scope
     'csv_headers.recoveries_report'
   end
