@@ -10,14 +10,6 @@ describe QuickDateFormatter do
       expect(QuickDateFormatter.parse('11/1/12')).to  eq(Date.new(2012, 1, 11))
     end
 
-    it 'correctly parses yyyy-mm-dd' do
-      expect(QuickDateFormatter.parse('2011-1-12')).to eq(Date.new(2011, 1, 12))
-    end
-
-    it 'correctly parses yy-mm-dd' do
-      expect(QuickDateFormatter.parse('11-1-12')).to eq(Date.new(2011, 1, 12))
-    end
-
     it 'allows a date from the 90s' do
       expect(QuickDateFormatter.parse('3/2/1995')).to eq(Date.new(1995, 2, 3))
     end
