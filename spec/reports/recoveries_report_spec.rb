@@ -23,53 +23,62 @@ describe RecoveriesReport do
   let!(:lender_user) { FactoryGirl.create(:lender_user, lender: lender1) }
 
   describe 'validations' do
+    let(:report_options) {
+      { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
+        start_date: 2.days.ago.to_date,
+        end_date: Date.today }
+    }
+
     subject(:report) { RecoveriesReport.new(cfe_user, report_options) }
 
     context 'with empty options' do
-      let(:report_options) { {} }
+      before do
+        report_options[:lender_ids] = ['']
+        report_options[:start_date] = ''
+        report_options[:end_date] = ''
+      end
+
       it { should be_invalid }
     end
 
     context 'with empty lender_ids' do
-      let(:report_options) {
-        { lender_ids: [],
-          start_date: 2.days.ago.to_date,
-          end_date: Date.today }
-      }
+      it 'is invalid' do
+        report_options[:lender_ids] = ['']
+        report1 = RecoveriesReport.new(cfe_user, report_options)
+        expect(report1).to be_invalid
 
-      it { should be_invalid }
+        report_options[:lender_ids] = []
+        report2 = RecoveriesReport.new(cfe_user, report_options)
+        expect(report2).to be_invalid
+      end
     end
 
     context 'with blank start_date' do
-      let(:report_options) {
-        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          start_date: '',
-          end_date: Date.today }
-      }
+      before do
+        report_options[:start_date] = ''
+      end
 
       it { should be_invalid }
     end
 
     context 'with blank end_date' do
-      let(:report_options) {
-        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          start_date: 2.days.ago.to_date,
-          end_date: '' }
-      }
+      before do
+        report_options[:end_date] = ''
+      end
 
       it { should be_invalid }
     end
 
     context 'with end_date before start_date' do
-      let(:report_options) {
-        { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          start_date: Date.today,
-          end_date: 3.days.ago.to_date }
-      }
+      before do
+        report_options[:start_date] = Date.today
+        report_options[:end_date] = 3.days.ago.to_date
+      end
 
       it { should be_invalid }
     end
   end
+
 
   describe 'with valid options' do
     let(:report_options) {
