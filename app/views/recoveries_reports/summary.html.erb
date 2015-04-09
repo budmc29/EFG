@@ -43,8 +43,8 @@
 
   <p>You can download the report by clicking the Download button below.</p>
   <%= simple_form_for(@recoveries_report, url: recoveries_reports_path(format: 'csv'), html: { class: 'csv-download' }) do |f| %>
-    <%= f.hidden_field :start_date %>
-    <%= f.hidden_field :end_date %>
+    <%= f.hidden_field :start_date, value: f.object.start_date.to_s(:screen) %>
+    <%= f.hidden_field :end_date, value: f.object.end_date.to_s(:screen) %>
     <% f.object.lender_ids.each do |lender_id| %>
       <%= f.hidden_field :lender_ids, { multiple: true, value: lender_id } %>
     <% end %>
