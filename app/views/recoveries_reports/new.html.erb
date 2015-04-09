@@ -8,7 +8,7 @@
 
 <hr>
 
-<%= simple_form_for(@recoveries_report, url: recoveries_reports_path(@recoveries_report.report, format: 'html'), html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
+<%= simple_form_for(@recoveries_report, url: recoveries_reports_path(format: 'html'), html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
   <%= render_errors_on_base(f.object.errors) %>
 
   <%= f.input :recovered_on_start_date, as: :quick_date %>

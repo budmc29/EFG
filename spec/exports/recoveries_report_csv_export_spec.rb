@@ -8,9 +8,17 @@ describe RecoveriesReportCsvExport do
   let(:loan2) { recovery2.loan }
   let(:lender1) { recovery1.loan.lender }
   let(:lender2) { recovery2.loan.lender }
-  let(:report_recoveries) { RecoveriesReport.new(3.days.ago.to_date, Date.today, Lender.all).recoveries }
+  let(:user) { FactoryGirl.create(:cfe_user) }
 
-  subject(:export) { RecoveriesReportCsvExport.new(report_recoveries) }
+  let(:report) {
+    RecoveriesReport.new(user, {
+      recovered_on_start_date: 3.days.ago.to_date,
+      recovered_on_end_date: Date.today,
+      lender_ids: Lender.all.pluck(:id),
+    })
+  }
+
+  subject(:export) { RecoveriesReportCsvExport.new(report.recoveries) }
 
   its(:fields) { should == [
       :lender_name,

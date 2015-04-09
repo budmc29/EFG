@@ -160,7 +160,7 @@ en:
             end_date:
               must_be_after_start_date: 'must be after start date'
 
-        recoveries_report_presenter:
+        recoveries_report:
           attributes:
             recovered_on_start_date:
               must_be_before_end_date: 'must be before end date'

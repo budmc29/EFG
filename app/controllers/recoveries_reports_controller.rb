@@ -2,11 +2,11 @@ class RecoveriesReportsController < ApplicationController
   before_action :verify_create_permission
 
   def new
-    @recoveries_report = RecoveriesReportPresenter.new(current_user, {})
+    @recoveries_report = RecoveriesReport.new(current_user, {})
   end
 
   def create
-    @recoveries_report = RecoveriesReportPresenter.new(current_user, params[:recoveries_report_presenter])
+    @recoveries_report = RecoveriesReport.new(current_user, params[:recoveries_report])
     if @recoveries_report.valid?
       respond_to do |format|
         format.html do
