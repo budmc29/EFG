@@ -11,8 +11,8 @@
 <%= simple_form_for(@realisations_report, url: realisations_reports_path, html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
   <%= render_errors_on_base(f.object.errors) %>
 
-  <%= f.input :realised_on_start_date, as: :quick_date %>
-  <%= f.input :realised_on_end_date, as: :quick_date %>
+  <%= f.input :start_date, as: :quick_date %>
+  <%= f.input :end_date, as: :quick_date %>
 
   <% if @realisations_report.allowed_lenders.count == 1 %>
     <%= f.hidden_field :lender_ids, { multiple: true, value: @realisations_report.allowed_lenders.first.id } %>

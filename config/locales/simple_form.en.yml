@@ -287,8 +287,8 @@ en:
         scheme: 'Loan Scheme'
 
       realisations_report_presenter:
-        realised_on_start_date: 'What is the start date for your report?'
-        realised_on_end_date: 'What is the end date for your report?'
+        start_date: 'What is the start date for your report?'
+        end_date: 'What is the end date for your report?'
         lender_ids: 'Which lenders would you like to see realisations for?'
 
       ask_an_expert:

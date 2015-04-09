@@ -44,38 +44,38 @@ describe RealisationsReportPresenter do
     context 'with empty lender_ids' do
       let(:report_options) {
         { lender_ids: [],
-          realised_on_start_date: 2.days.ago,
-          realised_on_end_date: Date.today }
+          start_date: 2.days.ago,
+          end_date: Date.today }
       }
 
       it { should be_invalid }
     end
 
-    context 'with blank realised_on_start_date' do
+    context 'with blank start_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          realised_on_start_date: '',
-          realised_on_end_date: Date.today }
+          start_date: '',
+          end_date: Date.today }
       }
 
       it { should be_invalid }
     end
 
-    context 'with blank realised_on_end_date' do
+    context 'with blank end_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          realised_on_start_date: 2.days.ago,
-          realised_on_end_date: '' }
+          start_date: 2.days.ago,
+          end_date: '' }
       }
 
       it { should be_invalid }
     end
 
-    context 'with realised_on_end_date before realised_on_start_date' do
+    context 'with end_date before start_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          realised_on_start_date: Date.today,
-          realised_on_end_date: 3.days.ago }
+          start_date: Date.today,
+          end_date: 3.days.ago }
       }
 
       it { should be_invalid }
@@ -87,8 +87,8 @@ describe RealisationsReportPresenter do
     let(:report_options) {
       {
         lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-        realised_on_start_date: 2.days.ago,
-        realised_on_end_date: Date.today
+        start_date: 2.days.ago,
+        end_date: Date.today
       }
     }
 
