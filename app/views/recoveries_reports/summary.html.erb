@@ -30,7 +30,7 @@
     <% if @recoveries_report.allowed_lenders.count > 1 %>
       <tr>
         <th>Lenders</th>
-        <td><%= @recoveries_report.lenders.map(&:name).join(', ') %></td>
+        <td><%= @recoveries_report.lender_names.join(', ') %></td>
       </tr>
     <% end %>
 

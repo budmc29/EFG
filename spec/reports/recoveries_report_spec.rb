@@ -71,7 +71,6 @@ describe RecoveriesReport do
     end
   end
 
-
   describe 'with valid options' do
     let(:report_options) {
       {
@@ -91,6 +90,8 @@ describe RecoveriesReport do
       }
 
       its(:lender_ids) { should match_array([lender1.id, lender2.id, lender3.id, lender4.id]) }
+
+      its(:lender_names) { should match_array([lender1.name, lender2.name, lender3.name, lender4.name]) }
 
       describe '#report_recoveries' do
         subject(:report_recoveries) { report.recoveries }
@@ -125,6 +126,8 @@ describe RecoveriesReport do
       its(:allowed_lenders) { should match_array([lender_user.lender]) }
 
       its(:lender_ids) { should match_array([lender_user.lender.id]) }
+
+      its(:lender_names) { should match_array([lender_user.lender.name]) }
 
       describe '#report_recoveries' do
         subject(:report_recoveries) { report.recoveries }

@@ -9,7 +9,7 @@ class RecoveriesReport
   format :start_date, with: QuickDateFormatter
   format :end_date, with: QuickDateFormatter
 
-  attr_reader :lender_ids, :lenders
+  attr_reader :lender_ids
 
   validates_presence_of :start_date, :end_date, :lender_ids
   validate :end_date_is_not_after_start_date
@@ -31,6 +31,10 @@ class RecoveriesReport
       Lender.where(id: ids).select { |lender| allowed_lenders.include? lender }
     end
     @lender_ids = @lenders.map(&:id)
+  end
+
+  def lender_names
+    @lenders.map(&:name)
   end
 
   def recoveries
