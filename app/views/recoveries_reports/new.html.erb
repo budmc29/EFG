@@ -11,8 +11,8 @@
 <%= simple_form_for(@recoveries_report, url: recoveries_reports_path(format: 'html'), html: { class: 'form-horizontal form-premium-schedule-report' }) do |f| %>
   <%= render_errors_on_base(f.object.errors) %>
 
-  <%= f.input :recovered_on_start_date, as: :quick_date %>
-  <%= f.input :recovered_on_end_date, as: :quick_date %>
+  <%= f.input :start_date, as: :quick_date %>
+  <%= f.input :end_date, as: :quick_date %>
 
   <% if @recoveries_report.allowed_lenders.count == 1 %>
     <%= f.hidden_field :lender_ids, { multiple: true, value: @recoveries_report.allowed_lenders.first.id } %>

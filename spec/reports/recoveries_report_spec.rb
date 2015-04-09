@@ -33,38 +33,38 @@ describe RecoveriesReport do
     context 'with empty lender_ids' do
       let(:report_options) {
         { lender_ids: [],
-          recovered_on_start_date: 2.days.ago.to_date,
-          recovered_on_end_date: Date.today }
+          start_date: 2.days.ago.to_date,
+          end_date: Date.today }
       }
 
       it { should be_invalid }
     end
 
-    context 'with blank recovered_on_start_date' do
+    context 'with blank start_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          recovered_on_start_date: '',
-          recovered_on_end_date: Date.today }
+          start_date: '',
+          end_date: Date.today }
       }
 
       it { should be_invalid }
     end
 
-    context 'with blank recovered_on_end_date' do
+    context 'with blank end_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          recovered_on_start_date: 2.days.ago.to_date,
-          recovered_on_end_date: '' }
+          start_date: 2.days.ago.to_date,
+          end_date: '' }
       }
 
       it { should be_invalid }
     end
 
-    context 'with recovered_on_end_date before recovered_on_start_date' do
+    context 'with end_date before start_date' do
       let(:report_options) {
         { lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-          recovered_on_start_date: Date.today,
-          recovered_on_end_date: 3.days.ago.to_date }
+          start_date: Date.today,
+          end_date: 3.days.ago.to_date }
       }
 
       it { should be_invalid }
@@ -76,8 +76,8 @@ describe RecoveriesReport do
     let(:report_options) {
       {
         lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-        recovered_on_start_date: 2.days.ago.to_date,
-        recovered_on_end_date: Date.today
+        start_date: 2.days.ago.to_date,
+        end_date: Date.today
       }
     }
 

@@ -12,8 +12,8 @@ describe RecoveriesReportCsvExport do
 
   let(:report) {
     RecoveriesReport.new(user, {
-      recovered_on_start_date: 3.days.ago.to_date,
-      recovered_on_end_date: Date.today,
+      start_date: 3.days.ago.to_date,
+      end_date: Date.today,
       lender_ids: Lender.all.pluck(:id),
     })
   }
