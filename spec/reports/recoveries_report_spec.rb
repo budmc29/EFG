@@ -103,8 +103,6 @@ describe RecoveriesReport do
     context 'when user is cfe_user' do
       subject(:report) { RecoveriesReport.new(cfe_user, report_options) }
 
-      it { should be_valid }
-
       its(:allowed_lenders) {
         should match_array(cfe_user.lenders << RecoveriesReport::ALL_LENDERS_OPTION)
       }
@@ -140,8 +138,6 @@ describe RecoveriesReport do
 
     context 'when user is lender_user' do
       subject(:report) { RecoveriesReport.new(lender_user, report_options) }
-
-      it { should be_valid }
 
       its(:allowed_lenders) { should match_array([lender_user.lender]) }
 
