@@ -6,6 +6,13 @@ class RealisationsReportCsvExport < BaseCsvExport
 
   private
 
+  def formats
+    @formats ||= {
+      FalseClass => 'pre',
+      TrueClass => 'post'
+    }
+  end
+
   def translation_scope
     'csv_headers.realisations_report'
   end

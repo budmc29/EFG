@@ -24,7 +24,7 @@ class BaseCsvExport
   private
 
   def formats
-    {}
+    @formats ||= {}
   end
 
   def header

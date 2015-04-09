@@ -2,19 +2,27 @@ require 'spec_helper'
 require 'csv'
 
 describe RealisationsReportCsvExport do
-  let!(:realisation1) { FactoryGirl.create(:loan_realisation, realised_on: 1.day.ago.to_date) }
-  let!(:realisation2) { FactoryGirl.create(:loan_realisation, realised_on: 2.day.ago.to_date) }
-  let(:loan1) { realisation1.realised_loan }
-  let(:loan2) { realisation2.realised_loan }
-  let(:lender1) { realisation1.realised_loan.lender }
-  let(:lender2) { realisation2.realised_loan.lender }
-  let(:report_realisations) { RealisationsReport.new(3.days.ago.to_date, Date.today, Lender.all).realisations }
+  let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
+  let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
+  let(:loan1) { FactoryGirl.create(:loan, :realised, lender: lender1, reference: 'abc123') }
+  let(:loan2) { FactoryGirl.create(:loan, :realised, lender: lender2, reference: 'xyz123') }
+  let(:realisations) { report.realisations }
+  let(:report) {
+    RealisationsReport.new(
+      Date.new(2015, 4, 1),
+      Date.new(2015, 4, 2),
+      Lender.all
+    )
+  }
+  let(:user) { FactoryGirl.create(:cfe_user) }
 
-  subject(:export) { RealisationsReportCsvExport.new(report_realisations) }
+  let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(101_00), realised_loan: loan1, realised_on: Date.new(2015,4,1)) }
+  let!(:realisation2) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(202_99), realised_loan: loan2, realised_on: Date.new(2015,4,2)) }
 
-  its(:generate) { should == %Q[Lender Name,Loan Reference,Realised On,Realised Amount,Post Claim Limit?
-#{lender1.name},#{loan1.reference},#{realisation1.realised_on},#{realisation1.realised_amount},#{realisation1.post_claim_limit}
-#{lender2.name},#{loan2.reference},#{realisation2.realised_on},#{realisation2.realised_amount},#{realisation2.post_claim_limit}
-] }
+  subject { RealisationsReportCsvExport.new(realisations) }
 
+  its(:generate) { should == 'Lender Name,Loan Reference,Realised On,Realised Amount,Post Claim Limit?
+Lender1,abc123,2015-04-01,101.00,pre
+Lender2,xyz123,2015-04-02,202.99,post
+' }
 end
