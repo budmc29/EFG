@@ -39,7 +39,7 @@
 
 <p><strong>Data extract found <%= pluralize @recoveries_report.recoveries.size, 'row' %>.</strong></p>
 
-<% if @recoveries_report.recoveries.size > 0 %>
+<% if @recoveries_report.any_recoveries? %>
 
   <p>You can download the report by clicking the Download button below.</p>
   <%= simple_form_for(@recoveries_report, url: recoveries_reports_path(format: 'csv'), html: { class: 'csv-download' }) do |f| %>

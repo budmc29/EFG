@@ -19,6 +19,10 @@ class RecoveriesReport
     super(options)
   end
 
+  def any_recoveries?
+    recoveries.size > 0
+  end
+
   def allowed_lenders
     return lenders_whitelist.order_by_name.unshift(ALL_LENDERS_OPTION) if lenders_whitelist.count > 1
     lenders_whitelist

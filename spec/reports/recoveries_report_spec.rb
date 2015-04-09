@@ -80,6 +80,26 @@ describe RecoveriesReport do
       }
     }
 
+    describe "any_recoveries?" do
+      let(:empty_recoveries_options) {
+        {
+          lender_ids: [lender1.id],
+          start_date: 20.days.ago.to_date,
+          end_date: 20.days.ago.to_date
+        }
+      }
+
+      it "returns false when there aren't any recoveries" do
+        empty_report = RecoveriesReport.new(cfe_user, empty_recoveries_options)
+        expect(empty_report.any_recoveries?).to eql false
+      end
+
+      it "returns true when there are recoveries" do
+        report = RecoveriesReport.new(cfe_user, report_options)
+        expect(report.any_recoveries?).to eql true
+      end
+    end
+
     context 'when user is cfe_user' do
       subject(:report) { RecoveriesReport.new(cfe_user, report_options) }
 
