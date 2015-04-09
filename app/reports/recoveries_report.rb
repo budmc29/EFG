@@ -19,13 +19,13 @@ class RecoveriesReport
     super(options)
   end
 
-  def any_recoveries?
-    recoveries.size > 0
-  end
-
   def allowed_lenders
     return lenders_whitelist.order_by_name.unshift(ALL_LENDERS_OPTION) if lenders_whitelist.count > 1
     lenders_whitelist
+  end
+
+  def any_recoveries?
+    recoveries.size > 0
   end
 
   def lender_ids=(ids = [])
@@ -53,10 +53,6 @@ private
 
   attr_reader :current_user
 
-  def lenders_whitelist
-    current_user.lenders
-  end
-
   def end_date_is_not_after_start_date
     if start_date.present? &&
         end_date.present? &&
@@ -64,6 +60,10 @@ private
       errors.add(:start_date, :must_be_before_end_date)
       errors.add(:end_date, :must_be_after_start_date)
     end
+  end
+
+  def lenders_whitelist
+    current_user.lenders
   end
 
 end
