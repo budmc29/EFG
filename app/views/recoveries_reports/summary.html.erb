@@ -21,11 +21,11 @@
 
     <tr>
       <th>Report Start Date</th>
-      <td><%= @recoveries_report.start_date %></td>
+      <td><%= @recoveries_report.start_date.to_s(:screen) %></td>
     </tr>
     <tr>
       <th>Report End Date</th>
-      <td><%= @recoveries_report.end_date %></td>
+      <td><%= @recoveries_report.end_date.to_s(:screen) %></td>
     </tr>
     <% if @recoveries_report.allowed_lenders.count > 1 %>
       <tr>
