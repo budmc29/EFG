@@ -78,96 +78,69 @@ describe RealisationsReport do
     end
   end
 
-  describe 'with valid options' do
-    let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,
-                                                  realised_amount: Money.new(1_000_00),
-                                                  realised_on: 1.day.ago) }
-    let!(:realisation2) { FactoryGirl.create(:loan_realisation, :post,
-                                                  realised_amount: Money.new(2_000_00),
-                                                  realised_on: 4.day.ago) }
-    let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post,
-                                                  realised_amount: Money.new(3_000_00),
-                                                  realised_on: 1.day.ago) }
-    let!(:realisation4) { FactoryGirl.create(:loan_realisation, :post,
-                                                  realised_amount: Money.new(4_000_00),
-                                                  realised_on: 3.day.ago) }
-    let!(:realisation5) { FactoryGirl.create(:loan_realisation, :pre,
-                                                  realised_amount: Money.new(4_000_00),
-                                                  realised_on: 1.day.ago) }
+  describe '#realisations' do
+    let(:loan1) { FactoryGirl.create(:loan, lender: lender1, reference: 'abc') }
+    let(:loan2) { FactoryGirl.create(:loan, lender: lender2, reference: 'lmn') }
+    let(:loan3) { FactoryGirl.create(:loan, lender: lender3, reference: 'xyz') }
+    let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
+    let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
+    let(:lender3) { FactoryGirl.create(:lender, name: 'Lender3') }
+    let(:realisations) { report.realisations.to_a }
+    let(:report) { RealisationsReport.new(user, report_options) }
 
-    let(:lender1) { realisation1.realised_loan.lender }
-    let(:lender2) { realisation2.realised_loan.lender }
-    let(:lender3) { realisation3.realised_loan.lender }
-    let(:lender4) { realisation4.realised_loan.lender }
-    let(:lender5) { realisation5.realised_loan.lender }
-
-    let(:report_options) {
-      {
-        lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
-        start_date: 2.days.ago,
-        end_date: Date.today
-      }
-    }
+    let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(1_000_00), realised_loan: loan1, realised_on: 3.day.ago) }
+    let!(:realisation2) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(2_000_00), realised_loan: loan2, realised_on: 2.day.ago) }
+    let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(3_000_00), realised_loan: loan3, realised_on: 1.day.ago) }
 
     context 'when user is cfe_user' do
-      let(:user) { FactoryGirl.create(:cfe_user) }
-      subject(:report) { RealisationsReport.new(user, report_options) }
-
-      its(:allowed_lenders) {
-        should match_array(user.lenders << RealisationsReport::ALL_LENDERS_OPTION)
+      let(:report_options) {
+        {
+          lender_ids: [lender1.id, lender2.id, lender3.id],
+          start_date: 2.days.ago,
+          end_date: Date.today
+        }
       }
+      let(:user) { FactoryGirl.create(:cfe_user) }
 
-      its(:lender_ids) { should match_array([lender1.id, lender2.id, lender3.id, lender4.id]) }
-      its(:size) { should == 2 }
+      it do
+        expect(realisations.size).to eql(2)
 
-      describe '#realisations' do
-        subject(:realisations) { report.realisations }
+        first = realisations[0]
+        second = realisations[1]
 
-        its(:size) { should == 2 }
+        expect(first.loan_reference).to eql('lmn')
+        expect(first.realised_on).to eql(2.day.ago.to_date)
+        expect(first.lender_name).to eql('Lender2')
+        expect(first.realised_amount).to eql(Money.new(2_000_00))
+        expect(first.post_claim_limit).to eql(false)
 
-        describe 'the first record' do
-          subject { realisations.first }
-
-          its(:loan_reference) { should == realisation1.realised_loan.reference }
-          its(:realised_on) { should == 1.day.ago.to_date }
-          its(:lender_name) { should == lender1.name }
-          its(:realised_amount) { should == realisation1.realised_amount }
-          its(:post_claim_limit) { should == realisation1.post_claim_limit }
-        end
-
-        describe 'the last record' do
-          subject { realisations.last }
-
-          its(:loan_reference) { should == realisation3.realised_loan.reference }
-          its(:realised_on) { should == 1.day.ago.to_date }
-          its(:lender_name) { should == lender3.name }
-          its(:realised_amount) { should == realisation3.realised_amount }
-          its(:post_claim_limit) { should == realisation3.post_claim_limit }
-        end
+        expect(second.loan_reference).to eql('xyz')
+        expect(second.realised_on).to eql(1.day.ago.to_date)
+        expect(second.lender_name).to eql('Lender3')
+        expect(second.realised_amount).to eql(Money.new(3_000_00))
+        expect(second.post_claim_limit).to eql(true)
       end
     end
 
     context 'when user is lender_user' do
-      let(:user) { FactoryGirl.create(:lender_user, lender: lender1) }
-      subject(:report) { RealisationsReport.new(user, report_options) }
+      let(:report_options) {
+        {
+          start_date: 2.days.ago,
+          end_date: Date.today
+        }
+      }
+      let(:user) { FactoryGirl.create(:lender_user, lender: lender2) }
 
-      its(:lender_ids) { should match_array([user.lender_id]) }
-      its(:size) { should == 1 }
+      it do
+        expect(realisations.size).to eql(1)
 
-      describe '#realisations' do
-        subject(:realisations) { report.realisations }
+        first = realisations[0]
 
-        its(:size) { should == 1 }
-
-        describe 'the only record' do
-          subject { realisations.first }
-
-          its(:loan_reference) { should == realisation1.realised_loan.reference }
-          its(:realised_on) { should == 1.day.ago.to_date }
-          its(:lender_name) { should == lender1.name }
-          its(:realised_amount) { should == realisation1.realised_amount }
-          its(:post_claim_limit) { should == realisation1.post_claim_limit }
-        end
+        expect(first.loan_reference).to eql('lmn')
+        expect(first.realised_on).to eql(2.day.ago.to_date)
+        expect(first.lender_name).to eql('Lender2')
+        expect(first.realised_amount).to eql(Money.new(2_000_00))
+        expect(first.post_claim_limit).to eql(false)
       end
     end
   end
