@@ -1,7 +1,15 @@
 class RealisationsReportCsvExport < BaseCsvExport
 
   def fields
-    [ :lender_name, :loan_reference, :realised_on, :realised_amount, :post_claim_limit ]
+    [
+      :lender_name,
+      :loan_reference,
+      :scheme,
+      :loan_phase,
+      :realised_on,
+      :realised_amount,
+      :post_claim_limit
+    ]
   end
 
   private

@@ -4,8 +4,10 @@ require 'csv'
 describe RealisationsReportCsvExport do
   let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
   let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
-  let(:loan1) { FactoryGirl.create(:loan, :realised, lender: lender1, reference: 'abc123') }
-  let(:loan2) { FactoryGirl.create(:loan, :realised, lender: lender2, reference: 'xyz123') }
+  let(:lending_limit1) { FactoryGirl.create(:lending_limit, lender: lender1, phase_id: 5) }
+  let(:lending_limit2) { FactoryGirl.create(:lending_limit, lender: lender2, phase_id: 6) }
+  let(:loan1) { FactoryGirl.create(:loan, :efg, :realised, lender: lender1, lending_limit: lending_limit1, reference: 'abc123') }
+  let(:loan2) { FactoryGirl.create(:loan, :legacy_sflg, :realised, lender: lender2, lending_limit: lending_limit2, reference: 'xyz123') }
   let(:realisations) { report.realisations }
   let(:report) {
     RealisationsReport.new(user, {
@@ -21,8 +23,8 @@ describe RealisationsReportCsvExport do
 
   subject { RealisationsReportCsvExport.new(realisations) }
 
-  its(:generate) { should == 'Lender Name,Loan Reference,Realised On,Realised Amount,Post Claim Limit?
-Lender1,abc123,2015-04-01,101.00,pre
-Lender2,xyz123,2015-04-02,202.99,post
+  its(:generate) { should == 'Lender Name,Loan Reference,Loan Scheme,Loan Phase,Realised On,Realised Amount,Post Claim Limit?
+Lender1,abc123,EFG,5,2015-04-01,101.00,pre
+Lender2,xyz123,Legacy,6,2015-04-02,202.99,post
 ' }
 end
