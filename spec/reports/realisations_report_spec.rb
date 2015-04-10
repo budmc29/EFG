@@ -1,46 +1,18 @@
 require 'spec_helper'
 
 describe RealisationsReport do
-  let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(1_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:realisation2) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(2_000_00),
-                                                realised_on: 4.day.ago) }
-  let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(3_000_00),
-                                                realised_on: 1.day.ago) }
-  let!(:realisation4) { FactoryGirl.create(:loan_realisation, :post,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 3.day.ago) }
-  let!(:realisation5) { FactoryGirl.create(:loan_realisation, :pre,
-                                                realised_amount: Money.new(4_000_00),
-                                                realised_on: 1.day.ago) }
-
-  let(:lender1) { realisation1.realised_loan.lender }
-  let(:lender2) { realisation2.realised_loan.lender }
-  let(:lender3) { realisation3.realised_loan.lender }
-  let(:lender4) { realisation4.realised_loan.lender }
-  let(:lender5) { realisation5.realised_loan.lender }
-
   describe 'validations' do
     let(:end_date) { Date.today }
-    let(:lender_ids) { [lender1.id] }
     let(:report_options) {
       {
         'end_date' => end_date,
-        'lender_ids' => lender_ids,
         'start_date' => start_date
       }
     }
     let(:start_date) { 2.days.ago }
-    let(:user) { FactoryGirl.create(:lender_user, lender: lender1) }
+    let(:user) { FactoryGirl.build(:cfe_user) }
 
     subject(:report) { RealisationsReport.new(user, report_options) }
-
-    context 'with valid options' do
-      it { should be_valid }
-    end
 
     context 'with empty options' do
       let(:report_options) { {} }
@@ -63,8 +35,22 @@ describe RealisationsReport do
       it { should be_invalid }
     end
 
-    context 'as a CfE user' do
+    context 'as a user with many lenders' do
+      let(:lender1) { FactoryGirl.create(:lender) }
+      let(:lender2) { FactoryGirl.create(:lender) }
+      let(:lender_ids) { [lender1.id, lender2.id] }
       let(:user) { FactoryGirl.create(:cfe_user) }
+      let(:report_options) {
+        {
+          'end_date' => end_date,
+          'lender_ids' => lender_ids,
+          'start_date' => start_date
+        }
+      }
+
+      context 'with valid options' do
+        it { should be_valid }
+      end
 
       context 'with nil lender_ids' do
         let(:lender_ids) { nil }
@@ -82,7 +68,9 @@ describe RealisationsReport do
       end
     end
 
-    context 'as a Lender user' do
+    context 'as a user with one lender' do
+      let(:user) { FactoryGirl.create(:lender_user) }
+
       context 'with empty lender_ids' do
         let(:lender_ids) { nil }
         it { should be_valid }
@@ -91,6 +79,28 @@ describe RealisationsReport do
   end
 
   describe 'with valid options' do
+    let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,
+                                                  realised_amount: Money.new(1_000_00),
+                                                  realised_on: 1.day.ago) }
+    let!(:realisation2) { FactoryGirl.create(:loan_realisation, :post,
+                                                  realised_amount: Money.new(2_000_00),
+                                                  realised_on: 4.day.ago) }
+    let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post,
+                                                  realised_amount: Money.new(3_000_00),
+                                                  realised_on: 1.day.ago) }
+    let!(:realisation4) { FactoryGirl.create(:loan_realisation, :post,
+                                                  realised_amount: Money.new(4_000_00),
+                                                  realised_on: 3.day.ago) }
+    let!(:realisation5) { FactoryGirl.create(:loan_realisation, :pre,
+                                                  realised_amount: Money.new(4_000_00),
+                                                  realised_on: 1.day.ago) }
+
+    let(:lender1) { realisation1.realised_loan.lender }
+    let(:lender2) { realisation2.realised_loan.lender }
+    let(:lender3) { realisation3.realised_loan.lender }
+    let(:lender4) { realisation4.realised_loan.lender }
+    let(:lender5) { realisation5.realised_loan.lender }
+
     let(:report_options) {
       {
         lender_ids: [lender1.id, lender2.id, lender3.id, lender4.id],
