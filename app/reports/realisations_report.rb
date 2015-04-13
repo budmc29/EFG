@@ -52,12 +52,14 @@ class RealisationsReport
     @realisations ||= LoanRealisation
       .select(
         :id,
+        :post_claim_limit,
         :realised_amount,
         :realised_loan_id,
         :realised_on,
-        :post_claim_limit,
+        'lenders.name AS lender_name',
+        'loans.loan_scheme AS loan_scheme',
+        'loans.loan_source AS loan_source',
         'loans.reference AS loan_reference',
-        'lenders.name AS lender_name'
       )
       .joins(realised_loan: :lender)
       .where(realised_on: start_date..end_date)

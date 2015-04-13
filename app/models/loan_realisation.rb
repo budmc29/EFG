@@ -17,4 +17,14 @@ class LoanRealisation < ActiveRecord::Base
   scope :post_claim_limit, -> { where(post_claim_limit: true) }
 
   format :realised_amount, with: MoneyFormatter.new
+
+  def scheme
+    if loan_source == Loan::LEGACY_SFLG_SOURCE
+      'Legacy'
+    elsif loan_scheme == Loan::SFLG_SCHEME
+      'New'
+    else
+      'EFG'
+    end
+  end
 end

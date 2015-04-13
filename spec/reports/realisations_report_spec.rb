@@ -79,9 +79,9 @@ describe RealisationsReport do
   end
 
   describe '#realisations' do
-    let(:loan1) { FactoryGirl.create(:loan, lender: lender1, reference: 'abc') }
-    let(:loan2) { FactoryGirl.create(:loan, lender: lender2, reference: 'lmn') }
-    let(:loan3) { FactoryGirl.create(:loan, lender: lender3, reference: 'xyz') }
+    let(:loan1) { FactoryGirl.create(:loan, :legacy_sflg, lender: lender1, reference: 'abc') }
+    let(:loan2) { FactoryGirl.create(:loan, :sflg,        lender: lender2, reference: 'lmn') }
+    let(:loan3) { FactoryGirl.create(:loan, :efg,         lender: lender3, reference: 'xyz') }
     let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
     let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
     let(:lender3) { FactoryGirl.create(:lender, name: 'Lender3') }
@@ -91,34 +91,45 @@ describe RealisationsReport do
     let!(:realisation1) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(1_000_00), realised_loan: loan1, realised_on: 3.day.ago) }
     let!(:realisation2) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(2_000_00), realised_loan: loan2, realised_on: 2.day.ago) }
     let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(3_000_00), realised_loan: loan3, realised_on: 1.day.ago) }
+    let!(:realisation4) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(4_000_00), realised_loan: loan3, realised_on: Date.current) }
 
     context 'when user is cfe_user' do
       let(:report_options) {
         {
           lender_ids: [lender1.id, lender2.id, lender3.id],
-          start_date: 2.days.ago,
-          end_date: Date.today
+          start_date: 3.days.ago,
+          end_date: 1.day.ago
         }
       }
       let(:user) { FactoryGirl.create(:cfe_user) }
 
       it do
-        expect(realisations.size).to eql(2)
+        expect(realisations.size).to eql(3)
 
         first = realisations[0]
         second = realisations[1]
+        third = realisations[2]
 
-        expect(first.loan_reference).to eql('lmn')
-        expect(first.realised_on).to eql(2.day.ago.to_date)
-        expect(first.lender_name).to eql('Lender2')
-        expect(first.realised_amount).to eql(Money.new(2_000_00))
+        expect(first.loan_reference).to eql('abc')
+        expect(first.realised_on).to eql(3.day.ago.to_date)
+        expect(first.scheme).to eql('Legacy')
+        expect(first.lender_name).to eql('Lender1')
+        expect(first.realised_amount).to eql(Money.new(1_000_00))
         expect(first.post_claim_limit).to eql(false)
 
-        expect(second.loan_reference).to eql('xyz')
-        expect(second.realised_on).to eql(1.day.ago.to_date)
-        expect(second.lender_name).to eql('Lender3')
-        expect(second.realised_amount).to eql(Money.new(3_000_00))
-        expect(second.post_claim_limit).to eql(true)
+        expect(second.loan_reference).to eql('lmn')
+        expect(second.realised_on).to eql(2.day.ago.to_date)
+        expect(second.scheme).to eql('New')
+        expect(second.lender_name).to eql('Lender2')
+        expect(second.realised_amount).to eql(Money.new(2_000_00))
+        expect(second.post_claim_limit).to eql(false)
+
+        expect(third.loan_reference).to eql('xyz')
+        expect(third.realised_on).to eql(1.day.ago.to_date)
+        expect(third.scheme).to eql('EFG')
+        expect(third.lender_name).to eql('Lender3')
+        expect(third.realised_amount).to eql(Money.new(3_000_00))
+        expect(third.post_claim_limit).to eql(true)
       end
     end
 
@@ -126,7 +137,7 @@ describe RealisationsReport do
       let(:report_options) {
         {
           start_date: 2.days.ago,
-          end_date: Date.today
+          end_date: Date.current
         }
       }
       let(:user) { FactoryGirl.create(:lender_user, lender: lender2) }
@@ -138,6 +149,7 @@ describe RealisationsReport do
 
         expect(first.loan_reference).to eql('lmn')
         expect(first.realised_on).to eql(2.day.ago.to_date)
+        expect(first.scheme).to eql('New')
         expect(first.lender_name).to eql('Lender2')
         expect(first.realised_amount).to eql(Money.new(2_000_00))
         expect(first.post_claim_limit).to eql(false)
