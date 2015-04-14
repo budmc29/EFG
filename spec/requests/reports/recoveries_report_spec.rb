@@ -27,7 +27,7 @@ describe 'Recoveries report' do
   end
 
   context 'as an CFE user' do
-    let!(:current_user) { FactoryGirl.create(:cfe_user) }
+    let(:current_user) { FactoryGirl.create(:cfe_user) }
 
     context 'when selecting particular lenders' do
       it 'outputs a CSV realisation report' do
@@ -74,7 +74,7 @@ describe 'Recoveries report' do
         expect(page).to have_text 'Data extract found 4 rows'
         expect(page).to have_text "Report Start Date 06/04/2015"
         expect(page).to have_text "Report End Date 08/04/2015"
-        expect(page).to have_text "Lenders #{Lender.all.map(&:name).join(', ')}"
+        expect(page).to have_text "Lenders #{Lender.order(:name).pluck(:name).join(', ')}"
         click_button 'Download Report'
 
         expect(page.response_headers['Content-Type']).to include('text/csv')
@@ -109,8 +109,8 @@ describe 'Recoveries report' do
 
   end
 
-  context 'as an lender user' do
-    let!(:current_user) { FactoryGirl.create(:lender_user, lender: lender1) }
+  context 'as a lender user' do
+    let(:current_user) { FactoryGirl.create(:lender_user, lender: lender1) }
 
     it "outputs a CSV realisation report for the current user's lender" do
       visit root_path
