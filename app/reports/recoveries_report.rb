@@ -11,7 +11,9 @@ class RecoveriesReport
 
   attr_reader :lender_ids
 
-  validates_presence_of :start_date, :end_date, :lender_ids
+  validates_presence_of :end_date
+  validates_presence_of :lender_ids
+  validates_presence_of :start_date
   validate :end_date_is_not_after_start_date
 
   def initialize(current_user, options={})
