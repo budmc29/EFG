@@ -57,11 +57,12 @@ class RealisationsReport
         :realised_loan_id,
         :realised_on,
         'lenders.name AS lender_name',
+        'lending_limits.phase_id AS loan_phase',
         'loans.loan_scheme AS loan_scheme',
         'loans.loan_source AS loan_source',
         'loans.reference AS loan_reference',
       )
-      .joins(realised_loan: :lender)
+      .joins(realised_loan: [:lender, :lending_limit])
       .where(realised_on: start_date..end_date)
       .where(loans: { lender_id: lender_ids })
   end

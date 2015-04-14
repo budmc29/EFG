@@ -79,12 +79,15 @@ describe RealisationsReport do
   end
 
   describe '#realisations' do
-    let(:loan1) { FactoryGirl.create(:loan, :legacy_sflg, lender: lender1, reference: 'abc') }
-    let(:loan2) { FactoryGirl.create(:loan, :sflg,        lender: lender2, reference: 'lmn') }
-    let(:loan3) { FactoryGirl.create(:loan, :efg,         lender: lender3, reference: 'xyz') }
+    let(:loan1) { FactoryGirl.create(:loan, :legacy_sflg, lender: lender1, lending_limit: lending_limit1, reference: 'abc') }
+    let(:loan2) { FactoryGirl.create(:loan, :sflg,        lender: lender2, lending_limit: lending_limit2, reference: 'lmn') }
+    let(:loan3) { FactoryGirl.create(:loan, :efg,         lender: lender3, lending_limit: lending_limit3, reference: 'xyz') }
     let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
     let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
     let(:lender3) { FactoryGirl.create(:lender, name: 'Lender3') }
+    let(:lending_limit1) { FactoryGirl.create(:lending_limit, lender: lender1, phase_id: 3) }
+    let(:lending_limit2) { FactoryGirl.create(:lending_limit, lender: lender2, phase_id: 4) }
+    let(:lending_limit3) { FactoryGirl.create(:lending_limit, lender: lender3, phase_id: 5) }
     let(:realisations) { report.realisations.to_a }
     let(:report) { RealisationsReport.new(user, report_options) }
 
@@ -110,6 +113,7 @@ describe RealisationsReport do
         second = realisations[1]
         third = realisations[2]
 
+        expect(first.loan_phase).to eql(3)
         expect(first.loan_reference).to eql('abc')
         expect(first.realised_on).to eql(3.day.ago.to_date)
         expect(first.scheme).to eql('Legacy')
@@ -117,6 +121,7 @@ describe RealisationsReport do
         expect(first.realised_amount).to eql(Money.new(1_000_00))
         expect(first.post_claim_limit).to eql(false)
 
+        expect(second.loan_phase).to eql(4)
         expect(second.loan_reference).to eql('lmn')
         expect(second.realised_on).to eql(2.day.ago.to_date)
         expect(second.scheme).to eql('New')
@@ -124,6 +129,7 @@ describe RealisationsReport do
         expect(second.realised_amount).to eql(Money.new(2_000_00))
         expect(second.post_claim_limit).to eql(false)
 
+        expect(third.loan_phase).to eql(5)
         expect(third.loan_reference).to eql('xyz')
         expect(third.realised_on).to eql(1.day.ago.to_date)
         expect(third.scheme).to eql('EFG')
@@ -147,6 +153,7 @@ describe RealisationsReport do
 
         first = realisations[0]
 
+        expect(first.loan_phase).to eql(4)
         expect(first.loan_reference).to eql('lmn')
         expect(first.realised_on).to eql(2.day.ago.to_date)
         expect(first.scheme).to eql('New')
