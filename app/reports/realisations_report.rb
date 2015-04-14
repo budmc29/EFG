@@ -62,7 +62,8 @@ class RealisationsReport
         'loans.loan_source AS loan_source',
         'loans.reference AS loan_reference',
       )
-      .joins(realised_loan: [:lender, :lending_limit])
+      .joins(realised_loan: :lender)
+      .joins('LEFT OUTER JOIN lending_limits ON lending_limits.id = loans.lending_limit_id')
       .where(realised_on: start_date..end_date)
       .where(loans: { lender_id: lender_ids })
   end

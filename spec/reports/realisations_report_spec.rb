@@ -79,13 +79,12 @@ describe RealisationsReport do
   end
 
   describe '#realisations' do
-    let(:loan1) { FactoryGirl.create(:loan, :legacy_sflg, lender: lender1, lending_limit: lending_limit1, reference: 'abc') }
+    let(:loan1) { FactoryGirl.create(:loan, :legacy_sflg, lender: lender1, lending_limit: nil,            reference: 'abc') }
     let(:loan2) { FactoryGirl.create(:loan, :sflg,        lender: lender2, lending_limit: lending_limit2, reference: 'lmn') }
     let(:loan3) { FactoryGirl.create(:loan, :efg,         lender: lender3, lending_limit: lending_limit3, reference: 'xyz') }
     let(:lender1) { FactoryGirl.create(:lender, name: 'Lender1') }
     let(:lender2) { FactoryGirl.create(:lender, name: 'Lender2') }
     let(:lender3) { FactoryGirl.create(:lender, name: 'Lender3') }
-    let(:lending_limit1) { FactoryGirl.create(:lending_limit, lender: lender1, phase_id: 3) }
     let(:lending_limit2) { FactoryGirl.create(:lending_limit, lender: lender2, phase_id: 4) }
     let(:lending_limit3) { FactoryGirl.create(:lending_limit, lender: lender3, phase_id: 5) }
     let(:realisations) { report.realisations.to_a }
@@ -95,6 +94,11 @@ describe RealisationsReport do
     let!(:realisation2) { FactoryGirl.create(:loan_realisation, :pre,  realised_amount: Money.new(2_000_00), realised_loan: loan2, realised_on: 2.day.ago) }
     let!(:realisation3) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(3_000_00), realised_loan: loan3, realised_on: 1.day.ago) }
     let!(:realisation4) { FactoryGirl.create(:loan_realisation, :post, realised_amount: Money.new(4_000_00), realised_loan: loan3, realised_on: Date.current) }
+
+    before do
+      # The loan factory always adds a lending limit but we don't want one.
+      loan1.update_column(:lending_limit_id, nil)
+    end
 
     context 'when user is cfe_user' do
       let(:report_options) {
@@ -113,7 +117,7 @@ describe RealisationsReport do
         second = realisations[1]
         third = realisations[2]
 
-        expect(first.loan_phase).to eql(3)
+        expect(first.loan_phase).to be_nil
         expect(first.loan_reference).to eql('abc')
         expect(first.realised_on).to eql(3.day.ago.to_date)
         expect(first.scheme).to eql('Legacy')
