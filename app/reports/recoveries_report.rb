@@ -16,8 +16,8 @@ class RecoveriesReport
   validates_presence_of :start_date
   validate :end_date_is_not_after_start_date
 
-  def initialize(current_user, options={})
-    @current_user = current_user
+  def initialize(user, options={})
+    @user = user
     super(options)
   end
 
@@ -57,7 +57,7 @@ class RecoveriesReport
 
 private
 
-  attr_reader :current_user
+  attr_reader :user
 
   def end_date_is_not_after_start_date
     if start_date.present? &&
@@ -69,7 +69,7 @@ private
   end
 
   def lenders_whitelist
-    current_user.lenders
+    user.lenders
   end
 
 end
