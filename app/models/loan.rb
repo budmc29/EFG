@@ -278,11 +278,11 @@ class Loan < ActiveRecord::Base
   end
 
   def guarantee_rate
-    read_attribute(:guarantee_rate) || rules.loan_category_guarantee_rate
+    super || rules.loan_category_guarantee_rate
   end
 
   def premium_rate
-    read_attribute(:premium_rate) || rules.loan_category_premium_rate(loan_category_id)
+    super || rules.loan_category_premium_rate(loan_category_id)
   end
 
   def sflg?
