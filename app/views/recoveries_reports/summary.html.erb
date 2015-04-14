@@ -27,7 +27,8 @@
       <th>Report End Date</th>
       <td><%= @recoveries_report.end_date.to_s(:screen) %></td>
     </tr>
-    <% if @recoveries_report.allowed_lenders.count > 1 %>
+
+    <% if @recoveries_report.must_select_lenders? %>
       <tr>
         <th>Lenders</th>
         <td><%= @recoveries_report.lender_names.join(', ') %></td>
@@ -39,7 +40,7 @@
 
 <p><strong>Data extract found <%= pluralize @recoveries_report.size, 'row' %>.</strong></p>
 
-<% if @recoveries_report.any_recoveries? %>
+<% if @recoveries_report.any? %>
 
   <p>You can download the report by clicking the Download button below.</p>
   <%= simple_form_for(@recoveries_report, url: recoveries_reports_path(format: 'csv'), html: { class: 'csv-download' }) do |f| %>

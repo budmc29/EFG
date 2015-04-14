@@ -6,7 +6,7 @@ class RecoveriesReportCsvExport < BaseCsvExport
       :loan_reference,
       :amount_due_to_dti,
       :recovered_on,
-      :realised,
+      :realise_flag,
     ]
   end
 
@@ -14,12 +14,8 @@ class RecoveriesReportCsvExport < BaseCsvExport
 
   def formats
     @formats ||= {
-      Fixnum => ->(n){
-        case n
-        when 1 then "realised"
-        when 0 then "not realised"
-        end
-      }
+      FalseClass => 'not realised',
+      TrueClass => 'realised'
     }
   end
 

@@ -18,29 +18,36 @@ class RecoveriesReport
 
   def initialize(user, options={})
     @user = user
+
+    if !must_select_lenders?
+      options['lender_ids'] = [ALL_LENDERS_OPTION.id]
+    end
+
     super(options)
   end
 
   def allowed_lenders
-    return lenders_whitelist.order_by_name.unshift(ALL_LENDERS_OPTION) if lenders_whitelist.count > 1
-    lenders_whitelist
+    user_lenders.order_by_name.unshift(ALL_LENDERS_OPTION)
   end
 
-  def any_recoveries?
-    recoveries.size > 0
+  def any?
+    size > 0
   end
 
-  def lender_ids=(ids = [])
-    @lenders = if ids.include? 'ALL'
-      lenders_whitelist
+  def lender_ids=(ids)
+    @lender_ids = if Array(ids).include?(ALL_LENDERS_OPTION.id)
+      user_lenders.pluck(:id)
     else
-      Lender.where(id: ids).select { |lender| allowed_lenders.include? lender }
+      user_lenders.where(id: ids).pluck(:id)
     end
-    @lender_ids = @lenders.map(&:id)
   end
 
   def lender_names
-    @lenders.map(&:name)
+    user_lenders.where(id: lender_ids).order_by_name.pluck(:name)
+  end
+
+  def must_select_lenders?
+    user_lenders.count > 1
   end
 
   def recoveries
@@ -48,7 +55,7 @@ class RecoveriesReport
       .joins(:loan => :lender)
       .where(recovered_on: start_date..end_date,
             'loans.lender_id' => lender_ids)
-      .select('recoveries.*, loans.reference AS loan_reference, lenders.name AS lender_name, realise_flag AS realised')
+      .select('recoveries.*, loans.reference AS loan_reference, lenders.name AS lender_name, realise_flag')
   end
 
   def size
@@ -66,8 +73,8 @@ private
     end
   end
 
-  def lenders_whitelist
-    user.lenders
+  def user_lenders
+    @user_lenders ||= user.lenders
   end
 
 end

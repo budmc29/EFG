@@ -27,15 +27,6 @@ describe RecoveriesReportCsvExport do
 
   subject(:export) { RecoveriesReportCsvExport.new(report.recoveries) }
 
-  its(:fields) { should == [
-      :lender_name,
-      :loan_reference,
-      :amount_due_to_dti,
-      :recovered_on,
-      :realised,
-    ]
-  }
-
   its(:generate) { should == %Q[Lender Name,Loan Reference,Amount,Recovered On,Realised?
 Lender 1,zyxwvu9876,345.89,2015-04-08,realised
 Lender 2,abcde1234,123.45,2015-04-07,not realised
