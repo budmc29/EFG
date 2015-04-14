@@ -11,9 +11,8 @@ class QuickDateFormatter
       value.to_date
     else
       match = value.to_s.match(%r{^(\d{1,2})/(\d{1,2})/(\d{2,4})$})
-      day, month, year = match[1..3] if match
-
       return unless match
+      day, month, year = match[1..3]
       year = "20#{year}" if year.length == 2
 
       begin
