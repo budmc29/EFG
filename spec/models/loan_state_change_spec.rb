@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanStateChange do
   let(:loan_state_change) { FactoryGirl.build(:loan_state_change) }

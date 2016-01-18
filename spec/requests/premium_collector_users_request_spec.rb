@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'PremiumCollectorUser management' do
   let(:current_user) { FactoryGirl.create(:cfe_admin) }

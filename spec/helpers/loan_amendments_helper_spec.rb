@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanAmendmentsHelper do
   describe "#format_amendment_value" do

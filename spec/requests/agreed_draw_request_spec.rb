@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'agreed draw' do
   let(:current_user) { FactoryGirl.create(:lender_user, lender: loan.lender) }

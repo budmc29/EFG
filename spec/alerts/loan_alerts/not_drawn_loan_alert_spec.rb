@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanAlerts::NotDrawnLoanAlert do
   describe "#start_date" do

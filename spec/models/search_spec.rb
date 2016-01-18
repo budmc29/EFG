@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Search do
   let(:default_search_params) { { 'lender_id' => "1" } }

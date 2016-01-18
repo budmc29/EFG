@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe PremiumScheduleReportsController do
   describe '#new' do

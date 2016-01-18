@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'CfeUser management' do
   let(:current_user) { FactoryGirl.create(:cfe_admin) }

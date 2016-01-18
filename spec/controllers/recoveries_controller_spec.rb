@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe RecoveriesController do
   let(:loan) { FactoryGirl.create(:loan, :settled) }

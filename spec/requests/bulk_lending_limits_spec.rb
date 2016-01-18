@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "bulk creation of lending limits" do
   let(:current_user) { FactoryGirl.create(:cfe_admin) }

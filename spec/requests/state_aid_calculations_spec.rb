@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'state aid calculations' do
   let(:current_lender) { FactoryGirl.create(:lender) }

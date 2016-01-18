@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanNoClaimsController do
   let(:loan) { FactoryGirl.create(:loan, :lender_demand) }

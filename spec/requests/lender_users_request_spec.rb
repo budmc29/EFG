@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'LenderUser management' do
   let(:lender) { FactoryGirl.create(:lender, name: 'Bankers') }

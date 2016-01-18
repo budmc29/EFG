@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe RealisationStatement do
   let(:realisation_statement) { FactoryGirl.build(:realisation_statement) }

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'Managing CfeAdmins as CfeAdmin' do
   let(:current_user) { FactoryGirl.create(:super_user) }

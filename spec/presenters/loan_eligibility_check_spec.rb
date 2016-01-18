@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanEligibilityCheck do
   let(:loan_eligibility_check) { FactoryGirl.build(:loan_eligibility_check) }

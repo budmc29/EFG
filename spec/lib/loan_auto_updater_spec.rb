@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'loan_auto_updater'
 
 describe LoanAutoUpdater do

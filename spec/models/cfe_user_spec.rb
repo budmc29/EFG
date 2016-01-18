@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CfeUser do
   let(:user) { FactoryGirl.build(:cfe_user) }

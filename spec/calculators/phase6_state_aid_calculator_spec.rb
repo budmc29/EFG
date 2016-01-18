@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Phase6StateAidCalculator do
   let(:state_aid_calculator) { Phase6StateAidCalculator.new(loan) }

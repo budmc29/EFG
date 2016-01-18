@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'Update loan lending limit' do
   let(:current_user) { FactoryGirl.create(:lender_user) }

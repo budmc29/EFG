@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanCancelsController do
   let(:loan) { FactoryGirl.create(:loan, :eligible) }

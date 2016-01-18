@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanTransfer::Sflg do
   let(:lender) { FactoryGirl.create(:lender, :with_lending_limit) }

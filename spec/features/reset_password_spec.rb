@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 feature "a user resetting their password" do
   before { ActionMailer::Base.deliveries.clear }

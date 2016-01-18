@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LenderLogo do
   let(:logo) { LenderLogo.new('XX') }

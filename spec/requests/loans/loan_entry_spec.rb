@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'loan entry' do
   let(:lender) { FactoryGirl.create(:lender) }

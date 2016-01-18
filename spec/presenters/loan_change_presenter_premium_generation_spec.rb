@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanChangePresenter, 'next premium collection values' do
   let(:loan) { FactoryGirl.create(:loan, :guaranteed, repayment_duration: 60) }

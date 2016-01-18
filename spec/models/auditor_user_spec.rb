@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe AuditorUser do
   let(:user) { FactoryGirl.build(:auditor_user) }

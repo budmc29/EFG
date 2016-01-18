@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 shared_examples_for 'loan audit report controller action' do
   context 'with auditor user' do

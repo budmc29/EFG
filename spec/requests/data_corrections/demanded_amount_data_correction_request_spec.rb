@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'Demanded Amount Data Correction' do
   include DataCorrectionSpecHelper

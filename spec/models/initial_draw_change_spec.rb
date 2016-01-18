@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe InitialDrawChange do
   it_behaves_like 'LoanModification'

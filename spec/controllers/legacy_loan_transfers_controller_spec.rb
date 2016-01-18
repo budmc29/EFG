@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LegacyLoanTransfersController do
   let(:loan) { FactoryGirl.create(:loan, :guaranteed, :legacy_sflg) }

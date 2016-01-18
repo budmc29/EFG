@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe PremiumScheduleHelper do
   describe "premiums_table_rows" do

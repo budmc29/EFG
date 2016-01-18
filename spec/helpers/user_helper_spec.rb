@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserHelper do
   describe '#polymorphic_user_path' do

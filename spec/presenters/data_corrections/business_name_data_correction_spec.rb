@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe BusinessNameDataCorrection do
   it_behaves_like 'a basic data correction presenter', :business_name, 'Bar'

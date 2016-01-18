@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanAlertsController do
   let(:current_lender) { FactoryGirl.create(:lender) }

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "search" do
   let(:current_lender) { FactoryGirl.create(:lender) }

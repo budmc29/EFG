@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LenderAdminPermissions do
   include RefuteMacro

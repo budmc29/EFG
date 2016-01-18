@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UsernamesReminder do
   let(:usernames_reminder) { UsernamesReminder.new(email: 'me@example.com') }

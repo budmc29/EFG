@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ReprofileDrawsLoanChange do
   it_behaves_like 'LoanChangePresenter'

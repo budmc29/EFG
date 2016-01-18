@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanOffersController do
   let(:loan) { FactoryGirl.create(:loan, :completed, :with_premium_schedule) }

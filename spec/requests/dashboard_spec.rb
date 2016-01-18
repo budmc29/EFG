@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'lender dashboard' do
   shared_examples 'dashboard' do

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LenderAdmin do
   let(:user) { FactoryGirl.build(:lender_admin) }

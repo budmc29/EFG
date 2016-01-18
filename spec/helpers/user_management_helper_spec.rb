@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe UserManagementHelper do
   describe '#most_recent_login_time' do

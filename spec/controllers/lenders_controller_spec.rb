@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LendersController do
   let(:lender) { FactoryGirl.create(:lender) }

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe RepaymentFrequencyLoanChange do
   it_behaves_like 'LoanChangePresenter'

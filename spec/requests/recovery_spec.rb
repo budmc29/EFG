@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'loan recovery' do
   let(:current_user) { FactoryGirl.create(:lender_user, lender: loan.lender) }
