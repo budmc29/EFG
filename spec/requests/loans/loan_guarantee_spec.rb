@@ -56,19 +56,17 @@ describe 'loan guarantee' do
   end
 
   it 'allows you to change the lender reference' do
-    Timecop.freeze(loan.facility_letter_date)
+    Timecop.freeze(loan.facility_letter_date) do
+      visit loan_path(loan)
+      click_link 'Guarantee & Initial Draw'
 
-    visit loan_path(loan)
-    click_link 'Guarantee & Initial Draw'
+      fill_in_valid_loan_guarantee_details
+      fill_in "Lender's Loan Reference", with: "MAH REF"
+      click_button 'Submit'
 
-    fill_in_valid_loan_guarantee_details
-    fill_in "Lender's Loan Reference", with: "MAH REF"
-    click_button 'Submit'
-
-    loan = Loan.last!
-    loan.lender_reference.should == "MAH REF"
-
-    Timecop.return
+      loan = Loan.last!
+      loan.lender_reference.should == "MAH REF"
+    end
   end
 
   it 'allows you to change the initial draw amount' do

@@ -59,15 +59,13 @@ describe RepaymentDurationLoanChange do
         let(:loan) { FactoryGirl.create(:loan, :guaranteed, repayment_duration: 24) }
         let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, loan: loan) }
 
-        before do
+        around do |example|
           loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
 
           # The month of second quarter collection.
-          Timecop.freeze(2010, 4, 1)
-        end
-
-        after do
-          Timecop.return
+          Timecop.freeze(2010, 4, 1) do
+            example.run
+          end
         end
 
         it 'must be positive' do
@@ -84,15 +82,13 @@ describe RepaymentDurationLoanChange do
       context 'calculated #repayment_duration' do
         let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, loan: loan) }
 
-        before do
+        around do |example|
           loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
 
           # One month after initial draw date.
-          Timecop.freeze(2010, 2, 1)
-        end
-
-        after do
-          Timecop.return
+          Timecop.freeze(2010, 2, 1) do
+            example.run
+          end
         end
 
         context 'for an EFG loan' do
@@ -160,15 +156,13 @@ describe RepaymentDurationLoanChange do
 
       subject { FactoryGirl.build(:repayment_duration_loan_change, loan: loan, added_months: added_months) }
 
-      before do
+      around do |example|
         loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
 
         # The month of second quarter collection.
-        Timecop.freeze(2010, 4, 1)
-      end
-
-      after do
-        Timecop.return
+        Timecop.freeze(2010, 4, 1) do
+          example.run
+        end
       end
 
       context '£1.2m / 5 years' do
@@ -214,12 +208,13 @@ describe RepaymentDurationLoanChange do
     let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, created_by: user, loan: loan) }
 
     context 'success' do
-      before do
+      around do |example|
         loan.initial_draw_change.update_column :date_of_change, Date.new(2010, 3, 2)
-        Timecop.freeze(2013, 3, 1)
-      end
 
-      after { Timecop.return }
+        Timecop.freeze(2013, 3, 1) do
+          example.run
+        end
+      end
 
       let(:loan_change) { loan.loan_changes.last! }
 
