@@ -123,12 +123,6 @@ describe LoanEligibilityCheck do
   end
 
   describe '#save' do
-    let(:validator) { double(validate: nil) }
-
-    before do
-      allow(loan_eligibility_check).to receive(:eligibility_validator).and_return(validator)
-    end
-
     context 'when there are *no* eligibility errors' do
       before do
         allow(loan_eligibility_check).to receive(:ineligibility_reasons).and_return([])
