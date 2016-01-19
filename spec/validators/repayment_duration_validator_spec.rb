@@ -5,6 +5,7 @@ describe RepaymentDurationValidator do
     Class.new do
       def self.name; 'Klass'; end
       include ActiveModel::Validations
+      attr_reader :loan, :repayment_duration
       validates_with RepaymentDurationValidator
     end
   }

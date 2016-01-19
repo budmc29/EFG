@@ -5,6 +5,7 @@ describe AmountValidator do
     Class.new do
       def self.name; 'Klass'; end
       include ActiveModel::Validations
+      attr_reader :amount
       validates_with AmountValidator, maximum: Money.new(1_000_000_00), minimum: Money.new(1_000_00)
     end
   }

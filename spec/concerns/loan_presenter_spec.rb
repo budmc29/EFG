@@ -62,18 +62,6 @@ describe LoanPresenter do
 
       transition.attributes = {'name' => 'Name'}
     end
-
-    it "should not call methods for read only attributes" do
-      expect(transition).not_to receive(:address=)
-
-      transition.attributes = {'address' => 'address'}
-    end
-
-    it "should not call methods for undefined attributes" do
-      expect(transition).not_to receive(:junk=)
-
-      transition.attributes = {'junk' => 'junk'}
-    end
   end
 
   describe "#save" do

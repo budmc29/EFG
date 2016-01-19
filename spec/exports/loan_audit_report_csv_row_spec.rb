@@ -4,9 +4,9 @@ describe LoanAuditReportCsvRow do
 
   describe "#row" do
 
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryGirl.create(:user, username: 'username') }
 
-    let!(:loan) {
+    let(:loan) {
       loan = FactoryGirl.create(
         :loan,
         reference: 'ABC123',
@@ -33,17 +33,16 @@ describe LoanAuditReportCsvRow do
         updated_at: Time.zone.parse('13/04/2012 14:34')
       )
 
-      # stub custom fields that are created by LoanAuditReport SQL query
-      allow(loan).to receive_messages(
-        lender_reference_code: 'DEF',
-        loan_created_by: user.username,
-        loan_modified_by: user.username,
-        loan_state_change_to_state: Loan::AutoCancelled,
-        loan_state_change_event_id: LoanEvent::Cancel.id,
-        loan_state_change_modified_at: Time.parse('11/06/2012 11:00'),
-        loan_state_change_modified_by: user.username,
-        loan_initial_draw_date: Date.parse('03/06/2012')
-      )
+      # Stub custom fields that are created by LoanAuditReport SQL query.
+      # Define methods on the loan instance to appease `verify_partial_doubles`.
+      def loan.lender_reference_code; 'DEF'; end
+      def loan.loan_created_by; 'username'; end
+      def loan.loan_modified_by; 'username'; end
+      def loan.loan_state_change_to_state; Loan::AutoCancelled; end
+      def loan.loan_state_change_event_id; LoanEvent::Cancel.id; end
+      def loan.loan_state_change_modified_at; Time.parse('11/06/2012 11:00'); end
+      def loan.loan_state_change_modified_by; 'username'; end
+      def loan.loan_initial_draw_date; Date.parse('03/06/2012'); end
 
       loan
     }

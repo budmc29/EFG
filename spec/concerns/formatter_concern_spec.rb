@@ -2,15 +2,16 @@ require 'rails_helper'
 
 describe FormatterConcern do
   module Formatter
-    def self.format; end
-    def self.parse; end
+    def self.format(_); end
+    def self.parse(_); end
   end
 
   let(:klass) {
     Class.new do
       include FormatterConcern
-
       format :foo, with: Formatter
+      def read_attribute(_); end
+      def write_attribute(_, _); end
     end
   }
   let(:instance) { klass.new }

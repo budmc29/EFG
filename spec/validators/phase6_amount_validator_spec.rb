@@ -5,6 +5,7 @@ describe Phase6AmountValidator do
     Class.new do
       def self.name; 'Klass'; end
       include ActiveModel::Validations
+      attr_reader :amount, :repayment_duration
       validates_with Phase6AmountValidator
     end
   }

@@ -4,7 +4,6 @@ require 'csv'
 describe LoanAuditReportCsvExport do
   describe ".header" do
     let(:loan_audit_report_csv_export) { LoanAuditReportCsvExport.new(Loan.all) }
-
     let(:header) { CSV.parse(loan_audit_report_csv_export.first).first }
 
     it "should return array of strings with correct text" do
@@ -44,20 +43,19 @@ describe LoanAuditReportCsvExport do
   end
 
   describe "#generate" do
-
-    let!(:loan) { FactoryGirl.create(:loan) }
-
+    let(:loan) { FactoryGirl.create(:loan) }
     let(:loan_audit_report_mock) { double(LoanAuditReportCsvRow, to_a: row_mock) }
-
-    let(:loan_audit_report_csv_export) { LoanAuditReportCsvExport.new(Loan.all) }
-
+    let(:loan_audit_report_csv_export) { LoanAuditReportCsvExport.new([loan]) }
     let(:row_mock) { Array.new(loan_audit_report_csv_export.fields.size) }
-
     let(:parsed_csv) { CSV.parse(loan_audit_report_csv_export.generate) }
 
-    before(:each) do
+    before do
       allow(loan_audit_report_csv_export).to receive(:csv_row).and_return(loan_audit_report_mock)
-      allow_any_instance_of(Loan).to receive(:loan_state_change_to_state).and_return(Loan::Guaranteed)
+
+      # Appease `verify_partial_doubles`.
+      def loan.loan_state_change_to_state
+        Loan::Guaranteed
+      end
     end
 
     it "should return a row for the header and each loan" do

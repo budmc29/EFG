@@ -5,6 +5,9 @@ describe EligibilityValidator do
     Class.new do
       def self.name; 'Klass'; end
       include ActiveModel::Validations
+      attr_reader :collateral_exhausted, :not_insolvent, :previous_borrowing,
+        :private_residence_charge_required, :reason, :reason_id, :sic,
+        :sic_code, :trading_date, :viable_proposition, :would_you_lend
       validates_with EligibilityValidator
     end
   }
