@@ -21,21 +21,18 @@ gem 'prawn', '0.12.0'
 gem 'progressbar', '0.11.0'
 gem 'rack-ssl-enforcer'
 gem 'rails', '4.1.11'
+gem 'sass-rails', '4.0.2'
 gem 'simple_form', '3.0.2'
 gem 'statsd-ruby', '1.0.0'
+gem 'therubyracer', '0.12'
 gem 'twitter-bootstrap-rails', '2.2.7'
+gem 'uglifier', '1.2.4'
 gem 'uk_postcode'
 gem 'unicorn', '4.6.2'
 gem 'useragent', '0.4.16'
 gem 'weekdays', '1.0.2'
 gem 'whenever', '0.9.2', :require => false
 gem 'will_paginate', '3.0.5'
-
-group :assets do
-  gem 'sass-rails', '4.0.2'
-  gem 'therubyracer', '0.12'
-  gem 'uglifier', '1.2.4'
-end
 
 group :development, :test do
   gem 'brakeman', '2.0.0'
