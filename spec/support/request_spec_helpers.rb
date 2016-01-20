@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module RequestSpecHelpers
 
   def submit_sign_in_form(username, password)

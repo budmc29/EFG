@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class RealiseRecovery
   class NotMarkedAsRealised < RuntimeError
   end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature "a user resetting their password" do
-  after { ActionMailer::Base.deliveries.clear }
+  before { ActionMailer::Base.deliveries.clear }
 
   specify "mails them a reset link, reset's their password and logs them in" do
     user = FactoryGirl.create(:lender_user, username: 'batman', first_name: 'Bruce', last_name: 'Wayne')

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class StateAidInput < CurrencyInput
   def input
     options[:unit] = '€'

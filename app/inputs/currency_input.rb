@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class CurrencyInput < SimpleForm::Inputs::StringInput
   def input
     unit = options[:unit] || '£'

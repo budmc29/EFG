@@ -3,7 +3,7 @@ class LoanCategoryValidators
 
   CategoryB = [
     PercentageValidator.new(attribute: :security_proportion, minimum: 0.1, maximum: 99.9),
-    SecurityTypesValidator.new({})
+    SecurityTypesValidator.new
   ].freeze
 
   CategoryC = [

@@ -34,9 +34,8 @@ class Phase6ClaimLimitCalculator < ClaimLimitCalculator
 
   def non_reduced_loans_cumulative_draw_amount
     @non_reduced_loans_cumulative_draw_amount ||= begin
-      # TODO: use .where.not() when on Rails 4
       amount = cumulative_drawn_amount_relation
-        .where('loan_category_id NOT IN (?)', ReducedLoanCategoryIds)
+        .where.not(loan_category_id: ReducedLoanCategoryIds)
         .sum(:amount_drawn)
 
       Money.new(amount)

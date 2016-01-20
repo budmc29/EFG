@@ -18,9 +18,9 @@ class Phase1Rules
 
   def self.eligibility_check_validations
     [
-      EligibilityValidator.new({}),
+      EligibilityValidator.new,
       AmountValidator.new(minimum: Money.new(1_000_00), maximum: Money.new(1_000_000_00)),
-      RepaymentDurationValidator.new({})
+      RepaymentDurationValidator.new
     ]
   end
 
@@ -46,7 +46,7 @@ class Phase1Rules
 
   def self.repayment_duration_loan_change_validations
     [
-      RepaymentDurationValidator.new({})
+      RepaymentDurationValidator.new
     ]
   end
 
@@ -61,7 +61,7 @@ class Phase1Rules
   def self.update_loan_lending_limit_validations
     [
       AmountValidator.new(minimum: Money.new(1_000_00), maximum: Money.new(1_000_000_00)),
-      RepaymentDurationValidator.new({})
+      RepaymentDurationValidator.new
     ]
   end
 

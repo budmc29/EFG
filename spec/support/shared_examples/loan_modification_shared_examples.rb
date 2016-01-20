@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 shared_examples_for 'LoanModification' do
   describe 'validations' do
     let(:loan_modification) { FactoryGirl.build(described_class.name.underscore) }
