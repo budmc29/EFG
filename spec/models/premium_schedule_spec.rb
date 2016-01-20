@@ -185,14 +185,19 @@ describe PremiumSchedule do
       end
 
       it 'must have a correctly formatted premium_cheque_month' do
-        rescheduled_premium_schedule.premium_cheque_month = 'blah'
-        rescheduled_premium_schedule.should_not be_valid
-        rescheduled_premium_schedule.premium_cheque_month = '1/12'
-        rescheduled_premium_schedule.should_not be_valid
-        rescheduled_premium_schedule.premium_cheque_month = '29/2015'
-        rescheduled_premium_schedule.should_not be_valid
-        rescheduled_premium_schedule.premium_cheque_month = '09/2015'
-        rescheduled_premium_schedule.should be_valid
+        Timecop.freeze(2015, 8, 1) do
+          rescheduled_premium_schedule.premium_cheque_month = 'blah'
+          rescheduled_premium_schedule.should_not be_valid
+
+          rescheduled_premium_schedule.premium_cheque_month = '1/12'
+          rescheduled_premium_schedule.should_not be_valid
+
+          rescheduled_premium_schedule.premium_cheque_month = '29/2015'
+          rescheduled_premium_schedule.should_not be_valid
+
+          rescheduled_premium_schedule.premium_cheque_month = '09/2015'
+          rescheduled_premium_schedule.should be_valid
+        end
       end
 
       it "is not valid when premium cheque month is in the past" do

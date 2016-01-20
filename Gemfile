@@ -55,7 +55,7 @@ group :test do
   gem 'factory_girl_rails', '4.2.0'
   gem 'launchy', '2.1.0'
   gem 'pdf-reader', '1.1.1'
-  gem 'timecop', '0.5.9.1'
+  gem 'timecop'
 end
 
 group :extract do

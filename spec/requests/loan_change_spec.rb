@@ -118,15 +118,16 @@ describe 'loan change' do
   end
 
   context 'repayment_frequency' do
-    before do
-      Timecop.freeze(2010, 9, 1)
-      visit_loan_changes
-      click_link 'Repayment Frequency'
+    around do |example|
+      Timecop.freeze(2010, 9, 1) do
+        example.run
+      end
     end
 
-    after { Timecop.return }
-
     it 'works' do
+      visit_loan_changes
+      click_link 'Repayment Frequency'
+
       fill_in :date_of_change, '11/9/10'
       fill_in :initial_draw_amount, '65,432.10'
 

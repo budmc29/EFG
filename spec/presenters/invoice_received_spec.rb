@@ -126,29 +126,27 @@ describe InvoiceReceived do
     end
 
     it "marks the selected loans as Settled" do
-      Timecop.freeze(2013, 1, 22, 11, 49)
+      Timecop.freeze(2013, 1, 22, 11, 49) do
+        invoice_received.save
 
-      invoice_received.save
+        assert_loan_settled = ->(loan) do
+          loan.reload
 
-      assert_loan_settled = ->(loan) do
-        loan.reload
+          loan.state.should == Loan::Settled
+          loan.settled_on.should == Date.new(2013, 1, 22)
+          loan.invoice.should == invoice_received.invoice
+          loan.updated_at.should == Time.new(2013, 1, 22, 11, 49, 0)
+          loan.modified_by_id.should == creator.id
+        end
 
-        loan.state.should == Loan::Settled
-        loan.settled_on.should == Date.new(2013, 1, 22)
-        loan.invoice.should == invoice_received.invoice
-        loan.updated_at.should == Time.new(2013, 1, 22, 11, 49, 0)
-        loan.modified_by_id.should == creator.id
+        assert_loan_settled.call(demanded_loan_1)
+        assert_loan_settled.call(demanded_loan_2)
+
+        demanded_loan_3.reload
+        demanded_loan_3.state.should == Loan::Demanded
+        demanded_loan_3.settled_on.should be_nil
+        demanded_loan_3.invoice.should be_nil
       end
-
-      assert_loan_settled.call(demanded_loan_1)
-      assert_loan_settled.call(demanded_loan_2)
-
-      demanded_loan_3.reload
-      demanded_loan_3.state.should == Loan::Demanded
-      demanded_loan_3.settled_on.should be_nil
-      demanded_loan_3.invoice.should be_nil
-
-      Timecop.return
     end
 
     it "updates the settled amount" do
