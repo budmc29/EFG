@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 FactoryGirl.define do
   factory :loan_demand_to_borrower do
     amount_demanded '£1,234.56'

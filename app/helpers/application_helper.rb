@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module ApplicationHelper
   def breadcrumbs(*items)
     items.unshift(link_to('Home', root_path))

@@ -1,4 +1,3 @@
-# encoding: utf-8
 class StateAidLetter < Prawn::Document
 
   attr_reader :filename

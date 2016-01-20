@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class LoanTypeGroupSet
   class Group
     def self.for(object_names)

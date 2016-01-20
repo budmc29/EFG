@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class InformationDeclaration < Prawn::Document
 
   attr_reader :filename
