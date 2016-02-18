@@ -12,6 +12,7 @@ en:
         one: "1 error prohibited this %{resource} from being saved:"
         other: "%{count} errors prohibited this %{resource} from being saved:"
       taken_in_past: "was used previously. Please choose a different one."
+      weak_password: "not strong enough. Consider using a longer password, and including different cases, numbers and symbols in your password."
   devise:
     failure:
       already_authenticated: 'You are already signed in.'

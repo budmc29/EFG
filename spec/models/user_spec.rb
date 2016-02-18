@@ -9,6 +9,6 @@ describe User do
     # REVIEW: slightly hokey - we don't validate the password for new records. Not sure if we want to revisit that?
     user.first_name = user.last_name
     user.valid?.should == false
-    user.errors[:password].should == [I18n.t('errors.messages.insufficient_entropy', entropy: 3, minimum_entropy: Devise::Models::Strengthened::MINIMUM_ENTROPY)]
+    user.errors[:password].should == [I18n.t('errors.messages.weak_password')]
   end
 end
