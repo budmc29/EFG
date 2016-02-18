@@ -218,9 +218,6 @@ Devise.setup do |config|
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
 
-  # Custom Validators for Devise
-  require 'devise/models/strengthened'
-
   Warden::Manager.after_authentication do |user,auth,opts|
     EFG.stats_collector.increment("logins.success")
   end
@@ -245,5 +242,8 @@ Devise.setup do |config|
 
   # Deny old password (true, false, count)
   config.deny_old_passwords = true
+
+  # from devise_zxcvbn
+  config.min_password_score = 4
 
 end

@@ -58,7 +58,7 @@ describe 'Resetting password' do
   it 'fails when changed password is too weak' do
     open_reset_password_page
     submit_change_password_form 'password'
-    page.should have_content(I18n.t('errors.messages.insufficient_entropy', entropy: 5, minimum_entropy: Devise::Models::Strengthened::MINIMUM_ENTROPY))
+    page.should have_content(I18n.t('errors.messages.weak_password'))
   end
 
   it 'fails when allowed time has expired' do
