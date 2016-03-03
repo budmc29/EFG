@@ -55,7 +55,16 @@ class RecoveriesReport
       .joins(:loan => :lender)
       .where(recovered_on: start_date..end_date,
             'loans.lender_id' => lender_ids)
-      .select('recoveries.*, loans.reference AS loan_reference, lenders.name AS lender_name, realise_flag')
+      .joins('LEFT OUTER JOIN lending_limits ON lending_limits.id = loans.lending_limit_id')
+      .select('
+        recoveries.*,
+        loans.reference AS loan_reference,
+        lenders.name AS lender_name,
+        realise_flag,
+        lending_limits.phase_id AS loan_phase,
+        loans.loan_scheme AS loan_scheme,
+        loans.loan_source AS loan_source
+      ')
   end
 
   def size

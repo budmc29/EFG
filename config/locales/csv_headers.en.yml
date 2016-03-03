@@ -144,3 +144,5 @@ en:
       realise_flag: Realised?
       loan_reference: Loan Reference
       amount_due_to_dti: Amount
+      scheme: Loan Scheme
+      loan_phase: Loan Phase

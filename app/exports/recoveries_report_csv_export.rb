@@ -4,6 +4,8 @@ class RecoveriesReportCsvExport < BaseCsvExport
     [
       :lender_name,
       :loan_reference,
+      :scheme,
+      :loan_phase,
       :amount_due_to_dti,
       :recovered_on,
       :realise_flag,

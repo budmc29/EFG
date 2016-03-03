@@ -86,6 +86,16 @@ class Recovery < ActiveRecord::Base
     false
   end
 
+  def scheme
+    if loan_source == Loan::LEGACY_SFLG_SOURCE
+      'Legacy'
+    elsif loan_scheme == Loan::SFLG_SCHEME
+      'New'
+    else
+      'EFG'
+    end
+  end
+
   def set_total_proceeds_recovered
     if loan.legacy_loan?
       self.total_proceeds_recovered = loan.dti_amount_claimed * (loan.guarantee_rate / 100)
