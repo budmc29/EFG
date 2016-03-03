@@ -7,7 +7,7 @@ gem 'bootstrap-will_paginate', '0.0.10'
 gem 'canable', '0.3.0'
 gem 'devise', '3.4.1'
 gem "devise-encryptable", "0.2.0"
-gem 'protected_attributes'
+gem 'protected_attributes', '1.0.8'
 gem "devise_security_extension", git: 'https://github.com/phatworx/devise_security_extension.git', ref: '1f35d9630e6cb5ae6208bf9f4a3f4c2bf1efad97'
 gem 'devise_zxcvbn', '2.1.0'
 gem 'exception_notification', '4.0.1'
