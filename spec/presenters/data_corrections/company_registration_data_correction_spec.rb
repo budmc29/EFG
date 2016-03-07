@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CompanyRegistrationDataCorrection do
   it_behaves_like 'a basic data correction presenter', :company_registration, '654321', nil, { legal_form_id: LegalForm::PLC.id }

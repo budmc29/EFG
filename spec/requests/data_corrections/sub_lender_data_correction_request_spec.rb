@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'Sub Lender Data Correction' do
   include DataCorrectionSpecHelper
