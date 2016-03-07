@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe TradingNameDataCorrection do
   it_behaves_like 'a basic data correction presenter', :trading_name, 'Bar'

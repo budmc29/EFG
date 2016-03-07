@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe LoanRealisationAdjustment do
   describe 'validations:' do
