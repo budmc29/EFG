@@ -2,7 +2,7 @@ class Postcode
   delegate :full?, to: :uk_postcode
 
   def initialize(value)
-    @uk_postcode = UKPostcode.new(value || '')
+    @uk_postcode = UKPostcode.parse(value || "")
   end
 
   def ==(other)
@@ -12,16 +12,16 @@ class Postcode
   alias_method :eql?, :==
 
   def inspect
-    "<Postcode raw:#{raw}>"
+    "<Postcode raw:#{uk_postcode}>"
   end
 
   def to_s
-    normalised = norm
-    normalised.empty? ? raw : normalised
+    uk_postcode.to_s
   end
 
-  private
-    attr_reader :uk_postcode
+  alias_method :raw, :to_s
 
-    delegate :norm, :raw, to: :uk_postcode
+  private
+
+  attr_reader :uk_postcode
 end
