@@ -57,6 +57,7 @@ class Loan < ActiveRecord::Base
   has_many :loan_realisations_pre_claim_limit, -> { where(post_claim_limit: false) }, class_name: 'LoanRealisation', foreign_key: 'realised_loan_id'
   has_many :recoveries
   has_many :realisation_adjustments
+  has_many :settlement_adjustments
   has_many :loan_securities
   has_many :ineligibility_reasons, class_name: 'LoanIneligibilityReason'
   has_many :state_changes, -> { order(:modified_at) }, class_name: 'LoanStateChange'
