@@ -1,4 +1,4 @@
-shared_examples_for 'rescue_from LoanStateTransition::IncorrectLoanState controller' do
+shared_examples_for 'rescue_from IncorrectLoanStateError controller' do
   let(:current_user) { FactoryGirl.create(:lender_user, lender: loan.lender) }
 
   before do

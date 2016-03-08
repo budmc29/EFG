@@ -1,6 +1,9 @@
 class SettlementAdjustmentsController < ApplicationController
   before_filter :verify_create_permission, only: [:new, :create]
   before_filter :load_loan, only: [:new, :create]
+  before_filter :verify_loan_state
+
+  rescue_from_incorrect_loan_state_error
 
   def new
     @settlement_adjustment = LoanSettlementAdjustment.new(@loan)
@@ -28,5 +31,12 @@ class SettlementAdjustmentsController < ApplicationController
 
   def load_loan
     @loan = current_lender.loans.find(params[:loan_id])
+  end
+
+  def verify_loan_state
+    unless @loan.has_state?(Loan::Settled, Loan::Recovered, Loan::Realised)
+      raise IncorrectLoanStateError.new("Tried to perform settlement " \
+        "adjustment on #{@loan.reference} in state: #{@loan.state}")
+    end
   end
 end

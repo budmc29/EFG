@@ -1,13 +1,6 @@
 module LoanStateTransition
   extend ActiveSupport::Concern
 
-  class IncorrectLoanState < StandardError
-    def initialize(presenter, loan)
-      message = "#{presenter.class.name} tried to transition Loan:#{loan.id} with state:#{loan.state}"
-      super(message)
-    end
-  end
-
   included do
     raise RuntimeError.new('LoanPresenter must be included.') unless ancestors.include?(LoanPresenter)
 
@@ -28,7 +21,12 @@ module LoanStateTransition
   def initialize(loan)
     from_state = self.class.from_state
     allowed_from_states = from_state.is_a?(Array) ? from_state : [from_state]
-    raise IncorrectLoanState.new(self, loan) unless allowed_from_states.include?(loan.state)
+
+    unless allowed_from_states.include?(loan.state)
+      raise IncorrectLoanStateError.new("#{self.class.name} tried to " \
+        "transition Loan:#{loan.id} with state:#{loan.state}")
+    end
+
     super(loan)
   end
 

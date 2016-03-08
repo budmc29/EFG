@@ -47,7 +47,10 @@ describe LoanStateTransition do
 
       expect {
         klass.new(loan)
-      }.to raise_error(LoanStateTransition::IncorrectLoanState, "MockLoanPresenter tried to transition Loan:40 with state:z")
+      }.to raise_error(
+        IncorrectLoanStateError,
+        "MockLoanPresenter tried to transition Loan:40 with state:z",
+      )
     end
   end
 

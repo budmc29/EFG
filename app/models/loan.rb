@@ -1,6 +1,8 @@
 require 'loan_reference'
 require 'legacy_loan_reference'
 
+class IncorrectLoanStateError < StandardError; end
+
 class Loan < ActiveRecord::Base
   include FormatterConcern
 
@@ -222,6 +224,10 @@ class Loan < ActiveRecord::Base
 
   def has_drawdowns?
     premium_schedule && premium_schedule.has_drawdowns?
+  end
+
+  def has_state?(*states)
+    states.include?(state)
   end
 
   def loan_category
