@@ -1,13 +1,7 @@
 module LoanPresenter
-  extend ActiveSupport::Concern
+  include BasePresenter
 
   included do
-    extend  ActiveModel::Naming
-    extend  ActiveModel::Callbacks
-    include ActiveModel::Conversion
-    include ActiveModel::MassAssignmentSecurity
-    include ActiveModel::Validations
-
     attr_reader :loan
 
     delegate :modified_by, :modified_by=, to: :loan
@@ -15,31 +9,10 @@ module LoanPresenter
     define_model_callbacks :save
   end
 
-  module ClassMethods
-    def attribute(name, options = {})
-      methods = [name]
-
-      unless options[:read_only]
-        methods << "#{name}="
-        attr_accessible name
-      end
-
-      delegate *methods, to: :loan
-    end
-  end
+  set_presenter_object :loan
 
   def initialize(loan)
     @loan = loan
-  end
-
-  def attributes=(attributes)
-    sanitize_for_mass_assignment(attributes).each do |k, v|
-      public_send("#{k}=", v)
-    end
-  end
-
-  def persisted?
-    false
   end
 
   def save
@@ -50,5 +23,4 @@ module LoanPresenter
       end
     end
   end
-
 end
