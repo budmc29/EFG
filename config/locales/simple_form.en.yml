@@ -158,6 +158,7 @@ en:
 
       loan_settle_claim:
         settled_on: 'What was the date that the Demand against the Government Guarantee was settled?'
+        cumulative_settlement_adjustments_amount: Settlement adjustment amount
         settled_amount: 'Settled amount'
 
       loan_recovery:

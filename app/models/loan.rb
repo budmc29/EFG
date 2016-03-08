@@ -200,6 +200,10 @@ class Loan < ActiveRecord::Base
     cumulative_recoveries_amount - cumulative_realised_amount
   end
 
+  def cumulative_settlement_adjustments_amount
+    Money.new(settlement_adjustments.sum(:amount))
+  end
+
   def drawable?
     amount > cumulative_drawn_amount
   end
@@ -323,6 +327,11 @@ class Loan < ActiveRecord::Base
     else
       Phase1Rules
     end
+  end
+
+  def settled_amount
+    Money.new(read_attribute(:settled_amount)) +
+      cumulative_settlement_adjustments_amount
   end
 
   private

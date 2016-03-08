@@ -631,4 +631,56 @@ describe Loan do
       end
     end
   end
+
+  describe "#settled_amount" do
+    let(:loan) do
+      FactoryGirl.create(
+        :loan,
+        :settled,
+        settled_amount: Money.new(10_000_00),
+      )
+    end
+
+    context "with no settlement adjustments" do
+      it "returns the original settled amount" do
+        expect(loan.settled_amount).to eq(Money.new(10_000_00))
+      end
+    end
+
+    context "with a single settlement adjustment" do
+      let!(:adjustment) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          loan: loan,
+          amount: Money.new(100_00),
+        )
+      end
+
+      it "returns the adjusted amount" do
+        expect(loan.settled_amount).to eq(Money.new(10_100_00))
+      end
+    end
+
+    context "with multiple settlement adjustment" do
+      let!(:adjustment1) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          loan: loan,
+          amount: Money.new(100_00),
+        )
+      end
+
+      let!(:adjustment2) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          loan: loan,
+          amount: Money.new(200_00),
+        )
+      end
+
+      it "returns the cumulative adjusted amount" do
+        expect(loan.settled_amount).to eq(Money.new(10_300_00))
+      end
+    end
+  end
 end

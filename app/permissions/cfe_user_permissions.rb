@@ -12,6 +12,7 @@ module CfeUserPermissions
       LoanAuditReport,
       RecoveriesReport,
       RealisationStatement,
+      SettlementAdjustment,
     ].include?(resource)
   end
 
