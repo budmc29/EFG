@@ -237,6 +237,9 @@ en:
     not_closed_title: "Loans assumed to have been Repaid due to lack of updates"
     not_closed_description: "Facilities that have not been updated to 'Repaid' in the six months following the expected date of repayment (or 3 months for EFG facilities). They should be reviewed and the records updated as appropriate."
 
+  settlement_adjustments:
+    adjustment_saved: "Loan settlement adjustment successfully saved"
+
   manage_users:
     new_account_email_sent: "An email has been sent to %{email} with instructions for activating their account."
     reset_password_sent: "An email has been sent to %{email} with instructions for setting their password."

@@ -13,6 +13,7 @@ class SettlementAdjustmentsController < ApplicationController
     @settlement_adjustment.created_by = current_user
 
     if @settlement_adjustment.save
+      flash[:notice] = I18n.t("settlement_adjustments.adjustment_saved")
       redirect_to loan_url(@loan)
     else
       render :new
