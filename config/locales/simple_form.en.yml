@@ -288,6 +288,10 @@ en:
         lender_id: 'Lender'
         scheme: 'Loan Scheme'
 
+      loan_settlement_adjustment:
+        amount: "Adjustment amount"
+        date: "Date of adjustment"
+
       realisations_report:
         start_date: 'What is the start date for your report?'
         end_date: 'What is the end date for your report?'
