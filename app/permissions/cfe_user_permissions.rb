@@ -38,6 +38,7 @@ module CfeUserPermissions
 
   def can_view?(resource)
     [
+      Adjustment,
       DataCorrection,
       Invoice,
       Loan,

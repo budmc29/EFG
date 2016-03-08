@@ -683,4 +683,53 @@ describe Loan do
       end
     end
   end
+
+  describe "#has_adjustments?" do
+    context "when loan has no adjustments" do
+      before do
+        allow(loan).to receive(:settlement_adjustments).and_return([])
+        allow(loan).to receive(:realisation_adjustments).and_return([])
+      end
+
+      it "returns false" do
+        expect(loan).not_to have_adjustments
+      end
+    end
+
+    context "when loan has only settlement adjustments" do
+      before do
+        allow(loan).to receive(:settlement_adjustments).
+          and_return([double(SettlementAdjustment)])
+      end
+
+      it "returns true" do
+        expect(loan).to have_adjustments
+      end
+    end
+
+    context "when loan has only realisation adjustments" do
+      before do
+        allow(loan).to receive(:settlement_adjustments).
+          and_return([double(SettlementAdjustment)])
+        allow(loan).to receive(:realisation_adjustments).
+          and_return([double(RealisationAdjustment)])
+      end
+
+      it "returns true" do
+        expect(loan).to have_adjustments
+      end
+    end
+
+    context "when loan has settlement and realisation adjustments" do
+      before do
+        allow(loan).to receive(:settlement_adjustments).and_return([])
+        allow(loan).to receive(:realisation_adjustments).
+          and_return([double(RealisationAdjustment)])
+      end
+
+      it "returns true" do
+        expect(loan).to have_adjustments
+      end
+    end
+  end
 end

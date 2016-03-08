@@ -16,6 +16,10 @@
       <% end %>
 
       <%= link_to('View Audit Log', audit_log_loan_path(@loan), class: 'btn') %>
+
+      <% if @loan.has_adjustments? %>
+        <%= link_to("View Adjustments", loan_adjustments_path(@loan), class: "btn") %>
+      <% end %>
   </div>
 
   <%= render "loans/buttons/#{@loan.state}" %>

@@ -1,0 +1,51 @@
+<%= breadcrumbs_for_loan(@loan) %>
+
+<div class="page-header">
+  <h1>Loan Adjustments</h1>
+</div>
+
+<%= loan_summary(@loan) do %>
+  <div class="form-actions">
+    <%= link_to 'Loan Summary', loan_path(@loan), class: 'btn' %>
+  </div>
+<% end %>
+
+<p>From this page you can view a summary of Loan Realisation and Settlement Adjustments.</p>
+
+<% if @loan_adjustments.empty? %>
+
+  <h4>No adjustments.</h4>
+
+<% else %>
+
+  <table class="table table-striped adjustment-table">
+    <thead>
+      <tr>
+        <th>Adjustment Date</th>
+        <th>Adjustment Type</th>
+        <th>Amount</th>
+        <th>Adjusted By</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @loan_adjustments.each_with_index do |loan_adjustment| %>
+        <tr class="adjustment-table__row">
+          <td class="adjustment-table__cell"><%= loan_adjustment.formatted_date %></td>
+
+          <td class="adjustment-table__cell adjustment-table__cell--type"><%= loan_adjustment.adjustment_type %></td>
+
+          <td class="adjustment-table__cell"><%= loan_adjustment.adjusted_amount %></td>
+
+          <td class="adjustment-table__cell"><%= loan_adjustment.adjusted_by_name %></td>
+
+          <td class="adjustment-table__cell adjustment-table__cell--notes">
+            <%= loan_adjustment.claim_limit_state %>
+            <%= loan_adjustment.notes %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<% end %>

@@ -88,6 +88,7 @@ EFG::Application.routes.draw do
     resources :recoveries, only: [:new, :create]
     resources :realisation_adjustments, only: [:new, :create]
     resources :settlement_adjustments, only: [:new, :create]
+    resources :adjustments, only: [:index]
   end
 
   resources :documents, only: [] do

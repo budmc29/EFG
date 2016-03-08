@@ -58,6 +58,7 @@ class Loan < ActiveRecord::Base
   has_many :loan_realisations_post_claim_limit, -> { where(post_claim_limit: true) }, class_name: 'LoanRealisation', foreign_key: 'realised_loan_id'
   has_many :loan_realisations_pre_claim_limit, -> { where(post_claim_limit: false) }, class_name: 'LoanRealisation', foreign_key: 'realised_loan_id'
   has_many :recoveries
+  has_many :adjustments
   has_many :realisation_adjustments
   has_many :settlement_adjustments
   has_many :loan_securities
@@ -224,6 +225,10 @@ class Loan < ActiveRecord::Base
 
   def has_drawdowns?
     premium_schedule && premium_schedule.has_drawdowns?
+  end
+
+  def has_adjustments?
+    settlement_adjustments.any? || realisation_adjustments.any?
   end
 
   def has_state?(*states)
