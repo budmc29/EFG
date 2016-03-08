@@ -11,7 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150401125109) do
+ActiveRecord::Schema.define(version: 20160308102522) do
+
+  create_table "adjustments", force: true do |t|
+    t.integer  "loan_id",                          null: false
+    t.integer  "amount",                           null: false
+    t.date     "date",                             null: false
+    t.text     "notes"
+    t.integer  "created_by_id",                    null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.boolean  "post_claim_limit", default: false, null: false
+    t.string   "type",                             null: false
+  end
+
+  add_index "adjustments", ["created_by_id"], name: "index_adjustments_on_created_by_id", using: :btree
+  add_index "adjustments", ["date"], name: "index_adjustments_on_date", using: :btree
+  add_index "adjustments", ["loan_id", "date"], name: "index_adjustments_on_loan_id_and_date", using: :btree
+  add_index "adjustments", ["loan_id"], name: "index_adjustments_on_loan_id", using: :btree
+  add_index "adjustments", ["type"], name: "index_adjustments_on_type", using: :btree
 
   create_table "admin_audits", force: true do |t|
     t.string   "auditable_type",        null: false
@@ -462,19 +480,6 @@ ActiveRecord::Schema.define(version: 20150401125109) do
   add_index "premium_schedules", ["legacy_loan_id"], name: "index_premium_schedules_on_legacy_loan_id", using: :btree
   add_index "premium_schedules", ["loan_id", "seq"], name: "index_premium_schedules_on_loan_id_and_seq", unique: true, using: :btree
 
-  create_table "realisation_adjustments", force: true do |t|
-    t.integer  "loan_id",                          null: false
-    t.integer  "amount",                           null: false
-    t.date     "date",                             null: false
-    t.text     "notes"
-    t.integer  "created_by_id",                    null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.boolean  "post_claim_limit", default: false, null: false
-  end
-
-  add_index "realisation_adjustments", ["loan_id"], name: "index_realisation_adjustments_on_loan_id", using: :btree
-
   create_table "realisation_statements", force: true do |t|
     t.integer  "lender_id"
     t.integer  "created_by_id"
@@ -527,7 +532,7 @@ ActiveRecord::Schema.define(version: 20150401125109) do
     t.boolean "eligible",                           default: false
     t.boolean "public_sector_restricted",           default: false
     t.boolean "active",                             default: true
-    t.integer "state_aid_threshold",      limit: 8,                 null: false
+    t.integer "state_aid_threshold",      limit: 8
   end
 
   add_index "sic_codes", ["code"], name: "index_sic_codes_on_code", unique: true, using: :btree

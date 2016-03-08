@@ -1,4 +1,4 @@
-class RealisationAdjustment < ActiveRecord::Base
+class RealisationAdjustment < Adjustment
   include FormatterConcern
 
   belongs_to :loan
