@@ -1,0 +1,2 @@
+class SettlementAdjustment < Adjustment
+end
