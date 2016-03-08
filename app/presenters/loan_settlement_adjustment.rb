@@ -10,6 +10,8 @@ class LoanSettlementAdjustment
 
   validate :positive_amount
 
+  delegate :settled_amount, to: :loan
+
   def initialize(loan, attributes = {})
     @loan = loan
     self.amount = attributes[:amount]

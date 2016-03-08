@@ -5,6 +5,7 @@
 </div>
 
 <%= simple_form_for(@settlement_adjustment, html: { class: 'form-horizontal' }) do |f| %>
+  <%= simple_form_row "Current settled amount", f.object.settled_amount.format %>
 
   <%= f.input :amount, as: :currency %>
   <%= f.input :date, as: :quick_date %>
