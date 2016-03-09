@@ -29,7 +29,7 @@ class RealisationAdjustmentsController < ApplicationController
   end
 
   def load_loan
-    @loan = Loan.find(params[:loan_id])
+    @loan = current_lender.loans.find(params[:loan_id])
   end
 
   def verify_loan_state
