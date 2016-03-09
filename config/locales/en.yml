@@ -251,5 +251,8 @@ en:
     repayment_frequency_not_set: "Cannot proceed until a repayment frequency has been selected for the loan."
     not_yet_generated: "A Premium Schedule must be generated before this loan can be offered."
 
+  realisation_adjustments:
+    adjustment_saved: "Loan realisation adjustment successfully saved"
+
   update_loan_lending_limit:
     loan_not_valid_for_lending_limit: "This loan is not valid for the chosen Lending Limit. Please update the loan details below."

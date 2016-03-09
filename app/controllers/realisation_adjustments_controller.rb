@@ -11,6 +11,7 @@ class RealisationAdjustmentsController < ApplicationController
     @realisation_adjustment.created_by = current_user
 
     if @realisation_adjustment.save
+      flash[:notice] = I18n.t("realisation_adjustments.adjustment_saved")
       redirect_to loan_url(@loan)
     else
       render :new
