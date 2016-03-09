@@ -302,4 +302,8 @@ describe LenderAdminPermissions do
   context "SettlementAdjustment" do
     it { refute user.can_create?(SettlementAdjustment) }
   end
+
+  context "RevertDemandedLoan" do
+    it { refute user.can_create?(RevertDemandedLoan) }
+  end
 end

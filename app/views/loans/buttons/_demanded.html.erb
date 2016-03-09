@@ -1,5 +1,6 @@
 <div class="form-actions">
   <%= link_to('Data Correction', loan_data_corrections_path(@loan), class: 'btn') if current_user.can_create?(DataCorrection) %>
-  <%= link_to('Change to Repaid', new_loan_repay_path(@loan), class: 'btn btn-change-to-repaid',  data: { confirm: "Are you sure you want to repay this loan?" }) if current_user.can_create?(LoanRepay) %>
+  <%= link_to('Repay Loan', new_loan_repay_path(@loan), class: 'btn btn-repay-loan',  data: { confirm: "Are you sure you want to repay this loan?" }) if current_user.can_create?(LoanRepay) %>
+  <%= link_to('Revert to Lender Demand', loan_revert_demanded_loan_path(@loan), class: 'btn btn-revert-to-lender-demand',  data: { confirm: "Are you sure you want to revert this loan to lender demand?", method: :post }) if current_user.can_create?(RevertDemandedLoan) %>
   <%= link_to_state_aid_letter(@loan) %>
 </div>

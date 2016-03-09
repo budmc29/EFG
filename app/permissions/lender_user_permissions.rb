@@ -25,6 +25,7 @@ module LenderUserPermissions
         RealisationsReport,
         RecoveriesReport,
         Recovery,
+        RevertDemandedLoan,
         PremiumSchedule,
         TransferredLoanEntry,
         UpdateLoanLendingLimit

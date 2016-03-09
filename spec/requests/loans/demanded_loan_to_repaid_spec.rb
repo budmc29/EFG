@@ -25,6 +25,6 @@ describe "Demanded loan" do
   end
 
   def change_to_repaid_button
-    find(".btn-change-to-repaid")
+    find(".btn-repay-loan")
   end
 end

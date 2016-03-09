@@ -256,3 +256,6 @@ en:
 
   update_loan_lending_limit:
     loan_not_valid_for_lending_limit: "This loan is not valid for the chosen Lending Limit. Please update the loan details below."
+
+  revert_demanded_loan:
+    revert_failed: "Loan failed to revert."

@@ -77,6 +77,7 @@ EFG::Application.routes.draw do
     resource :repay, only: [:new, :create], controller: 'loan_repays'
     resource :no_claim, only: [:new, :create], controller: 'loan_no_claims'
     resource :demand_against_government, only: [:new, :create], controller: 'loan_demand_against_government'
+    resource :revert_demanded_loan, only: :create
     resource :premium_schedule, only: [:edit, :update, :show]
     resource :remove_guarantee, only: [:new, :create], controller: 'loan_remove_guarantees'
     resource :update_lending_limit, only: [:new, :create], controller: 'update_loan_lending_limits'
