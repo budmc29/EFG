@@ -2,17 +2,21 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
   LoanAlreadyFullyDrawnError = Class.new(StandardError)
 
   attr_reader :second_draw_amount, :third_draw_amount, :fourth_draw_amount
-  attr_accessor :second_draw_months, :third_draw_months, :fourth_draw_months
+  attr_accessor :second_draw_months, :third_draw_months, :fourth_draw_months,
+                :initial_capital_repayment_holiday
 
   attr_accessible :second_draw_amount, :second_draw_months,
                   :third_draw_amount, :third_draw_months, :fourth_draw_amount,
-                  :fourth_draw_months
+                  :fourth_draw_months, :initial_capital_repayment_holiday
 
   before_save :update_loan_change
   before_validation :update_premium_schedule
 
   validate :no_skipped_draws
   validate :draws_have_months
+
+  validates :initial_capital_repayment_holiday,
+            numericality: { greater_than: 0 }, allow_blank: true
 
   def initialize(loan, _)
     raise LoanAlreadyFullyDrawnError if loan.fully_drawn?
@@ -55,6 +59,8 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
       premium_schedule.third_draw_months  = third_draw_months
       premium_schedule.fourth_draw_amount = fourth_draw_amount
       premium_schedule.fourth_draw_months = fourth_draw_months
+      premium_schedule.initial_capital_repayment_holiday =
+        initial_capital_repayment_holiday
     end
 
     def draws_have_months

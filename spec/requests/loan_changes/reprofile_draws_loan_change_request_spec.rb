@@ -44,6 +44,8 @@ describe 'Reprofile draws loan change' do
       expect(premium_schedule.fourth_draw_amount).to eq(Money.new(5_000_00))
       expect(premium_schedule.fourth_draw_months).to eq(18)
 
+      expect(premium_schedule.initial_capital_repayment_holiday).to eq(6)
+
       expect(loan.modified_by).to eq(current_user)
       expect(loan.repayment_duration.total_months).to eq(60)
       expect(loan.maturity_date).to eq(Date.new(2014, 12, 25))
@@ -87,6 +89,8 @@ describe 'Reprofile draws loan change' do
     fill_in :third_draw_months, '12'
     fill_in :fourth_draw_amount, '5,000.00'
     fill_in :fourth_draw_months, '18'
+
+    fill_in :initial_capital_repayment_holiday, '6'
 
     Timecop.freeze(2010, 9, 1) do
       click_button 'Submit'

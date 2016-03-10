@@ -19,3 +19,11 @@
   <%= f.input :fourth_draw_amount, as: :currency %>
   <%= f.input :fourth_draw_months, as: :months, input_html: { class: 'input-mini' } %>
 <% end %>
+
+<%= field_set_tag "Capital Repayment Holiday" do %>
+  <p>
+    <span class="label label-important">IMPORTANT</span> Capital repayment holiday is optional. Leave it blank if not relevant.
+  </p>
+
+  <%= render "capital_repayment_holiday", f: f, presenter: @presenter %>
+<% end %>

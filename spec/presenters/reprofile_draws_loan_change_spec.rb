@@ -76,6 +76,22 @@ describe ReprofileDrawsLoanChange do
         expect(draw_change).to be_valid
       end
     end
+
+    it "must have a positive capital repayment holiday" do
+      draw_change = FactoryGirl.build(
+        :reprofile_draws_loan_change,
+        initial_capital_repayment_holiday: -1,
+      )
+      expect(draw_change).not_to be_valid
+    end
+
+    it "allows a blank capital repayment holiday" do
+      draw_change = FactoryGirl.build(
+        :reprofile_draws_loan_change,
+        initial_capital_repayment_holiday: '',
+      )
+      expect(draw_change).to be_valid
+    end
   end
 
   describe '#save' do
