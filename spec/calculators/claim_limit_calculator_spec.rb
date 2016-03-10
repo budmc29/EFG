@@ -89,4 +89,86 @@ describe ClaimLimitCalculator do
       end
     end
   end
+
+  describe "#settled_amount" do
+    class ClaimLimitCalculatorSubclass < ClaimLimitCalculator
+      def phase
+        Phase.find(1)
+      end
+    end
+
+    let(:lender) { FactoryGirl.create(:lender) }
+
+    let(:lending_limit) do
+      FactoryGirl.create(:lending_limit, :phase_1, lender: lender)
+    end
+
+    let!(:loan1) do
+      FactoryGirl.create(
+        :loan,
+        :settled,
+        lender: lender,
+        lending_limit: lending_limit,
+        settled_amount: Money.new(50_000_00),
+      )
+    end
+
+    let!(:loan2) do
+      FactoryGirl.create(
+        :loan,
+        :settled,
+        lender: lender,
+        lending_limit: lending_limit,
+        settled_amount: Money.new(15_000_00),
+      )
+    end
+
+    # belongs to different phase
+    let!(:excluded_loan) do
+      FactoryGirl.create(
+        :loan,
+        :settled,
+        lender: lender,
+        settled_amount: Money.new(10_000_00),
+      )
+    end
+
+    subject(:calculator) { ClaimLimitCalculatorSubclass.new(lender) }
+
+    context "when loan has settlement adjustments" do
+      let!(:loan1_adjustment) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          amount: Money.new(500_00),
+          loan: loan1,
+        )
+      end
+
+      let!(:loan2_adjustment) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          amount: Money.new(320_00),
+          loan: loan2,
+        )
+      end
+
+      let!(:excluded_loan_adjustment) do
+        FactoryGirl.create(
+          :settlement_adjustment,
+          amount: Money.new(100_00),
+          loan: excluded_loan,
+        )
+      end
+
+      it "includes settlement adjustments" do
+        expect(calculator.settled_amount).to eq(Money.new(65_820_00))
+      end
+    end
+
+    context "when loan has no settlement adjustments" do
+      it "returns the loan's settled amount" do
+        expect(calculator.settled_amount).to eq(Money.new(65_000_00))
+      end
+    end
+  end
 end

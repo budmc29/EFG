@@ -88,15 +88,23 @@ class ClaimLimitCalculator
 
   def settled_amount
     @settled_amount ||= begin
-      amount = Loan
-        .joins(:lending_limit)
-        .where(lender_id: lender.id)
-        .where(loan_scheme: Loan::EFG_SCHEME)
-        .where(state: SettledStates)
-        .where(lending_limits: { phase_id: phase.id})
-        .sum(:settled_amount)
+      loans = Loan.
+        select("
+          loans.id,
+          IFNULL(loans.settled_amount, 0) as unadjusted_settled_amount
+        ").
+        joins(:lending_limit).
+        where(lender_id: lender.id).
+        where(loan_scheme: Loan::EFG_SCHEME).
+        where(state: SettledStates).
+        where(lending_limits: { phase_id: phase.id }).
+        to_a
 
-      Money.new(amount)
+      adjustments_amount = SettlementAdjustment.
+        where(loan: loans.map(&:id)).
+        sum(:amount)
+
+      Money.new(loans.sum(&:unadjusted_settled_amount) + adjustments_amount)
     end
   end
 
