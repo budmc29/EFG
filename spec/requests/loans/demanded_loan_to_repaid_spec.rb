@@ -18,7 +18,7 @@ describe "Demanded loan" do
       "Are you sure you want to repay this loan?")
     change_to_repaid_button.click
 
-    fill_in :loan_repay_repaid_on, with: 1.day.from_now.to_date.to_s(:screen)
+    fill_in :loan_repay_repaid_on, with: Date.current.to_s(:screen)
     click_button "Submit"
 
     expect(current_path).to eq(loan_path(loan))
