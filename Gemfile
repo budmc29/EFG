@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 # rails basics
 gem "rails", "4.1.14.2"
-gem "mysql2", "0.3.16"
+gem "mysql2", "0.3.20"
 gem "uglifier", "1.2.4"
 gem "sass-rails", "4.0.2"
 gem "less-rails", "2.2.6"
