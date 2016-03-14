@@ -1,14 +1,4 @@
 module LoanChangesHelper
-
-  def capital_repayment_holiday_link(loan)
-    if loan.fully_drawn?
-      link_to('Capital Repayment Holiday', new_loan_loan_change_path(@loan, type: 'capital_repayment_holiday'))
-    else
-      content_tag(:span, 'Capital Repayment Holiday', class: 'not-available') +
-        content_tag(:em, ' - (Only applicable to fully drawn loans)')
-    end
-  end
-
   def premium_schedule_hidden_fields(hash)
     if hash.is_a?(Hash)
       %w(

@@ -1,25 +1,8 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe CapitalRepaymentHolidayLoanChange do
   it_behaves_like 'LoanChangePresenter' do
     let(:presenter_factory_options) { { loan: FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, :fully_drawn) } }
-  end
-
-  describe '#initialize' do
-    let(:loan) { FactoryGirl.create(:loan, :guaranteed, amount: Money.new(20_000_00)) }
-    let(:presenter) { FactoryGirl.build(:capital_repayment_holiday_loan_change, loan: loan) }
-
-    context 'when the full amount has not been fully drawn' do
-      before do
-        loan.initial_draw_change.update_column(:amount_drawn, Money.new(5_000_00).cents)
-      end
-
-      it 'is not allowed' do
-        expect {
-          presenter
-        }.to raise_error(CapitalRepaymentHolidayLoanChange::LoanNotFullyDrawnError)
-      end
-    end
   end
 
   describe 'validations' do
