@@ -38,7 +38,8 @@ gem "bourbon", "2.1.1"
 gem "twitter-bootstrap-rails", "2.2.7"
 
 # csv and pdf handling
-gem "prawn", "0.12.0"
+gem "prawn", "~> 2.1"
+gem "prawn-table", "~> 0.2"
 gem "progressbar", "0.11.0"
 
 # background jobs
