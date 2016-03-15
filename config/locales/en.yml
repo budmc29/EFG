@@ -114,6 +114,7 @@ en:
           attributes:
             repaid_on:
               before_initial_draw_date: Repayment date cannot be before the date of initial draw of funds
+              in_the_future: Repayment date cannot be in the future
         loan_cancel:
           attributes:
             cancelled_on:

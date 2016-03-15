@@ -13,6 +13,11 @@ describe LoanRepay do
       expect(loan_repay).not_to be_valid
     end
 
+    it "cannot have a repaid date in the future" do
+      loan_repay.repaid_on = 1.day.from_now
+      expect(loan_repay).not_to be_valid
+    end
+
     it 'should be invalid if repaid date is before initial draw date' do
       initial_draw_date = loan_repay.loan.initial_draw_change.date_of_change
 

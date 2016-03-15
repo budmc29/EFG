@@ -11,7 +11,7 @@
 <hr>
 
 <%= simple_form_for(@loan_repay, url: loan_repay_path(@loan), html: { class: 'form-horizontal form-loan-repay' }) do |f| %>
-  <%= f.input :repaid_on, as: :quick_date %>
+  <%= f.input :repaid_on, as: :quick_date, input_html: { data: {"popover-input" => "", content: "Please ensure this is the date the facility was repaid." } } %>
 
   <div class="form-actions">
     <%= f.button :submit, value: 'Submit', class: 'btn-primary', data: { 'disable-with' => 'Submitting...' } %>

@@ -9,7 +9,7 @@ describe 'loan repay' do
     visit loan_path(loan)
     click_link 'Repay Loan'
 
-    fill_in 'repaid_on', 1.day.from_now.to_date.to_s(:screen)
+    fill_in "repaid_on", Date.current.to_s(:screen)
     click_button 'Submit'
 
     loan = Loan.last
@@ -17,7 +17,7 @@ describe 'loan repay' do
     expect(current_path).to eq(loan_path(loan))
 
     expect(loan.state).to eq(Loan::Repaid)
-    expect(loan.repaid_on).to eq(1.day.from_now.to_date)
+    expect(loan.repaid_on).to eq(Date.current)
     expect(loan.modified_by).to eq(current_user)
 
     should_log_loan_state_change(loan, Loan::Repaid, 14, current_user)
@@ -28,7 +28,7 @@ describe 'loan repay' do
     visit loan_path(loan)
     click_link 'Repay Loan'
 
-    fill_in 'repaid_on', 1.day.from_now.to_date.to_s(:screen)
+    fill_in "repaid_on", Date.current.to_s(:screen)
     click_button 'Submit'
 
     loan = Loan.last
@@ -36,7 +36,7 @@ describe 'loan repay' do
     expect(current_path).to eq(loan_path(loan))
 
     expect(loan.state).to eq(Loan::Repaid)
-    expect(loan.repaid_on).to eq(1.day.from_now.to_date)
+    expect(loan.repaid_on).to eq(Date.current)
     expect(loan.modified_by).to eq(current_user)
   end
 
