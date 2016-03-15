@@ -82,9 +82,8 @@ class InformationDeclaration < Prawn::Document
       data.insert(14, [ row_description(:loan_sub_category_id), @loan.loan_sub_category.try(:name) ])
     end
 
-    table(data, column_widths: [350, 190]) do
+    table(data, column_widths: [350, 190], row_colors: ["FFFFFF", "F4F4F4"]) do
       cells.borders = []
-      cells.rows(->(index) { index.even? }).background_color = 'f4f4f4'
     end
   end
 
