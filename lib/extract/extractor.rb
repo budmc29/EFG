@@ -110,6 +110,40 @@ class Extractor
           whitelist 'updated_at'
         end
 
+        table "data_corrections" do
+          primary_key "id"
+
+          whitelist "loan_id"
+          whitelist "created_by_id"
+          whitelist "change_type_id"
+          whitelist "oid"
+          whitelist "seq"
+          whitelist "date_of_change"
+          whitelist "modified_date"
+          whitelist "modified_user"
+          whitelist "ar_timestamp"
+          whitelist "ar_insert_timestamp"
+          whitelist "data_correction_changes"
+          whitelist "_legacy_business_name"
+          whitelist "_legacy_old_business_name"
+          whitelist "_legacy_facility_letter_date"
+          whitelist "_legacy_old_facility_letter_date"
+          whitelist "_legacy_sortcode"
+          whitelist "_legacy_old_sortcode"
+          whitelist "_legacy_dti_demand_outstanding"
+          whitelist "_legacy_old_dti_demand_outstanding"
+          whitelist "_legacy_dti_interest"
+          whitelist "_legacy_old_dti_interest"
+          whitelist "_legacy_lending_limit_id"
+          whitelist "_legacy_old_lending_limit_id"
+          whitelist "_legacy_postcode"
+          whitelist "_legacy_old_postcode"
+          whitelist "_legacy_lender_reference"
+          whitelist "_legacy_old_lender_reference"
+          whitelist "created_at"
+          whitelist "updated_at"
+        end
+
         table 'data_migration_records' do
           primary_key 'id'
 
@@ -130,85 +164,6 @@ class Extractor
           whitelist "ar_insert_timestamp"
           whitelist "created_at"
           whitelist "updated_at"
-        end
-
-        table 'lenders' do
-          primary_key 'id'
-
-          anonymize("main_point_of_contact_user")
-          anonymize("name") { |field| "lender-#{field.row_number}" }
-          anonymize("primary_contact_email") { |field| "lender-#{field.row_number}@example.com" }
-          anonymize("primary_contact_name") { |field| "primary contact #{field.row_number}" }
-          anonymize("primary_contact_phone") { |field| "primary phone #{field.row_number}" }
-
-          whitelist "created_at"
-          whitelist "updated_at"
-          whitelist "legacy_id"
-          whitelist "version"
-          whitelist "high_volume"
-          whitelist "can_use_add_cap"
-          whitelist "organisation_reference_code"
-          whitelist "std_cap_lending_allocation"
-          whitelist "add_cap_lending_allocation"
-          whitelist "disabled"
-          whitelist "created_by_legacy_id"
-          whitelist "modified_by_legacy_id"
-          whitelist "allow_alert_process"
-          whitelist "loan_scheme"
-          whitelist "ar_timestamp"
-          whitelist "ar_insert_timestamp"
-          whitelist "created_by_id"
-          whitelist "modified_by_id"
-        end
-
-        table 'users' do
-          batch_size 200
-          primary_key 'id'
-
-          # Ensure the SystemUser is correctly extracted.
-          #
-          # Note: Must extend this after we set the primary_key.
-          source_table.extend(UserFindInBatchesModification)
-
-          anonymize("email") { |field| "user-#{field.row_number}@example.com" }
-          anonymize("first_name")
-          anonymize("last_name")
-          anonymize("legacy_email") { |field| "legacy-#{field.row_number}@example.com" }
-          anonymize("memorable_name")
-          anonymize("memorable_place")
-          anonymize("memorable_year")
-          anonymize('username') { |field| "username_#{field.row_number}" }
-
-          whitelist 'reset_password_token'
-          whitelist 'type'
-          whitelist "encrypted_password"
-          whitelist "reset_password_token"
-          whitelist "reset_password_sent_at"
-          whitelist "sign_in_count"
-          whitelist "current_sign_in_at"
-          whitelist "last_sign_in_at"
-          whitelist "current_sign_in_ip"
-          whitelist "last_sign_in_ip"
-          whitelist "created_at"
-          whitelist "updated_at"
-          whitelist "lender_id"
-          whitelist "legacy_lender_id"
-          whitelist "version"
-          whitelist "disabled"
-          whitelist "login_failures"
-          whitelist "password_changed_at"
-          whitelist "locked"
-          whitelist "created_by_legacy_id"
-          whitelist "created_by_id"
-          whitelist "confirm_t_and_c"
-          whitelist "modified_by_legacy_id"
-          whitelist "modified_by_id"
-          whitelist "knowledge_resource"
-          whitelist "ar_timestamp"
-          whitelist "ar_insert_timestamp"
-          whitelist "type"
-          whitelist "failed_attempts"
-          whitelist "password_salt"
         end
 
         table 'demand_to_borrowers' do
@@ -259,6 +214,35 @@ class Extractor
           whitelist "creation_time"
           whitelist "ar_timestamp"
           whitelist "ar_insert_timestamp"
+        end
+
+        table 'lenders' do
+          primary_key 'id'
+
+          anonymize("main_point_of_contact_user")
+          anonymize("name") { |field| "lender-#{field.row_number}" }
+          anonymize("primary_contact_email") { |field| "lender-#{field.row_number}@example.com" }
+          anonymize("primary_contact_name") { |field| "primary contact #{field.row_number}" }
+          anonymize("primary_contact_phone") { |field| "primary phone #{field.row_number}" }
+
+          whitelist "created_at"
+          whitelist "updated_at"
+          whitelist "legacy_id"
+          whitelist "version"
+          whitelist "high_volume"
+          whitelist "can_use_add_cap"
+          whitelist "organisation_reference_code"
+          whitelist "std_cap_lending_allocation"
+          whitelist "add_cap_lending_allocation"
+          whitelist "disabled"
+          whitelist "created_by_legacy_id"
+          whitelist "modified_by_legacy_id"
+          whitelist "allow_alert_process"
+          whitelist "loan_scheme"
+          whitelist "ar_timestamp"
+          whitelist "ar_insert_timestamp"
+          whitelist "created_by_id"
+          whitelist "modified_by_id"
         end
 
         table 'lending_limits' do
@@ -400,6 +384,8 @@ class Extractor
           anonymize("sortcode")
           anonymize("town")
           anonymize("trading_name")
+          anonymize("lender_reference")
+          anonymize("sub_lender")
 
           whitelist "viable_proposition"
           whitelist "would_you_lend"
@@ -511,9 +497,68 @@ class Extractor
           whitelist "legacy_sic_notified_aid"
           whitelist "legacy_sic_eligible"
           whitelist "settled_amount"
+          whitelist "last_modified_at"
+          whitelist "not_insolvent"
+          whitelist "euro_conversion_rate"
+          whitelist "loan_sub_category_id"
         end
 
-        table 'realisation_statements' do
+        table 'premium_schedules' do
+          batch_size 200
+          primary_key 'id'
+
+          whitelist 'loan_id'
+          whitelist 'legacy_loan_id'
+          whitelist "initial_draw_year"
+          whitelist "initial_draw_amount"
+          whitelist "repayment_duration"
+          whitelist "initial_capital_repayment_holiday"
+          whitelist "second_draw_amount"
+          whitelist "second_draw_months"
+          whitelist "third_draw_amount"
+          whitelist "third_draw_months"
+          whitelist "fourth_draw_amount"
+          whitelist "fourth_draw_months"
+          whitelist "created_at"
+          whitelist "updated_at"
+          whitelist "seq"
+          whitelist "loan_version"
+          whitelist "calc_type"
+          whitelist "premium_cheque_month"
+          whitelist "holiday"
+          whitelist "total_cost"
+          whitelist "public_funding"
+          whitelist "obj1_area"
+          whitelist "reduce_costs"
+          whitelist "improve_prod"
+          whitelist "increase_quality"
+          whitelist "improve_nat_env"
+          whitelist "promote"
+          whitelist "agriculture"
+          whitelist "guarantee_rate"
+          whitelist "npv"
+          whitelist "prem_rate"
+          whitelist "euro_conversion_rate"
+          whitelist "elsewhere_perc"
+          whitelist "obj1_perc"
+          whitelist "ar_timestamp"
+          whitelist "ar_insert_timestamp"
+        end
+
+        table "realisation_adjustments" do
+          primary_key 'id'
+
+          whitelist "loan_id"
+          whitelist "amount"
+          whitelist "date"
+          whitelist "notes"
+          whitelist "created_by_id"
+          whitelist "created_at"
+          whitelist "updated_at"
+          whitelist "post_claim_limit"
+        end
+
+        table "realisation_statements" do
           primary_key 'id'
 
           whitelist "lender_id"
@@ -569,48 +614,18 @@ class Extractor
           whitelist "description"
           whitelist "eligible"
           whitelist "public_sector_restricted"
+          whitelist "active"
+          whitelist "state_aid_threshold"
         end
 
-        table 'premium_schedules' do
-          batch_size 200
-          primary_key 'id'
+        table "sub_lenders" do
+          primary_key "id"
 
-          whitelist 'loan_id'
-          whitelist 'legacy_loan_id'
-          whitelist "initial_draw_year"
-          whitelist "initial_draw_amount"
-          whitelist "repayment_duration"
-          whitelist "initial_capital_repayment_holiday"
-          whitelist "second_draw_amount"
-          whitelist "second_draw_months"
-          whitelist "third_draw_amount"
-          whitelist "third_draw_months"
-          whitelist "fourth_draw_amount"
-          whitelist "fourth_draw_months"
+          anonymize("name")
+
+          whitelist "lender_id"
           whitelist "created_at"
           whitelist "updated_at"
-          whitelist "seq"
-          whitelist "loan_version"
-          whitelist "calc_type"
-          whitelist "premium_cheque_month"
-          whitelist "holiday"
-          whitelist "total_cost"
-          whitelist "public_funding"
-          whitelist "obj1_area"
-          whitelist "reduce_costs"
-          whitelist "improve_prod"
-          whitelist "increase_quality"
-          whitelist "improve_nat_env"
-          whitelist "promote"
-          whitelist "agriculture"
-          whitelist "guarantee_rate"
-          whitelist "npv"
-          whitelist "prem_rate"
-          whitelist "euro_conversion_rate"
-          whitelist "elsewhere_perc"
-          whitelist "obj1_perc"
-          whitelist "ar_timestamp"
-          whitelist "ar_insert_timestamp"
         end
 
         table 'user_audits' do
@@ -628,6 +643,56 @@ class Extractor
           whitelist "ar_insert_timestamp"
           whitelist "created_at"
           whitelist "updated_at"
+        end
+
+        table 'users' do
+          batch_size 200
+          primary_key 'id'
+
+          # Ensure the SystemUser is correctly extracted.
+          #
+          # Note: Must extend this after we set the primary_key.
+          source_table.extend(UserFindInBatchesModification)
+
+          anonymize("email") { |field| "user-#{field.row_number}@example.com" }
+          anonymize("first_name")
+          anonymize("last_name")
+          anonymize("legacy_email") { |field| "legacy-#{field.row_number}@example.com" }
+          anonymize("memorable_name")
+          anonymize("memorable_place")
+          anonymize("memorable_year")
+          anonymize('username') { |field| "username_#{field.row_number}" }
+
+          whitelist 'reset_password_token'
+          whitelist 'type'
+          whitelist "encrypted_password"
+          whitelist "reset_password_token"
+          whitelist "reset_password_sent_at"
+          whitelist "sign_in_count"
+          whitelist "current_sign_in_at"
+          whitelist "last_sign_in_at"
+          whitelist "current_sign_in_ip"
+          whitelist "last_sign_in_ip"
+          whitelist "created_at"
+          whitelist "updated_at"
+          whitelist "lender_id"
+          whitelist "legacy_lender_id"
+          whitelist "version"
+          whitelist "disabled"
+          whitelist "login_failures"
+          whitelist "password_changed_at"
+          whitelist "locked"
+          whitelist "created_by_legacy_id"
+          whitelist "created_by_id"
+          whitelist "confirm_t_and_c"
+          whitelist "modified_by_legacy_id"
+          whitelist "modified_by_id"
+          whitelist "knowledge_resource"
+          whitelist "ar_timestamp"
+          whitelist "ar_insert_timestamp"
+          whitelist "type"
+          whitelist "failed_attempts"
+          whitelist "password_salt"
         end
       end
     end
