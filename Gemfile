@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # rails basics
-gem "rails", "4.1.14.2"
+gem "rails", "4.1.15"
 gem "mysql2", "0.3.20"
 gem "uglifier", "1.2.4"
 gem "sass-rails", "4.0.2"
@@ -63,7 +63,7 @@ group :development, :test do
   gem "brakeman", "2.0.0"
   gem "ci_reporter", "1.8.4"
   gem "parallel_tests", "0.16.10"
-  gem "rspec-rails"
+  gem "rspec-rails", "~> 3.4"
   gem "simplecov-rcov", "0.2.3"
 end
 
