@@ -51,6 +51,6 @@ group :test do
 end
 
 group :extract do
-  gem "data-anonymization", "0.6.5"
+  gem "data-anonymization", github: "thoughtbot/data-anonymization"
   gem "sqlite3", "1.3.6"
 end

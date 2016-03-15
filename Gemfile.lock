@@ -1,4 +1,19 @@
 GIT
+  remote: git://github.com/thoughtbot/data-anonymization.git
+  revision: c7d6dda3cb1950bd5a93e876eff4534142d172bb
+  specs:
+    data-anonymization (0.7.3)
+      activerecord (~> 4.1)
+      activesupport (~> 4.1)
+      composite_primary_keys (~> 7.0)
+      parallel (~> 1.0)
+      powerbar (~> 1.0)
+      protected_attributes (~> 1.0)
+      rgeo (~> 0.3)
+      rgeo-geojson (~> 0.3)
+      thor (~> 0.19)
+
+GIT
   remote: https://github.com/phatworx/devise_security_extension.git
   revision: 1f35d9630e6cb5ae6208bf9f4a3f4c2bf1efad97
   ref: 1f35d9630e6cb5ae6208bf9f4a3f4c2bf1efad97
@@ -38,7 +53,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.2.8)
-    ansi (1.5.0)
     arel (5.0.1.20140414130214)
     aws-ses (0.6.0)
       builder
@@ -76,18 +90,8 @@ GEM
     ci_reporter (1.8.4)
       builder (>= 2.1.2)
     commonjs (0.2.7)
-    composite_primary_keys (7.0.12)
+    composite_primary_keys (7.0.16)
       activerecord (~> 4.1.7)
-    data-anonymization (0.6.5)
-      activerecord (~> 4.1)
-      activesupport (~> 4.1)
-      composite_primary_keys (~> 7.0)
-      parallel (~> 1.0)
-      powerbar (~> 1.0)
-      protected_attributes (~> 1.0)
-      rgeo (~> 0.3)
-      rgeo-geojson (~> 0.3)
-      thor (~> 0.19)
     devise (3.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -116,7 +120,7 @@ GEM
     ffi (1.9.6)
     haml (4.0.6)
       tilt
-    hashie (3.3.2)
+    hashie (3.4.3)
     highline (1.6.21)
     hike (1.2.3)
     i18n (0.6.11)
@@ -156,8 +160,7 @@ GEM
       ruby-rc4
     plek (0.3.0)
       builder
-    powerbar (1.0.12)
-      ansi (~> 1.5.0)
+    powerbar (1.0.17)
       hashie (>= 1.1.0)
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
@@ -189,9 +192,9 @@ GEM
     ref (1.0.5)
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
-    rgeo (0.3.20)
-    rgeo-geojson (0.3.1)
-      rgeo (~> 0.3)
+    rgeo (0.5.3)
+    rgeo-geojson (0.4.2)
+      rgeo (~> 0.5)
     rspec-core (2.14.8)
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
@@ -299,7 +302,7 @@ DEPENDENCIES
   canable (= 0.3.0)
   capybara (= 2.0.2)
   ci_reporter (= 1.8.4)
-  data-anonymization (= 0.6.5)
+  data-anonymization!
   devise (= 3.4.1)
   devise-encryptable (= 0.2.0)
   devise_security_extension!
