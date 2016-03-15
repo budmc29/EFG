@@ -1,3 +1,18 @@
+GIT
+  remote: git://github.com/thoughtbot/data-anonymization.git
+  revision: c7d6dda3cb1950bd5a93e876eff4534142d172bb
+  specs:
+    data-anonymization (0.7.3)
+      activerecord (~> 4.1)
+      activesupport (~> 4.1)
+      composite_primary_keys (~> 7.0)
+      parallel (~> 1.0)
+      powerbar (~> 1.0)
+      protected_attributes (~> 1.0)
+      rgeo (~> 0.3)
+      rgeo-geojson (~> 0.3)
+      thor (~> 0.19)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -66,16 +81,6 @@ GEM
     commonjs (0.2.7)
     composite_primary_keys (7.0.16)
       activerecord (~> 4.1.7)
-    data-anonymization (0.6.5)
-      activerecord (~> 4.1)
-      activesupport (~> 4.1)
-      composite_primary_keys (~> 7.0)
-      parallel (~> 1.0)
-      powerbar (~> 1.0)
-      protected_attributes (~> 1.0)
-      rgeo (~> 0.3)
-      rgeo-geojson (~> 0.3)
-      thor (~> 0.19)
     devise (3.5.6)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -291,7 +296,7 @@ DEPENDENCIES
   canable (= 0.3.0)
   capybara
   ci_reporter (= 1.8.4)
-  data-anonymization (= 0.6.5)
+  data-anonymization!
   devise (~> 3.5)
   devise-encryptable (~> 0.2)
   devise_security_extension (~> 0.8)
