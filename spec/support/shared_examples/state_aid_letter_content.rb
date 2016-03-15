@@ -1,10 +1,9 @@
 shared_context "State Aid Letter Content" do
-  let(:loan) { FactoryGirl.create(:loan, :completed, :offered) }
-
-  let(:pdf_content) {
-    state_aid_letter = described_class.new(loan)
-    reader = PDF::Reader.new(StringIO.new(state_aid_letter.render))
+  def render_pdf_content(loan: nil, pdf_opts: {})
+    loan ||= FactoryGirl.create(:loan, :completed, :offered)
+    pdf ||= described_class.new(loan, pdf_opts)
+    reader = PDF::Reader.new(StringIO.new(pdf.render))
     # Note: replace line breaks to make assertions easier
     reader.pages.collect { |page| page.to_s }.join(" ").gsub("\n", ' ')
-  }
+  end
 end

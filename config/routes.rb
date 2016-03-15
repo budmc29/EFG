@@ -90,11 +90,11 @@ EFG::Application.routes.draw do
     resources :realisation_adjustments, only: [:new, :create]
     resources :settlement_adjustments, only: [:new, :create]
     resources :adjustments, only: [:index]
+    resources :state_aid_letters, only: [:new, :create]
   end
 
   resources :documents, only: [] do
     member do
-      get :state_aid_letter
       get :information_declaration
     end
 

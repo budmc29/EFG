@@ -1,20 +1,73 @@
 class StateAidLetter < Prawn::Document
+  class Address
+    NUMBER_OF_ADDRESS_FIELDS = 5
+    LINE_HEIGHT = BOTTOM_SPACING = 20
 
-  attr_reader :filename
+    def initialize(pdf, opts = {})
+      @pdf = pdf
+      @opts = opts
+    end
+
+    def render
+      if has_address?
+        populated_address_fields.map { |f| pdf.text(f) }
+      else
+        pdf.text "<b>Applicant Address:</b>", inline_format: true
+      end
+      pdf.move_down(bottom_spacing_height)
+    end
+
+    private
+
+    attr_reader :pdf, :opts
+
+    def populated_address_fields
+      @populated_address_fields ||= %i(
+        applicant_address1
+        applicant_address2
+        applicant_address3
+        applicant_address4
+        applicant_postcode
+      ).map { |attr| opts[attr] }.reject(&:blank?)
+    end
+
+    def populated_address_height
+      populated_address_fields.size * LINE_HEIGHT
+    end
+
+    def has_address?
+      populated_address_fields.present?
+    end
+
+    def bottom_spacing_height
+      total_height - populated_address_height
+    end
+
+    def total_height
+      (LINE_HEIGHT * NUMBER_OF_ADDRESS_FIELDS) + BOTTOM_SPACING
+    end
+  end
 
   def initialize(loan, pdf_opts = {})
     super(pdf_opts)
     @loan = loan
+    @name = pdf_opts.delete(:applicant_name)
+    @address = Address.new(self, pdf_opts)
+    @date = pdf_opts.delete(:letter_date)
     @filename = "state_aid_letter_#{loan.reference}.pdf"
     self.font_size = 12
     build
   end
 
+  attr_reader :filename
+
   private
+
+  attr_reader :name, :address, :date
 
   def build
     letterhead
-    address
+    applicant_details
     title(:title)
     loan_details
     body_text(:body_text1)
@@ -33,13 +86,15 @@ class StateAidLetter < Prawn::Document
     end
   end
 
-  def address
-    text "Applicant Name"
-    move_down 20
-    text "Applicant Address"
-    move_down 20
-    text "Date"
-    move_down 60
+  def applicant_details
+    text applicant_name, inline_format: true
+    address.render
+    text "<b>Date:</b> #{date}", inline_format: true
+    move_down 40
+  end
+  
+  def applicant_name
+    name.present? ? name : "<b>Applicant Name:</b>"
   end
 
   def title(translation_key)

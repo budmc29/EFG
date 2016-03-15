@@ -228,6 +228,15 @@ en:
         sort_postcode: Postcode
         sort_maturity_date: Maturity Date
 
+      state_aid_letter_details:
+        applicant_name: Applicant name
+        applicant_address1: Applicant address 1
+        applicant_address2: Applicant address 2
+        applicant_address3: Applicant address 3
+        applicant_address4: Applicant address 4
+        applicant_postcode: Applicant postcode
+        letter_date: Letter date
+
       invoice_received:
         lender_id: Name of the Lender submitting the invoice?
         reference: What is the lender's invoice reference?

@@ -1,0 +1,31 @@
+<%= breadcrumbs_for_loan @loan %>
+
+<div class="page-header">
+  <h1>State Aid Letter</h1>
+</div>
+
+<p><span class="label label-info">INFORMATION</span> You may enter <b>optional</b> details for the State Aid letter, which will appear in the letterhead.</p>
+
+<hr>
+
+<%= simple_form_for(
+      :state_aid_letter_details, 
+      url: loan_state_aid_letters_path(@loan, format: :pdf),
+      html: {class: "form-horizontal"}) do |f| %>
+
+  <%= f.input :applicant_name %>
+  <%= f.input :applicant_address1 %>
+  <%= f.input :applicant_address2 %>
+  <%= f.input :applicant_address3 %>
+  <%= f.input :applicant_address4 %>
+  <%= f.input :applicant_postcode %>
+  <%= f.input :letter_date %>
+
+  <div class="form-actions">
+    <%= f.button :submit,
+      value: "Generate State Aid Letter",
+      class: "btn-primary",
+      data: { "disable-with" => "Generating..." }
+    %>
+  </div>
+<% end %>

@@ -4,12 +4,12 @@ class Phase6StateAidLetter < StateAidLetter
 
   def build
     letterhead
-    address
+    applicant_details
     title(:title)
     loan_details
     body_text(:body_text1)
     state_aid_amount
-    body_text(:body_text2, margin: 120)
+    body_text(:body_text2, margin: 80)
     title(:annex_title)
     body_text(:annex_text1)
     annex_table

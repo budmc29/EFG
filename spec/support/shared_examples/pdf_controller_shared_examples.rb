@@ -1,4 +1,4 @@
-shared_examples_for "documents controller action" do
+shared_examples_for "PDF controller action" do
   it 'works with a loan from the same lender' do
     dispatch
 
