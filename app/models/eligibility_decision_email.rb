@@ -16,9 +16,11 @@ class EligibilityDecisionEmail
 
   def deliver_email
     if loan.state == Loan::Eligible
-      LoanEligibilityDecisionMailer.loan_eligible_email(email, loan).deliver
+      LoanEligibilityDecisionMailer.loan_eligible_email(
+        email, loan).deliver_later
     elsif loan.state == Loan::Rejected
-      LoanEligibilityDecisionMailer.loan_ineligible_email(email, loan).deliver
+      LoanEligibilityDecisionMailer.loan_ineligible_email(
+        email, loan).deliver_later
     end
   end
 

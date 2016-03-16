@@ -8,7 +8,7 @@ class AskAnExpert
   validate :validate_at_least_one_to_email
 
   def deliver
-    AskForHelpMailer.ask_an_expert_email(self).deliver
+    AskForHelpMailer.ask_an_expert_email(self).deliver_later
   end
 
   def from

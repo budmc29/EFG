@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
     self.reset_password_sent_at = Time.now.utc
     self.save(validate: false)
 
-    UserMailer.new_account_notification(self, raw).deliver
+    UserMailer.new_account_notification(self, raw).deliver_later
   end
 
   # Override Devise's default behaviour so that an email with a blank "To" is

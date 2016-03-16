@@ -30,10 +30,10 @@ describe UsernamesReminder do
       end
 
       it 'calls UsernamesReminderMailer#usernames_reminder with the correct arguments' do
-        expect(UsernamesReminderMailer).to receive(:usernames_reminder)
-                               .with('me@example.com', %w(user2 user3))
-                               .once
-                               .and_return(double("mailer", deliver: true))
+        expect(UsernamesReminderMailer).to receive(:usernames_reminder).
+          with("me@example.com", %w(user2 user3)).
+          once.
+          and_return(double("mailer", deliver_later: true))
 
         usernames_reminder.send_email
       end

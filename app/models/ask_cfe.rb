@@ -13,7 +13,7 @@ class AskCfe
   end
 
   def deliver
-    AskForHelpMailer.ask_cfe_email(self).deliver
+    AskForHelpMailer.ask_cfe_email(self).deliver_later
   end
 
   def from

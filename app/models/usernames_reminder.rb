@@ -7,7 +7,8 @@ class UsernamesReminder
 
   def send_email
     if usernames_for_email.present?
-      UsernamesReminderMailer.usernames_reminder(email, usernames_for_email).deliver
+      UsernamesReminderMailer.usernames_reminder(
+        email, usernames_for_email).deliver_later
     end
   end
 
