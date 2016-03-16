@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :data_correction_presenter do
-    ignore do
+    transient do
       association :loan, factory: [:loan, :guaranteed]
       association :created_by, factory: :lender_user
     end

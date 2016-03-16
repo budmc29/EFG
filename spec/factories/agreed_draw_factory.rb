@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :agreed_draw do
-    ignore do
+    transient do
       association :loan, factory: [:loan, :guaranteed]
     end
 

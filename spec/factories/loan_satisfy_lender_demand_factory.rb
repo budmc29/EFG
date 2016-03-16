@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :loan_satisfy_lender_demand do
-    ignore do
+    transient do
       association :loan, factory: [:loan, :lender_demand]
     end
 
