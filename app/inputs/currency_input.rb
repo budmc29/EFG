@@ -1,5 +1,5 @@
 class CurrencyInput < SimpleForm::Inputs::StringInput
-  def input
+  def input(wrapper_options)
     unit = options[:unit] || '£'
 
     input_html_options[:type] = 'text'

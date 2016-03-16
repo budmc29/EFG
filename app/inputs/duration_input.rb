@@ -1,5 +1,5 @@
 class DurationInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     duration = @builder.object.send(attribute_name)
 
     template.content_tag(:div, class: 'input-append') do

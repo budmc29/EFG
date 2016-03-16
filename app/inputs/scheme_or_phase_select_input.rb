@@ -1,5 +1,5 @@
 class SchemeOrPhaseSelectInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     @builder.select(attribute_name, select_options)
   end
 

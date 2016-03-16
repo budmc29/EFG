@@ -1,5 +1,5 @@
 class LoanSubCategorySelectInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     unless options[:loan_category_id] 
       raise ArgumentError, 'Please specify the :loan_category_id'
     end

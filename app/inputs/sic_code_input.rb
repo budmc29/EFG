@@ -1,5 +1,5 @@
 class SICCodeInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     template.content_tag(:div, class: 'sic-code-input') do
       @builder.select(
         attribute_name,

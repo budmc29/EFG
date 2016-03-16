@@ -1,5 +1,5 @@
 class QuickDateInput < SimpleForm::Inputs::Base
-  def input
+  def input(wrapper_options)
     date = @builder.object.send(attribute_name)
 
     input_html_options[:placeholder] = 'dd/mm/yyyy'

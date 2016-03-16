@@ -1,5 +1,5 @@
 class PercentageInput < SimpleForm::Inputs::StringInput
-  def input
+  def input(wrapper_options)
     unit = '%'
 
     input_html_options[:maxlength] = 6
