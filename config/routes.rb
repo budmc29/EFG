@@ -32,15 +32,14 @@ EFG::Application.routes.draw do
 
     resources :sub_lenders, except: [:show]
 
-    with_options only: [:index, :show, :new, :create, :edit, :update] do
-      %w(lender_admins lender_users).each do |resource|
-        resources resource do
-          member do
-            post :disable
-            post :enable
-            post :reset_password
-            post :unlock
-          end
+    %w(lender_admins lender_users).each do |resource|
+      resources resource,
+                only: [:index, :show, :new, :create, :edit, :update] do
+        member do
+          post :disable
+          post :enable
+          post :reset_password
+          post :unlock
         end
       end
     end
@@ -107,19 +106,16 @@ EFG::Application.routes.draw do
 
   resources :loan_alerts, only: :show
 
-  with_options only: [:index, :show, :new, :create, :edit, :update] do
-
-    %w(auditor_users cfe_admins cfe_users premium_collector_users).each do |resource|
-      resources resource do
-        member do
-          post :disable
-          post :enable
-          post :reset_password
-          post :unlock
-        end
+  %w(auditor_users cfe_admins cfe_users
+     premium_collector_users).each do |resource|
+    resources resource, only: [:index, :show, :new, :create, :edit, :update] do
+      member do
+        post :disable
+        post :enable
+        post :reset_password
+        post :unlock
       end
     end
-
   end
 
   resource :search, only: [:show, :new], controller: :search do
