@@ -10,11 +10,11 @@ class DemandedAmountDataCorrection < DataCorrectionPresenter
   before_save :calculate_dti_amount_claimed
 
   def demanded_amount=(value)
-    @demanded_amount = value.present? ? Money.parse(value) : nil
+    @demanded_amount = value.present? ? Monetize.parse(value) : nil
   end
 
   def demanded_interest=(value)
-    @demanded_interest = value.present? ? Money.parse(value) : nil
+    @demanded_interest = value.present? ? Monetize.parse(value) : nil
   end
 
   private

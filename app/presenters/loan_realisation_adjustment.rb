@@ -42,7 +42,7 @@ class LoanRealisationAdjustment
     attr_writer :notes, :post_claim_limit
 
     def amount=(value)
-      @amount = value.present? ? Money.parse(value) : nil
+      @amount = value.present? ? Monetize.parse(value) : nil
     end
 
     def date=(value)

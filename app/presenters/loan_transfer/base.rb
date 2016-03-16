@@ -20,7 +20,7 @@ class LoanTransfer::Base
   end
 
   def new_amount=(value)
-    @new_amount = value.present? ? Money.parse(value) : nil
+    @new_amount = value.present? ? Monetize.parse(value) : nil
   end
 
   def loan_to_transfer

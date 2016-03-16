@@ -17,6 +17,7 @@ gem "useragent", "0.4.16"
 
 # types and conversions
 gem "money", "~> 6.7"
+gem "monetize", "~> 1.4"
 gem "uk_postcode", "~> 2.1"
 gem "weekdays", "1.0.2"
 

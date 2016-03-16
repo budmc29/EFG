@@ -17,7 +17,7 @@ class AgreedDraw
   end
 
   def amount_drawn=(value)
-    @amount_drawn = value.present? ? Money.parse(value) : nil
+    @amount_drawn = value.present? ? Monetize.parse(value) : nil
   end
 
   def attributes=(attributes)
@@ -59,7 +59,7 @@ class AgreedDraw
     def validate_amount_drawn
       if amount_drawn.nil?
         errors.add(:amount_drawn, :required)
-      elsif amount_drawn <= 0
+      elsif amount_drawn <= Money.new(0)
         errors.add(:amount_drawn, :must_be_positive)
       elsif amount_drawn > loan.amount_not_yet_drawn
         errors.add(:amount_drawn, :exceeds_amount_available)

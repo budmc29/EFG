@@ -7,7 +7,7 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
   before_save :update_loan_change
 
   def lump_sum_repayment=(value)
-    @lump_sum_repayment = value.present? ? Money.parse(value) : nil
+    @lump_sum_repayment = value.present? ? Monetize.parse(value) : nil
   end
 
   private
@@ -19,7 +19,7 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
     def validate_lump_sum_repayment
       if lump_sum_repayment.nil?
         errors.add(:lump_sum_repayment, :required)
-      elsif lump_sum_repayment <= 0
+      elsif lump_sum_repayment <= Money.new(0)
         errors.add(:lump_sum_repayment, :must_be_gt_zero)
       elsif loan.cumulative_lump_sum_amount + lump_sum_repayment > loan.cumulative_drawn_amount
         errors.add(:lump_sum_repayment, :exceeds_amount_drawn)

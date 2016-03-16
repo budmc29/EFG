@@ -21,7 +21,7 @@ class LenderLendingLimit
 
   def allocation=(value)
     if value.present?
-      @allocation = Money.parse(value)
+      @allocation = Monetize.parse(value)
     else
       @allocation = nil
     end

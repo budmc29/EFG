@@ -36,7 +36,7 @@ class LoanSettlementAdjustment
   attr_writer :notes
 
   def amount=(value)
-    @amount = value.present? ? Money.parse(value) : nil
+    @amount = value.present? ? Monetize.parse(value) : nil
   end
 
   def date=(value)

@@ -11,7 +11,8 @@ class LoanChange < LoanModification
     ChangeType::RepaymentFrequency,
   ].map(&:id)
 
-  validates_inclusion_of :change_type_id, in: ALLOWED_CHANGE_TYPE_IDS, strict: true
+  validates_inclusion_of :change_type_id,
+                         in: ALLOWED_CHANGE_TYPE_IDS, strict: true
   validate :validate_non_negative_amounts
 
   def repayment_frequency
@@ -23,8 +24,14 @@ class LoanChange < LoanModification
   end
 
   private
-    def validate_non_negative_amounts
-      errors.add(:amount_drawn, :not_be_negative) if amount_drawn && amount_drawn < 0
-      errors.add(:lump_sum_repayment, :not_be_negative) if lump_sum_repayment && lump_sum_repayment < 0
+
+  def validate_non_negative_amounts
+    if amount_drawn && amount_drawn < Money.new(0)
+      errors.add(:amount_drawn, :not_be_negative)
     end
+
+    if lump_sum_repayment && lump_sum_repayment < Money.new(0)
+      errors.add(:lump_sum_repayment, :not_be_negative)
+    end
+  end
 end

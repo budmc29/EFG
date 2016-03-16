@@ -10,6 +10,6 @@ class MoneyFormatter
   end
 
   def parse(value)
-    Money.parse(value, currency).cents if value.present?
+    Monetize.parse(value).cents if value.present?
   end
 end

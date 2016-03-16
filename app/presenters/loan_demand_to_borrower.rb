@@ -15,7 +15,7 @@ class LoanDemandToBorrower
   validate :borrower_demanded_on_is_not_in_the_future, if: :borrower_demanded_on
 
   def amount_demanded=(value)
-    @amount_demanded = value.present? ? Money.parse(value) : nil
+    @amount_demanded = value.present? ? Monetize.parse(value) : nil
   end
 
   def borrower_demanded_on=(value)

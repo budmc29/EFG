@@ -48,7 +48,7 @@ class SettleLoan
 
   def settled_amount=(value)
     if value.present?
-      @settled_amount = Money.parse(value)
+      @settled_amount = Monetize.parse(value)
     else
       @settled_amount = nil
     end

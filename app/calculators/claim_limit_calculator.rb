@@ -47,7 +47,7 @@ class ClaimLimitCalculator
 
   def amount_remaining
     remainder = total_amount + pre_claim_realisations_amount - settled_amount
-    remainder < 0 ? Money.new(0) : remainder
+    remainder < Money.new(0) ? Money.new(0) : remainder
   end
 
   def cumulative_drawn_amount
