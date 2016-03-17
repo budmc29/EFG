@@ -25,8 +25,6 @@ ActiveRecord::Schema.define(version: 20160308102522) do
     t.string   "type",                             null: false
   end
 
-  add_index "adjustments", ["created_by_id"], name: "index_adjustments_on_created_by_id", using: :btree
-  add_index "adjustments", ["date"], name: "index_adjustments_on_date", using: :btree
   add_index "adjustments", ["loan_id", "date"], name: "index_adjustments_on_loan_id_and_date", using: :btree
   add_index "adjustments", ["loan_id"], name: "index_adjustments_on_loan_id", using: :btree
   add_index "adjustments", ["type"], name: "index_adjustments_on_type", using: :btree
@@ -532,7 +530,7 @@ ActiveRecord::Schema.define(version: 20160308102522) do
     t.boolean "eligible",                           default: false
     t.boolean "public_sector_restricted",           default: false
     t.boolean "active",                             default: true
-    t.integer "state_aid_threshold",      limit: 8
+    t.integer "state_aid_threshold",      limit: 8,                 null: false
   end
 
   add_index "sic_codes", ["code"], name: "index_sic_codes_on_code", unique: true, using: :btree
