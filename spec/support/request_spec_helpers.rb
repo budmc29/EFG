@@ -75,6 +75,9 @@ module RequestSpecHelpers
     check 'loan_entry_state_aid_is_valid'
   end
 
+  alias :fill_in_valid_loan_entry_details_phase_7
+        :fill_in_valid_loan_entry_details_phase_6
+
   def calculate_state_aid(loan)
     click_button 'State Aid Calculation'
     page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year

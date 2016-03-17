@@ -20,7 +20,7 @@ describe 'Loan lifecycle' do
     context "phase 5" do
       let(:phase) { 5 }
 
-      it do
+      it "can progress through to realised" do
         phase_5_loan_lifecycle_steps
       end
     end
@@ -28,15 +28,19 @@ describe 'Loan lifecycle' do
     context 'phase 6' do
       let(:phase) { 6 }
 
-      it do
+      it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
+        generate_premium_schedule(loan)
+        loan_lifecycle_steps_from_offered(loan)
+      end
+    end
 
-        # Before offering facility in Phase 6, premium schedule must be generated
-        click_link "Generate Premium Schedule"
-        page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
-        page.fill_in 'premium_schedule_initial_draw_amount', with: Loan.last.amount.to_s
-        click_button 'Submit'
+    context "phase 7" do
+      let(:phase) { 7 }
 
+      it "can progress through to realised" do
+        loan = loan_lifecycle_steps_up_to_complete
+        generate_premium_schedule(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -46,7 +50,7 @@ describe 'Loan lifecycle' do
     context "for guaranteed #{loan_type.humanize} loan" do
       let!(:loan) { FactoryGirl.create(:loan, loan_type.to_sym, :offered, :guaranteed, lender: lender, sortcode: '03-12-45') }
 
-      it do
+      it "can progress through to realised" do
         visit root_path
         login_as_lender_user
 
@@ -255,6 +259,14 @@ describe 'Loan lifecycle' do
     click_link "View Loan Summary"
 
     return loan
+  end
+
+  def generate_premium_schedule(loan)
+    click_link "Generate Premium Schedule"
+    page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
+    page.fill_in 'premium_schedule_initial_draw_amount',
+      with: Loan.last.amount.to_s
+    click_button 'Submit'
   end
 
   def loan_lifecycle_steps_from_offered(loan)
