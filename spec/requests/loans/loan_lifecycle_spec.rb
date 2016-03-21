@@ -44,6 +44,16 @@ describe 'Loan lifecycle' do
         loan_lifecycle_steps_from_offered(loan)
       end
     end
+ 
+    context "phase 8" do
+      let(:phase) { 8 }
+
+      it "can progress through to realised" do
+        loan = loan_lifecycle_steps_up_to_complete
+        generate_premium_schedule(loan)
+        loan_lifecycle_steps_from_offered(loan)
+      end
+    end
   end
 
   %w(sflg legacy_sflg).each do |loan_type|

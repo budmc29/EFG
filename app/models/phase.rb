@@ -7,6 +7,7 @@ class Phase < StaticAssociation
     { id: 5, euro_conversion_rate: BigDecimal.new('1.22850'), starts_on: Date.new(2013, 4, 1),  ends_on: Date.new(2014, 3, 31) },
     { id: 6, euro_conversion_rate: BigDecimal.new('1.20744'), starts_on: Date.new(2014, 4, 1),  ends_on: Date.new(2015, 3, 31) },
     { id: 7, euro_conversion_rate: BigDecimal.new('1.20744'), starts_on: Date.new(2015, 4, 1),  ends_on: Date.new(2016, 3, 31) },
+    { id: 8, euro_conversion_rate: BigDecimal.new('1.20744'), starts_on: Date.new(2016, 4, 1),  ends_on: Date.new(2017, 3, 31) },
   ]
 
   def lending_limits

@@ -32,5 +32,9 @@ FactoryGirl.define do
     trait :phase_7 do
       phase_id 7
     end
+
+    trait :phase_8 do
+      phase_id 8
+    end
   end
 end
