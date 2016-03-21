@@ -44,7 +44,7 @@ describe 'Loan lifecycle' do
         loan_lifecycle_steps_from_offered(loan)
       end
     end
- 
+
     context "phase 8" do
       let(:phase) { 8 }
 

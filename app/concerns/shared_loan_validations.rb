@@ -16,7 +16,8 @@ module SharedLoanValidations
   end
 
   def company_turnover_is_allowed
-    errors.add(:turnover, :invalid) if turnover < Money.new(0) || turnover > Money.new(41_000_000_00)
+    if turnover < Money.new(0) || turnover > loan.rules.maximum_allowed_turnover
+      errors.add(:turnover, :invalid)
+    end
   end
-
 end

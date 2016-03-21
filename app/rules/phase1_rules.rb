@@ -65,4 +65,7 @@ class Phase1Rules
     ]
   end
 
+  def self.maximum_allowed_turnover
+    Money.new(41_000_000_00)
+  end
 end
