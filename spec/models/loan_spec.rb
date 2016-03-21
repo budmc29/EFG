@@ -493,6 +493,22 @@ describe Loan do
         expect(loan.premium_rate).to eq(1.3)
       end
     end
+
+    context "phase 8" do
+      let(:lending_limit) { FactoryGirl.build(:lending_limit, :phase_8) }
+
+      let(:loan) do
+        FactoryGirl.build(:loan,
+                          premium_rate: nil,
+                          lending_limit: lending_limit,
+                          loan_category_id: LoanCategory::TypeF.id)
+      end
+
+      it "returns the loan's category specific premium rate" do
+        expect(loan.premium_rate).to eq(1.2)
+      end
+    end
+
   end
 
   describe "#state_history" do
