@@ -420,21 +420,54 @@ describe 'lender dashboard' do
 
     context "with Claim Limits" do
       before do
-        allow_any_instance_of(Phase1ClaimLimitCalculator).to receive(:total_amount).and_return(Money.new(1_000_000_00))
-        allow_any_instance_of(Phase1ClaimLimitCalculator).to receive(:amount_remaining).and_return(Money.new(500_000_00))
-        allow_any_instance_of(Phase1ClaimLimitCalculator).to receive(:percentage_remaining).and_return(50)
+        all_phases = Phase.all.map do |phase|
+          calculator_class = "Phase#{phase.id}ClaimLimitCalculator".constantize
+
+          calculator = double(
+            calculator_class,
+            total_amount: Money.new(1_000_000_00),
+            amount_remaining: Money.new(500_000_00),
+            percentage_remaining: 50,
+            pre_claim_realisations_amount: Money.new(0),
+            settled_amount: Money.new(500_000_00),
+            phase: phase)
+
+          allow(calculator_class).to receive(:new).and_return(calculator)
+
+          rules = double("Rules", claim_limit_calculator: calculator_class)
+
+          allow(phase).to receive(:rules).and_return(rules)
+
+          phase
+        end
+
+        allow(Phase).to receive(:all).and_return(all_phases)
       end
 
-      it "should display Claim Limit summary" do
+      it "displays claim limit stats" do
         visit root_path
 
-        within '.dashboard-widgets.secondary' do
+        within(claim_limit_widgets) do
           expect(page).to have_content('Phase 1')
           expect(page).to have_content('Claim Limit: £1,000,000')
           expect(page).to have_content('Amount Remaining: £500,000')
           expect(page).to have_content('Percentage Remaining: 50%')
         end
       end
+
+      it "displays a claim limit for each phase" do
+        visit root_path
+
+        within(claim_limit_widgets) do
+          Phase.all.each do |phase|
+            expect(page).to have_content(phase.name)
+          end
+        end
+      end
     end
+  end
+
+  def claim_limit_widgets
+    find(".dashboard-widgets.secondary")
   end
 end
