@@ -4,7 +4,7 @@
   <h1>Realisation Adjustment</h1>
 </div>
 
-<%= simple_form_for([@loan, @realisation_adjustment], html: { class: 'form-horizontal' }) do |f| %>
+<%= simple_form_for(@realisation_adjustment, html: { class: 'form-horizontal' }) do |f| %>
 
   <%= f.input :amount, as: :currency %>
   <%= f.input :date, as: :quick_date %>

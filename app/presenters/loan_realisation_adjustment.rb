@@ -1,5 +1,5 @@
 class LoanRealisationAdjustment
-  include ActiveModel::Validations
+  include ActiveModel::Model
 
   attr_accessor :created_by
   attr_reader :amount, :date, :notes, :post_claim_limit
@@ -14,10 +14,10 @@ class LoanRealisationAdjustment
 
   def initialize(loan, attributes = {})
     @loan = loan
-    self.amount = attributes['amount']
-    self.date = attributes['date']
-    self.notes = attributes['notes']
-    self.post_claim_limit = attributes['post_claim_limit']
+    self.amount = attributes[:amount]
+    self.date = attributes[:date]
+    self.notes = attributes[:notes]
+    self.post_claim_limit = attributes[:post_claim_limit]
   end
 
   def save
@@ -31,11 +31,6 @@ class LoanRealisationAdjustment
       realisation_adjustment.post_claim_limit = post_claim_limit
     end
   end
-
-  # ActiveModel compliance.
-  def self.model_name; ActiveModel::Name.new(self, nil, 'RealisationAdjustment'); end
-  def persisted?; false; end
-  def to_key; nil; end
 
   private
     attr_reader :loan
