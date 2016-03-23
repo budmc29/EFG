@@ -66,6 +66,8 @@ group :development, :test do
   gem "parallel_tests", "0.16.10"
   gem "rspec-rails", "~> 3.4"
   gem "simplecov-rcov", "0.2.3"
+  gem "spring", "~> 1.6"
+  gem "spring-commands-rspec", "~> 1.0"
 end
 
 group :test do
