@@ -51,7 +51,7 @@ class Phase1Rules
   end
 
   def self.state_aid_calculator
-    Phase5StateAidCalculator
+    StateAidCalculator
   end
 
   def self.state_aid_letter

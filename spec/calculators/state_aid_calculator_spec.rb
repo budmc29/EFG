@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Phase5StateAidCalculator do
+describe StateAidCalculator do
   let(:loan) {
     double(:loan,
       amount: Money.new(100_000_00),
@@ -16,7 +16,7 @@ describe Phase5StateAidCalculator do
     )
   }
 
-  let(:state_aid_calculator) { Phase5StateAidCalculator.new(loan) }
+  let(:state_aid_calculator) { described_class.new(loan) }
 
   it 'calculates state aid in EUR' do
     expect(state_aid_calculator.state_aid_eur).to eq(Money.new(24_962_50, 'EUR'))

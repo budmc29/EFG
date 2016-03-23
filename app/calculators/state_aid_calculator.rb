@@ -1,4 +1,4 @@
-class Phase5StateAidCalculator
+class StateAidCalculator
   RISK_FACTOR = 0.3
 
   def initialize(loan)
