@@ -60,6 +60,10 @@ gem "lograge", "0.1.2"
 # gds specific
 gem "plek", "0.3.0"
 
+group :development do
+  gem "guard-rspec", "~> 4.6", require: false
+end
+
 group :development, :test do
   gem "brakeman", "2.0.0"
   gem "ci_reporter", "1.8.4"
