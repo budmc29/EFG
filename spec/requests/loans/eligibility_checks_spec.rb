@@ -125,4 +125,11 @@ describe 'eligibility checks' do
     expect(current_path).to eq(loan_path(loan))
     expect(page).to have_content("Your email was sent successfully")
   end
+
+  it "has popover text to display when choosing refinanced loan reason" do
+    visit root_path
+    click_link "New Loan Application"
+
+    expect(page).to have_css("option[value='37'][data-toggle='popover']")
+  end
 end

@@ -66,4 +66,14 @@ module LoanHelper
     [Loan::Rejected, Loan::Incomplete].include?(loan.state) && loan.ineligibility_reasons.present?
   end
 
+  def loan_reason_options(reasons)
+    reasons.map do |r| 
+      array = [r.name, r.id] 
+      if r.notice_text.present?
+        array << { data: { content: r.notice_text, toggle: "popover" } }
+      end
+      array
+    end
+  end
+
 end

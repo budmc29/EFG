@@ -34,7 +34,16 @@
     <%= f.input :repayment_frequency_id, as: :select, collection: RepaymentFrequency.selectable, prompt: 'Please select', input_html: { class: 'input-xxlarge' } %>
     <%= simple_form_row t('simple_form.labels.loan_entry.sic_code'), @loan.sic_code %>
     <%= simple_form_row t('simple_form.labels.loan_entry.sic_desc'), @loan.sic_desc %>
-    <%= f.input :reason_id, as: :select, collection: LoanReason.active, prompt: 'Please select', input_html: { class: 'input-xxlarge' } %>
+    
+    <%= f.input :reason_id do %>
+      <%= f.select(
+        :reason_id,
+        loan_reason_options(LoanReason.active),
+        { prompt: true },
+        { class: "input-xxlarge", data: { "select-popover" => true } }
+      ) %>
+    <% end %>
+
     <%= f.input :interest_rate_type_id, as: :radio_buttons, collection: InterestRateType.all, wrapper_html: {class: 'radio-buttons-inline'} %>
     <%= f.input :interest_rate, as: :string %>
     <%= f.input :fees, as: :currency %>

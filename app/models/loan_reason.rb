@@ -227,6 +227,8 @@ class LoanReason < StaticAssociation
       name: 'Replacing existing finance',
       active: true,
       eligible: false,
+      notice_text: "This reason is not eligible. Please choose the original
+                    purpose of the funding being refinanced.",
     },
     {
       id: 38,

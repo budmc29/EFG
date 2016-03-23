@@ -222,6 +222,11 @@ describe 'loan entry' do
     end
   end
 
+  it "has popover text to display when choosing refinanced loan reason" do
+    visit new_loan_entry_path(loan)
+    expect(page).to have_css("option[value='37'][data-toggle='popover']")
+  end
+
   private
 
     def should_show_only_loan_category_fields(*field_names)
