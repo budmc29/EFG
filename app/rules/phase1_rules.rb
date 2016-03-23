@@ -13,7 +13,8 @@ class Phase1Rules
   }
 
   def self.claim_limit_calculator
-    Phase1ClaimLimitCalculator
+    phase_name = name.chomp("Rules")
+    "#{phase_name}ClaimLimitCalculator".constantize
   end
 
   def self.eligibility_check_validations

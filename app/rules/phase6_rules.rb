@@ -23,10 +23,6 @@ class Phase6Rules < Phase5Rules
     8 => BigDecimal.new('1.3'),
   }
 
-  def self.claim_limit_calculator
-    Phase6ClaimLimitCalculator
-  end
-
   def self.eligibility_check_validations
     [
       EligibilityValidator.new,
