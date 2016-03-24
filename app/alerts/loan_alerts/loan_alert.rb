@@ -2,7 +2,25 @@
 #
 # Note: alert range is 60 week days (no support for public holidays)
 class LoanAlerts::LoanAlert
+  include Enumerable
+
   VALID_PRIORITIES = %w(low medium high)
+
+  class AlertingLoan < SimpleDelegator
+    def initialize(loan, start_date, date_method)
+      @start_date = start_date
+      @date_method = date_method
+      super(loan)
+    end
+
+    def days_remaining
+      start_date.weekdays_until(send(date_method))
+    end
+
+    private
+
+    attr_reader :start_date, :date_method
+  end
 
   def initialize(lender, priority = nil)
     unless priority.blank? || VALID_PRIORITIES.include?(priority)
@@ -16,16 +34,13 @@ class LoanAlerts::LoanAlert
   attr_reader :lender, :priority
 
   def loans
-    lender.loans.order(self.date_method)
+    scope = lender.loans.order(date_method)
+    scope = yield scope if block_given?
+    scope.map { |loan| AlertingLoan.new(loan, start_date, date_method) }
   end
 
-  def loans_with_days_remaining
-    Enumerator.new do |yielder|
-      loans.each do |loan|
-        loan_date = loan.send(date_method)
-        yielder.yield loan, calculate_days_remaining(loan_date)
-      end
-    end
+  def each(&block)
+    loans.each(&block)
   end
 
   def self.start_date
@@ -75,7 +90,6 @@ class LoanAlerts::LoanAlert
     end
   end
 
-  private
   def calculate_days_remaining(loan_date)
     start_date.weekdays_until(loan_date.to_date)
   end

@@ -1,13 +1,13 @@
 <%= breadcrumbs %>
 
 <div class="page-header">
-  <%= loan_alerts_priority(@alert.priority) %>
-  <h1><%= params[:id].titleize %> Loan Alerts (<%= pluralize(@alert.loans.count, 'loan') %>)</h1>
+  <%= loan_alerts_priority(@alerting_loans.priority) %>
+  <h1><%= params[:id].titleize %> Loan Alerts (<%= pluralize(@alerting_loans.loans.count, 'loan') %>)</h1>
 </div>
 
 <p><%= t("loan_alerts.#{params[:id]}_description") %></p>
 
-<%= other_alert_links(@alert.priority) %>
+<%= other_alert_links(@alerting_loans.priority) %>
 
 <table class="table table-striped">
   <thead>
@@ -20,9 +20,9 @@
     </tr>
   </thead>
   <tbody>
-    <% @alert.loans_with_days_remaining.each do |loan, days_remaining| %>
+    <% @alerting_loans.each do |loan| %>
       <tr>
-        <td><%= days_remaining %></td>
+        <td><%= loan.days_remaining %></td>
         <td><%= link_to(loan.reference, loan) %></td>
         <td><%= link_to(loan_business_name(loan), loan) %></td>
         <td><%= loan.amount.format %></td>
@@ -32,6 +32,6 @@
   </tbody>
 </table>
 
-<% if @alert.loans_with_days_remaining.count > 5 %>
-  <%= other_alert_links(@alert.priority) %>
+<% if @alerting_loans.count > 5 %>
+  <%= other_alert_links(@alerting_loans.priority) %>
 <% end %>

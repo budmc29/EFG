@@ -1,20 +1,100 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe LoanAlerts::NotClosedLoanAlert do
   let(:lender) { FactoryGirl.create(:lender) }
   let(:not_closed) { LoanAlerts::NotClosedLoanAlert.new(lender) }
 
-  describe '#loans' do
-    let!(:loan1) { FactoryGirl.create(:loan, :sflg, :guaranteed, lender: lender, maturity_date: 22.weeks.ago.to_date) }
-    let!(:loan2) { FactoryGirl.create(:loan, :sflg, :guaranteed, lender: lender, maturity_date: 21.weeks.ago.to_date) }
-    let!(:loan3) { FactoryGirl.create(:loan, :sflg, :guaranteed, lender: lender, maturity_date: 20.weeks.ago.to_date) }
-    let!(:loan4) { FactoryGirl.create(:loan, :efg,  :guaranteed, lender: lender, maturity_date: 12.weeks.ago.to_date) }
-    let!(:loan5) { FactoryGirl.create(:loan, :efg,  :guaranteed, lender: lender, maturity_date: 11.weeks.ago.to_date) }
-    let!(:loan6) { FactoryGirl.create(:loan, :efg,  :guaranteed, lender: lender, maturity_date: 10.weeks.ago.to_date) }
-    let!(:loan7) { FactoryGirl.create(:loan, :efg,  :guaranteed,                 maturity_date: 10.weeks.ago.to_date) }
+  describe "#loans" do
+    let!(:unclosed_sflg_loan1) do
+      FactoryGirl.create(
+        :loan,
+        :sflg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 22.weeks.ago.to_date)
+    end
 
-    it 'fetches the loans from both guaranteed and offered, and sorts by maturity date' do
-      expect(not_closed.loans).to eq([loan1, loan2, loan3, loan4, loan5, loan6])
+    let!(:unclosed_sflg_loan2) do
+      FactoryGirl.create(
+        :loan,
+        :sflg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 21.weeks.ago.to_date)
+    end
+
+    let!(:unclosed_sflg_loan3) do
+      FactoryGirl.create(
+        :loan,
+        :sflg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 20.weeks.ago.to_date)
+    end
+
+    let!(:unclosed_efg_loan1) do
+      FactoryGirl.create(
+        :loan,
+        :efg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 11.weeks.ago.to_date)
+    end
+
+    let!(:unclosed_efg_loan2) do
+      FactoryGirl.create(
+        :loan,
+        :efg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 12.weeks.ago.to_date)
+    end
+
+    let!(:unclosed_efg_loan3) do
+      FactoryGirl.create(
+        :loan,
+        :efg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 10.weeks.ago.to_date)
+    end
+
+    let!(:already_closed_loan) do
+      FactoryGirl.create(
+        :loan,
+        :efg,
+        :guaranteed,
+        lender: lender,
+        maturity_date: 15.weeks.ago.to_date)
+    end
+
+    let!(:different_lender_unclosed_loan) do
+      FactoryGirl.create(
+        :loan,
+        :efg,
+        :guaranteed,
+        maturity_date: 10.weeks.ago.to_date)
+    end
+
+    it "fetches the alerting loans from both guaranteed and offered,
+        and sorts by maturity date" do
+      expected_loan_ids = [unclosed_sflg_loan1.id,
+                           unclosed_sflg_loan2.id,
+                           unclosed_sflg_loan3.id,
+                           unclosed_efg_loan2.id,
+                           unclosed_efg_loan1.id,
+                           unclosed_efg_loan3.id]
+
+      expect(not_closed.loans.map(&:id)).to match_array(expected_loan_ids)
+    end
+
+    it "has remaining days before each loan is auto-removed" do
+      expect(not_closed.loans[0].days_remaining).to eql(20)
+      expect(not_closed.loans[1].days_remaining).to eql(25)
+      expect(not_closed.loans[2].days_remaining).to eql(30)
+      expect(not_closed.loans[3].days_remaining).to eql(5)
+      expect(not_closed.loans[4].days_remaining).to eql(10)
+      expect(not_closed.loans[5].days_remaining).to eql(15)
     end
   end
 end

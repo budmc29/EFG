@@ -4,7 +4,12 @@
 # "EFG loans however, should not be subjected to this alert
 class LoanAlerts::NotDemandedLoanAlert < LoanAlerts::LoanAlert
   def loans
-    super.with_scheme('non_efg').lender_demanded.borrower_demanded_date_between(alert_range.first, alert_range.last)
+    super do |loans|
+      loans.
+        with_scheme('non_efg').
+        lender_demanded.
+        borrower_demanded_date_between(alert_range.first, alert_range.last)
+    end
   end
 
   def self.start_date

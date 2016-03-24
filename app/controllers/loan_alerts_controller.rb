@@ -1,29 +1,35 @@
 class LoanAlertsController < ApplicationController
   ALERTS = {
-    'not_closed'     => LoanAlerts::NotClosedLoanAlert,
-    'not_demanded'   => LoanAlerts::NotDemandedLoanAlert,
-    'not_drawn'      => LoanAlerts::NotDrawnLoanAlert,
-    'not_progressed' => LoanAlerts::NotProgressedLoanAlert
-  }
+    "not_closed"     => LoanAlerts::NotClosedLoanAlert,
+    "not_demanded"   => LoanAlerts::NotDemandedLoanAlert,
+    "not_drawn"      => LoanAlerts::NotDrawnLoanAlert,
+    "not_progressed" => LoanAlerts::NotProgressedLoanAlert,
+  }.freeze
 
   before_filter :verify_view_permission
 
   def show
-    action = params[:id]
-    klass = ALERTS.fetch(action) { raise ActiveRecord::RecordNotFound }
-    @alert = klass.new(current_lender, params[:priority])
+    klass = ALERTS.fetch(alert_type) { raise ActiveRecord::RecordNotFound }
+    @alerting_loans = klass.new(current_lender, params[:priority])
 
     respond_to do |format|
       format.html
-      format.csv {
-        filename = "#{[action, @alert.priority].reject(&:blank?).join('-')}.csv"
-        csv_export = LoanCsvExport.new(@alert.loans)
-        stream_response(csv_export, filename)
-      }
+      format.csv do
+        csv_export = LoanCsvExport.new(@alerting_loans)
+        stream_response(csv_export, csv_filename)
+      end
     end
   end
 
   private
+
+  def alert_type
+    params[:id]
+  end
+
+  def csv_filename
+    "#{[alert_type, @alerting_loans.priority].reject(&:blank?).join('-')}.csv"
+  end
 
   def verify_view_permission
     enforce_view_permission(LoanAlerts)

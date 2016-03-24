@@ -1,7 +1,13 @@
-# EFG – if state ‘guaranteed’ and maturity date elapsed by 3 months – auto remove
+# EFG loans
+# if state ‘guaranteed’ and maturity date elapsed by 3 months – auto remove
 class LoanAlerts::NotClosedGuaranteedLoanAlert < LoanAlerts::LoanAlert
   def loans
-    super.with_scheme('efg').guaranteed.maturity_date_between(alert_range.first, alert_range.end)
+    super do |loans|
+      loans.
+        with_scheme("efg").
+        guaranteed.
+        maturity_date_between(alert_range.first, alert_range.end)
+    end
   end
 
   def self.start_date
