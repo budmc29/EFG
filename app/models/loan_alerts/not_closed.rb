@@ -7,7 +7,7 @@ class LoanAlerts::NotClosed < LoanAlerts::Base
   end
 
   def self.date_method
-    :maturity_date
+    :days_remaining
   end
 
   def loans

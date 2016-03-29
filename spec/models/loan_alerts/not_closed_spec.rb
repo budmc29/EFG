@@ -77,24 +77,24 @@ describe LoanAlerts::NotClosed do
     end
 
     it "fetches the alerting loans from both guaranteed and offered,
-        and sorts by maturity date" do
-      expected_loan_ids = [unclosed_sflg_loan1.id,
-                           unclosed_sflg_loan2.id,
-                           unclosed_sflg_loan3.id,
-                           unclosed_efg_loan2.id,
+        and sorts by days remaining" do
+      expected_loan_ids = [unclosed_efg_loan2.id,
                            unclosed_efg_loan1.id,
-                           unclosed_efg_loan3.id]
+                           unclosed_efg_loan3.id,
+                           unclosed_sflg_loan1.id,
+                           unclosed_sflg_loan2.id,
+                           unclosed_sflg_loan3.id]
 
-      expect(not_closed.loans.map(&:id)).to match_array(expected_loan_ids)
+      expect(not_closed.loans.map(&:id)).to eq(expected_loan_ids)
     end
 
     it "has remaining days before each loan is auto-removed" do
-      expect(not_closed.loans[0].days_remaining).to eql(20)
-      expect(not_closed.loans[1].days_remaining).to eql(25)
-      expect(not_closed.loans[2].days_remaining).to eql(30)
-      expect(not_closed.loans[3].days_remaining).to eql(5)
-      expect(not_closed.loans[4].days_remaining).to eql(10)
-      expect(not_closed.loans[5].days_remaining).to eql(15)
+      expect(not_closed.loans[0].days_remaining).to eql(5)
+      expect(not_closed.loans[1].days_remaining).to eql(10)
+      expect(not_closed.loans[2].days_remaining).to eql(15)
+      expect(not_closed.loans[3].days_remaining).to eql(20)
+      expect(not_closed.loans[4].days_remaining).to eql(25)
+      expect(not_closed.loans[5].days_remaining).to eql(30)
     end
   end
 end
