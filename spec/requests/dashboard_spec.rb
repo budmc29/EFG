@@ -10,7 +10,7 @@ describe 'lender dashboard' do
           :loan,
           :offered,
           lender: lender,
-          facility_letter_date: start_date
+          facility_letter_date: 5.weekdays_from(start_date)
         )
       }
 
@@ -19,7 +19,7 @@ describe 'lender dashboard' do
           :loan,
           :offered,
           lender: lender,
-          facility_letter_date: 11.weekdays_from(start_date)
+          facility_letter_date: 19.weekdays_from(start_date)
         )
       }
 
@@ -28,7 +28,7 @@ describe 'lender dashboard' do
           :loan,
           :offered,
           lender: lender,
-          facility_letter_date: 30.weekdays_from(start_date)
+          facility_letter_date: 42.weekdays_from(start_date)
         )
       }
 
@@ -81,7 +81,7 @@ describe 'lender dashboard' do
           :lender_demand,
           :sflg,
           lender: lender,
-          borrower_demanded_on: start_date
+          borrower_demanded_on: 5.weekdays_from(start_date)
         )
       }
 
@@ -91,7 +91,7 @@ describe 'lender dashboard' do
           :lender_demand,
           :legacy_sflg,
           lender: lender,
-          borrower_demanded_on: 11.weekdays_from(start_date)
+          borrower_demanded_on: 19.weekdays_from(start_date)
         )
       }
 
@@ -101,7 +101,7 @@ describe 'lender dashboard' do
           :lender_demand,
           :sflg,
           lender: lender,
-          borrower_demanded_on: 30.weekdays_from(start_date)
+          borrower_demanded_on: 42.weekdays_from(start_date)
         )
       }
 
@@ -274,7 +274,7 @@ describe 'lender dashboard' do
           :loan,
           :guaranteed,
           lender: lender,
-          maturity_date: 30.weekdays_from(3.months.ago)
+          maturity_date: 31.weekdays_from(3.months.ago)
         )
       }
 
@@ -284,7 +284,7 @@ describe 'lender dashboard' do
           :guaranteed,
           :legacy_sflg,
           lender: lender,
-          maturity_date: 30.weekdays_from(6.months.ago)
+          maturity_date: 31.weekdays_from(6.months.ago)
         )
       }
 
@@ -293,7 +293,7 @@ describe 'lender dashboard' do
           :loan,
           :guaranteed,
           lender: lender,
-          maturity_date: 60.weekdays_from(6.months.ago)
+          maturity_date: 61.weekdays_from(3.months.ago)
         )
       }
 
