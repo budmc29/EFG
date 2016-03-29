@@ -1,8 +1,8 @@
 require "rails_helper"
 
-describe LoanAlerts::NotClosedLoanAlert do
+describe LoanAlerts::NotClosed do
   let(:lender) { FactoryGirl.create(:lender) }
-  let(:not_closed) { LoanAlerts::NotClosedLoanAlert.new(lender) }
+  let(:not_closed) { described_class.new(lender) }
 
   describe "#loans" do
     let!(:unclosed_sflg_loan1) do

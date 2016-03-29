@@ -1,9 +1,9 @@
-class LoanAlerts::NotClosedLoanAlert < LoanAlerts::LoanAlert
+class LoanAlerts::NotClosed < LoanAlerts::Base
   def initialize(lender, priority = nil)
     super
 
-    @guaranteed = LoanAlerts::NotClosedGuaranteedLoanAlert.new(lender, priority)
-    @offered = LoanAlerts::NotClosedOfferedLoanAlert.new(lender, priority)
+    @guaranteed = LoanAlerts::NotClosedGuaranteed.new(lender, priority)
+    @offered = LoanAlerts::NotClosedOffered.new(lender, priority)
   end
 
   def self.date_method

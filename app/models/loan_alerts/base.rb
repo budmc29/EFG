@@ -1,7 +1,7 @@
 # Loan Alert sub-classes & behaviour from 'CfEL Response to Initial Questions.docx'.
 #
 # Note: alert range is 60 week days (no support for public holidays)
-class LoanAlerts::LoanAlert
+class LoanAlerts::Base
   include Enumerable
 
   VALID_PRIORITIES = %w(low medium high)

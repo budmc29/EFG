@@ -1,7 +1,7 @@
 # "All schemes, any loan that has remained at the state of
 # “eligible” / “incomplete” or “complete”
 # – for a period of 6 months from entering those states – should be ‘auto cancelled’"
-class LoanAlerts::NotProgressedLoanAlert < LoanAlerts::LoanAlert
+class LoanAlerts::NotProgressed < LoanAlerts::Base
   def loans
     super do |loans|
       loans.

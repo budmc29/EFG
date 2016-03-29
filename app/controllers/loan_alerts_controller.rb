@@ -1,9 +1,9 @@
 class LoanAlertsController < ApplicationController
   ALERTS = {
-    "not_closed"     => LoanAlerts::NotClosedLoanAlert,
-    "not_demanded"   => LoanAlerts::NotDemandedLoanAlert,
-    "not_drawn"      => LoanAlerts::NotDrawnLoanAlert,
-    "not_progressed" => LoanAlerts::NotProgressedLoanAlert,
+    "not_closed"     => LoanAlerts::NotClosed,
+    "not_demanded"   => LoanAlerts::NotDemanded,
+    "not_drawn"      => LoanAlerts::NotDrawn,
+    "not_progressed" => LoanAlerts::NotProgressed,
   }.freeze
 
   before_filter :verify_view_permission

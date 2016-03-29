@@ -2,7 +2,7 @@
 # have a 12 month time frame to be progressed to “Demanded”
 # – if they do not, they will become “Auto Removed”."
 # "EFG loans however, should not be subjected to this alert
-class LoanAlerts::NotDemandedLoanAlert < LoanAlerts::LoanAlert
+class LoanAlerts::NotDemanded < LoanAlerts::Base
   def loans
     super do |loans|
       loans.

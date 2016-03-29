@@ -1,6 +1,6 @@
 # "Offered loans have 6 months to progress from offered to guaranteed state
 # – if not they progress to auto cancelled""
-class LoanAlerts::NotDrawnLoanAlert < LoanAlerts::LoanAlert
+class LoanAlerts::NotDrawn < LoanAlerts::Base
   def loans
     super do |loans|
       loans.
