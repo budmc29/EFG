@@ -11,7 +11,7 @@ class LoanAlerts::NotClosed < LoanAlerts::Base
   end
 
   def loans
-    [@guaranteed, @offered].map(&:loans).flatten(1).sort_by(&date_method)
+    @loans ||= [@guaranteed, @offered].flat_map(&:loans).sort_by(&date_method)
   end
 
   def start_date

@@ -34,9 +34,11 @@ class LoanAlerts::Base
   attr_reader :lender, :priority
 
   def loans
-    scope = lender.loans.order(date_method)
-    scope = yield scope if block_given?
-    scope.map { |loan| AlertingLoan.new(loan, start_date, date_method) }
+    @loans ||= begin
+      scope = lender.loans.order(date_method)
+      scope = yield scope if block_given?
+      scope.map { |loan| AlertingLoan.new(loan, start_date, date_method) }
+    end
   end
 
   def each(&block)
