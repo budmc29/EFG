@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe LoanAlerts::NotProgressedLoanAlert do
+describe LoanAlerts::NotProgressed do
   it "groups medium priority alerts correctly" do
     start_date = 6.months.ago
     lender = FactoryGirl.create(:lender)
@@ -34,9 +34,10 @@ describe LoanAlerts::NotProgressedLoanAlert do
                     mid_range_medium_priority_loan,
                     newly_medium_priority_loan].map(&:id)
 
-    alerts = described_class.new(lender, "medium")
+    alert = described_class.new(lender)
+    group = alert.group(:medium)
 
-    expect(alerts.loans.map(&:id)).to eq(expected_ids)
+    expect(group.map(&:id)).to eq(expected_ids)
   end
 
   it "groups low priority alerts correctly" do
@@ -72,9 +73,10 @@ describe LoanAlerts::NotProgressedLoanAlert do
                     mid_range_low_priority_loan,
                     newly_low_priority_loan].map(&:id)
 
-    alerts = described_class.new(lender, "low")
+    alert = described_class.new(lender)
+    group = alert.group(:low)
 
-    expect(alerts.loans.map(&:id)).to eq(expected_ids)
+    expect(group.map(&:id)).to eq(expected_ids)
   end
 
   it "groups high priority alerts correctly" do
@@ -110,8 +112,9 @@ describe LoanAlerts::NotProgressedLoanAlert do
                     mid_range_high_priority_loan,
                     newly_high_priority_loan].map(&:id)
 
-    alerts = described_class.new(lender, "high")
+    alert = described_class.new(lender)
+    group = alert.group(:high)
 
-    expect(alerts.loans.map(&:id)).to eq(expected_ids)
+    expect(group.map(&:id)).to eq(expected_ids)
   end
 end

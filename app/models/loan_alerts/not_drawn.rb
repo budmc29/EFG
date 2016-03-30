@@ -5,7 +5,7 @@ class LoanAlerts::NotDrawn < LoanAlerts::Base
     super do |loans|
       loans.
         offered.
-        facility_letter_date_between(alert_range.first, alert_range.last)
+        facility_letter_date_between(start_date, end_date)
     end
   end
 
@@ -14,7 +14,46 @@ class LoanAlerts::NotDrawn < LoanAlerts::Base
     10.weekdays_ago(6.months.ago).to_date
   end
 
-  def self.date_method
+  def start_date
+    self.class.start_date
+  end
+
+  def date_method
     :facility_letter_date
+  end
+
+  def groups
+    @groups ||= begin
+      [
+        LoanAlertGroup.new(
+          loans: loans,
+          priority: :overdue,
+          method_name: date_method,
+          start_date: start_date,
+          end_date: 9.weekdays_from(start_date),
+        ),
+        LoanAlertGroup.new(
+          loans: loans,
+          priority: :high,
+          method_name: date_method,
+          start_date: 10.weekdays_from(start_date),
+          end_date: 19.weekdays_from(start_date),
+        ),
+        LoanAlertGroup.new(
+          loans: loans,
+          priority: :medium,
+          method_name: date_method,
+          start_date: 20.weekdays_from(start_date),
+          end_date: 39.weekdays_from(start_date),
+        ),
+        LoanAlertGroup.new(
+          loans: loans,
+          priority: :low,
+          method_name: date_method,
+          start_date: 40.weekdays_from(start_date),
+          end_date: 59.weekdays_from(start_date),
+        ),
+      ]
+    end
   end
 end

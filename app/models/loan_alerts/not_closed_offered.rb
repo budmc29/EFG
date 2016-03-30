@@ -5,7 +5,7 @@ class LoanAlerts::NotClosedOffered < LoanAlerts::Base
       loans.
         with_scheme("non_efg").
         guaranteed.
-        maturity_date_between(alert_range.first, alert_range.end)
+        maturity_date_between(start_date, end_date)
     end
   end
 
@@ -13,7 +13,11 @@ class LoanAlerts::NotClosedOffered < LoanAlerts::Base
     6.months.ago.to_date
   end
 
-  def self.date_method
+  def start_date
+    self.class.start_date
+  end
+
+  def date_method
     :maturity_date
   end
 end

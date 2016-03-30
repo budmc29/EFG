@@ -112,25 +112,25 @@
     height: 100%;
     text-decoration: none;
 
-    &.high-priority {
-      width: 150px;
+    &.overdue-priority {
+      span {
+        background-color: $dark_grey;
+      }
+    }
 
+    &.high-priority {
       span {
         background-color: $red;
       }
     }
 
     &.medium-priority {
-      width: 300px;
-
       span {
         background-color: $amber;
       }
     }
 
     &.low-priority {
-      width: 450px;
-
       span {
         background-color: $dark_green;
       }

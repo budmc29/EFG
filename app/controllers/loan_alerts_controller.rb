@@ -8,14 +8,17 @@ class LoanAlertsController < ApplicationController
 
   before_filter :verify_view_permission
 
+  helper_method :alert_type
+
   def show
     klass = ALERTS.fetch(alert_type) { raise ActiveRecord::RecordNotFound }
-    @alerting_loans = klass.new(current_lender, params[:priority])
+    @alert = klass.new(current_lender)
+    @group = @alert.group(params[:priority])
 
     respond_to do |format|
       format.html
       format.csv do
-        csv_export = LoanCsvExport.new(@alerting_loans)
+        csv_export = LoanCsvExport.new(@group)
         stream_response(csv_export, csv_filename)
       end
     end
@@ -28,7 +31,7 @@ class LoanAlertsController < ApplicationController
   end
 
   def csv_filename
-    "#{[alert_type, @alerting_loans.priority].reject(&:blank?).join('-')}.csv"
+    "#{[alert_type, @group.priority].reject(&:blank?).join('-')}.csv"
   end
 
   def verify_view_permission

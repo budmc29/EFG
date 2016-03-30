@@ -5,7 +5,7 @@ describe 'lender dashboard' do
     context "with not drawn loan alerts" do
       let(:start_date) { (6.months.ago - 10.days).to_date }
 
-      let!(:high_priority_loan) {
+      let!(:overdue_priority_loan) {
         FactoryGirl.create(
           :loan,
           :offered,
@@ -14,12 +14,21 @@ describe 'lender dashboard' do
         )
       }
 
+      let!(:high_priority_loan) {
+        FactoryGirl.create(
+          :loan,
+          :offered,
+          lender: lender,
+          facility_letter_date: 11.weekdays_from(start_date)
+        )
+      }
+
       let!(:medium_priority_loan) {
         FactoryGirl.create(
           :loan,
           :offered,
           lender: lender,
-          facility_letter_date: 19.weekdays_from(start_date)
+          facility_letter_date: 21.weekdays_from(start_date)
         )
       }
 
@@ -41,15 +50,28 @@ describe 'lender dashboard' do
         )
       }
 
-      it "should display high, medium and low priority loan alerts" do
+      it "should display overdue, high, medium and low priority loan alerts" do
         visit root_path
 
+        expect(page).to have_css "#not_drawn_loan_alerts a.overdue-priority .total-loans", text: "1"
         expect(page).to have_css "#not_drawn_loan_alerts a.high-priority .total-loans", text: "1"
         expect(page).to have_css "#not_drawn_loan_alerts a.medium-priority .total-loans", text: "1"
         expect(page).to have_css "#not_drawn_loan_alerts a.low-priority .total-loans", text: "1"
 
+        find("#not_drawn_loan_alerts a.overdue-priority").click
+        expect(page).to have_content("(1 loan)")
+        expect(page).to have_content(overdue_priority_loan.reference)
+        expect(page).not_to have_content(high_priority_loan.reference)
+        expect(page).not_to have_content(medium_priority_loan.reference)
+        expect(page).not_to have_content(low_priority_loan.reference)
+        expect(page).not_to have_content(loan_not_in_alerts.reference)
+
+        visit root_path
+
         find("#not_drawn_loan_alerts a.high-priority").click
+        expect(page).to have_content("(1 loan)")
         expect(page).to have_content(high_priority_loan.reference)
+        expect(page).not_to have_content(overdue_priority_loan.reference)
         expect(page).not_to have_content(medium_priority_loan.reference)
         expect(page).not_to have_content(low_priority_loan.reference)
         expect(page).not_to have_content(loan_not_in_alerts.reference)
@@ -57,7 +79,9 @@ describe 'lender dashboard' do
         visit root_path
 
         find("#not_drawn_loan_alerts a.medium-priority").click
+        expect(page).to have_content("(1 loan)")
         expect(page).to have_content(medium_priority_loan.reference)
+        expect(page).not_to have_content(overdue_priority_loan.reference)
         expect(page).not_to have_content(high_priority_loan.reference)
         expect(page).not_to have_content(low_priority_loan.reference)
         expect(page).not_to have_content(loan_not_in_alerts.reference)
@@ -65,10 +89,30 @@ describe 'lender dashboard' do
         visit root_path
 
         find("#not_drawn_loan_alerts a.low-priority").click
+        expect(page).to have_content("(1 loan)")
         expect(page).to have_content(low_priority_loan.reference)
+        expect(page).not_to have_content(overdue_priority_loan.reference)
         expect(page).not_to have_content(medium_priority_loan.reference)
         expect(page).not_to have_content(high_priority_loan.reference)
         expect(page).not_to have_content(loan_not_in_alerts.reference)
+      end
+
+      it "allows navigating to different loan alerts groups" do
+        visit root_path
+        find("#not_drawn_loan_alerts a.overdue-priority").click
+        expect(page).to have_css(".overdue.btn.btn-info")
+
+        click_on("High Priority Alerts")
+        expect(page).to have_css(".high.btn.btn-info")
+
+        click_on("Medium Priority Alerts")
+        expect(page).to have_css(".medium.btn.btn-info")
+
+        click_on("Low Priority Alerts")
+        expect(page).to have_css(".low.btn.btn-info")
+
+        click_on("All Loan Alerts")
+        expect(page).to have_content("(4 loans)")
       end
     end
 
@@ -235,6 +279,7 @@ describe 'lender dashboard' do
         FactoryGirl.create(
           :loan,
           :guaranteed,
+          :efg,
           lender: lender,
           maturity_date: 3.months.ago
         )
@@ -254,6 +299,7 @@ describe 'lender dashboard' do
         FactoryGirl.create(
           :loan,
           :guaranteed,
+          :efg,
           lender: lender,
           maturity_date: 11.weekdays_from(3.months.ago)
         )
@@ -273,6 +319,7 @@ describe 'lender dashboard' do
         FactoryGirl.create(
           :loan,
           :guaranteed,
+          :efg,
           lender: lender,
           maturity_date: 31.weekdays_from(3.months.ago)
         )
@@ -292,6 +339,7 @@ describe 'lender dashboard' do
         FactoryGirl.create(
           :loan,
           :guaranteed,
+          :efg,
           lender: lender,
           maturity_date: 61.weekdays_from(3.months.ago)
         )

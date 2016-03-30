@@ -8,7 +8,7 @@ class LoanAlerts::NotDemanded < LoanAlerts::Base
       loans.
         with_scheme('non_efg').
         lender_demanded.
-        borrower_demanded_date_between(alert_range.first, alert_range.last)
+        borrower_demanded_date_between(start_date, end_date)
     end
   end
 
@@ -16,7 +16,11 @@ class LoanAlerts::NotDemanded < LoanAlerts::Base
     365.days.ago.to_date
   end
 
-  def self.date_method
+  def start_date
+    self.class.start_date
+  end
+
+  def date_method
     :borrower_demanded_on
   end
 end

@@ -1,104 +1,105 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe LoanAlerts::PriorityGrouping do
+  describe "for Not Drawn alert" do
+    let(:start_date) { alert.start_date }
 
-  describe '.merge' do
+    let!(:lender) { FactoryGirl.create(:lender) }
 
-    let(:group1) {
-      double(LoanAlerts::PriorityGrouping,
-        high_priority_loans: [[1], [2], [3]],
-        medium_priority_loans: [[4], [5], [6]],
-        low_priority_loans: [[7], [8], [9], [10]]
-      )
-    }
-
-    let(:group2) {
-      double(LoanAlerts::PriorityGrouping,
-        high_priority_loans: [[11], [12], [13]],
-        medium_priority_loans: [[14], [15], [16]],
-        low_priority_loans: [[17], [18], [19]]
-      )
-    }
-
-    it "returns a PriorityGrouping with merge high, medium, low loans" do
-      merged_grouping = LoanAlerts::PriorityGrouping.merge(group1, group2)
-      expect(merged_grouping.high_priority_loans).to eq([[1, 11], [2, 12], [3, 13]])
-      expect(merged_grouping.medium_priority_loans).to eq([[4, 14], [5, 15], [6, 16]])
-      expect(merged_grouping.low_priority_loans).to eq([[7, 17], [8, 18], [9, 19], [10]])
+    let!(:overdue_priority_loan) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: start_date)
     end
-  end
 
-  describe "grouping loans" do
-    let(:date) { Date.parse("31-10-2012") }
+    let!(:high_priority_loan) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: 10.weekdays_from(start_date))
+    end
 
-    let!(:high_priority_loan1) { FactoryGirl.create(:loan, :offered, maturity_date: 59.weekdays_ago(date)) }
+    let!(:medium_priority_loan1) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: 21.weekdays_from(start_date))
+    end
 
-    let!(:high_priority_loan2) { FactoryGirl.create(:loan, :offered, maturity_date: 50.weekdays_ago(date)) }
+    let!(:medium_priority_loan2) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: 39.weekdays_from(start_date))
+    end
 
-    let!(:medium_priority_loan1) { FactoryGirl.create(:loan, :offered, maturity_date: 49.weekdays_ago(date)) }
+    let!(:low_priority_loan1) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: 40.weekdays_from(start_date))
+    end
 
-    let!(:medium_priority_loan2) { FactoryGirl.create(:loan, :offered, maturity_date: 30.weekdays_ago(date)) }
+    let!(:low_priority_loan2) do
+      FactoryGirl.create(
+        :loan,
+        :offered,
+        lender: lender,
+        facility_letter_date: 59.weekdays_from(start_date))
+    end
 
-    let!(:low_priority_loan1) { FactoryGirl.create(:loan, :offered, maturity_date: 29.weekdays_ago(date)) }
+    let(:alert) do
+      LoanAlerts::NotDrawn.new(lender)
+    end
 
-    let!(:low_priority_loan2) { FactoryGirl.create(:loan, :offered, maturity_date: date) }
-
-    let(:alert) {
-      loans = [
-        high_priority_loan1,
-        high_priority_loan2,
-        medium_priority_loan1,
-        medium_priority_loan2,
-        low_priority_loan1,
-        low_priority_loan2
-      ]
-
-      double('LoanAlert',
-        loans: loans,
-        start_date: 59.weekdays_ago(date).to_date,
-        end_date: date,
-        date_method: :maturity_date
-      )
-    }
-
-    let(:priority_grouping) {
+    let(:priority_grouping) do
       LoanAlerts::PriorityGrouping.new(alert)
-    }
+    end
 
-    describe "#high_priority_loans" do
-      it "returns all high priority loans" do
-        expect(priority_grouping.high_priority_loans).to eq(padded_array_of_arrays(10, {
-          0 => [high_priority_loan1],
-          9 => [high_priority_loan2]
-        }))
+    describe "#alerts_grouped_by_priority" do
+      it "returns groups in the expected order" do
+        group_names = priority_grouping.alerts_grouped_by_priority.
+          map(&:priority)
+
+        expect(group_names).to eq([:overdue, :high, :medium, :low])
+      end
+
+      it "includes the correct loans in the first group" do
+        first_group = priority_grouping.alerts_grouped_by_priority.first
+        expect(first_group.total_loans).to eq(1)
+      end
+
+      it "includes the correct loans in the second group" do
+        second_group = priority_grouping.alerts_grouped_by_priority.second
+        expect(second_group.total_loans).to eq(1)
+      end
+
+      it "includes the correct loans in the third group" do
+        third_group = priority_grouping.alerts_grouped_by_priority.third
+        expect(third_group.total_loans).to eq(2)
+      end
+
+      it "includes the correct loans in the fourth group" do
+        fourth_group = priority_grouping.alerts_grouped_by_priority.fourth
+        expect(fourth_group.total_loans).to eq(2)
       end
     end
 
-    describe "#medium_priority_loans" do
-      it "returns all medium priority loans" do
-        expect(priority_grouping.medium_priority_loans).to eq(padded_array_of_arrays(20, {
-          0 => [medium_priority_loan1],
-          19 => [medium_priority_loan2]
-        }))
-      end
-    end
+    context "for not demanded alert" do
+      it "returns groups in the expected order" do
+        alert = LoanAlerts::NotDemanded.new(lender)
+        priority_grouping = LoanAlerts::PriorityGrouping.new(alert)
+        group_names = priority_grouping.alerts_grouped_by_priority.
+          map(&:priority)
 
-    describe "#low_priority_loans" do
-      it "returns all low priority loans" do
-        expect(priority_grouping.low_priority_loans).to eq(padded_array_of_arrays(30, {
-          0 => [low_priority_loan1],
-          29 => [low_priority_loan2]
-        }))
+        expect(group_names).to eq([:high, :medium, :low])
       end
     end
   end
-
-  private
-
-  # Returns an Array of +length+ padded with empty Array's. Uses the +contents+
-  # hash to populate the array at the specified indexes.
-  def padded_array_of_arrays(length, contents)
-    Array.new(length) { |index| contents[index] || [] }
-  end
-
 end

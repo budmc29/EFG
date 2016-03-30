@@ -1,13 +1,13 @@
 <%= breadcrumbs %>
 
 <div class="page-header">
-  <%= loan_alerts_priority(@alerting_loans.priority) %>
-  <h1><%= params[:id].titleize %> Loan Alerts (<%= pluralize(@alerting_loans.loans.count, 'loan') %>)</h1>
+  <%= loan_alerts_priority(@group.priority) %>
+  <h1><%= alert_type.titleize %> Loan Alerts (<%= pluralize(@group.count, 'loan') %>)</h1>
 </div>
 
-<p><%= t("loan_alerts.#{params[:id]}_description") %></p>
+<p><%= t("loan_alerts.#{alert_type}_description") %></p>
 
-<%= other_alert_links(@alerting_loans.priority) %>
+<%= other_alert_links(@alert.groups, @group.priority) %>
 
 <table class="table table-striped">
   <thead>
@@ -20,7 +20,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @alerting_loans.each do |loan| %>
+    <% @group.each do |loan| %>
       <tr>
         <td><%= loan.days_remaining %></td>
         <td><%= link_to(loan.reference, loan) %></td>
@@ -32,6 +32,6 @@
   </tbody>
 </table>
 
-<% if @alerting_loans.count > 5 %>
-  <%= other_alert_links(@alerting_loans.priority) %>
+<% if @group.count > 5 %>
+  <%= other_alert_links(@alert.groups, @group.priority) %>
 <% end %>
