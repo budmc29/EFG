@@ -71,6 +71,8 @@ describe 'Change password' do
       fill_in "#{user_type}_password_confirmation", with: current_user.password
       click_button 'Update Password'
 
+      IO.write("page.html", page.html)
+
       expect(page).to have_content((I18n.t('errors.messages.taken_in_past')))
     end
 

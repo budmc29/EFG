@@ -29,7 +29,7 @@ gem "bootstrap-will_paginate", "0.0.10"
 gem "devise", "~> 3.5"
 gem "devise-encryptable", "~> 0.2"
 gem "devise_zxcvbn", "~> 2.1"
-gem "devise_security_extension", "~> 0.8"
+gem "devise_security_extension", "~> 0.7.2"
 
 # authorization
 gem "canable", "0.3.0"
