@@ -1,7 +1,7 @@
 //= require accounting
 
 (function ($) {
-  $.fn.selectableRows = function () {
+  $.fn.recoveriesSelectableRows = function () {
     return $(this).each(function() {
       var table = $(this)
 
@@ -16,7 +16,7 @@
     })
   }
 
-  $.fn.total = function (filter) {
+  $.fn.recoveriesTotal = function (filter) {
     var selector
     if(filter) {
       selector = $(filter, this)
@@ -34,15 +34,15 @@
     return totalAmount
   }
 
-  $.fn.calculateTotals = function() {
+  $.fn.recoveriesCalculateTotals = function() {
     function setupBehaviour(table) {
       function renderTotals () {
         // calculate subtotals for this table
-        var preSubTotal = table.total('tbody tr[data-post-claim=no]')
+        var preSubTotal = table.recoveriesTotal('tbody tr[data-post-claim=no]')
         var formattedPreSubTotal = accounting.formatMoney(preSubTotal, '£')
         table.find('[data-behaviour=preSubTotal] td').text(formattedPreSubTotal)
 
-        var postSubTotal = table.total('tbody tr[data-post-claim=yes]')
+        var postSubTotal = table.recoveriesTotal('tbody tr[data-post-claim=yes]')
         var formattedPostSubTotal = accounting.formatMoney(postSubTotal, '£')
         table.find('[data-behaviour=postSubTotal] td').text(formattedPostSubTotal)
 
@@ -51,11 +51,11 @@
         table.find('[data-behaviour=subtotal] td').text(formattedSubTotal)
 
         // recalculate the grand totals for all tables
-        var preTotal = $('table tbody tr[data-post-claim=no]').total()
+        var preTotal = $('table tbody tr[data-post-claim=no]').recoveriesTotal()
         var formattedPreTotal = accounting.formatMoney(preTotal, '£')
         $('[data-behaviour=pre-total]').text(formattedPreTotal)
 
-        var postTotal = $('table tbody tr[data-post-claim=yes]').total()
+        var postTotal = $('table tbody tr[data-post-claim=yes]').recoveriesTotal()
         var formattedPostTotal = accounting.formatMoney(postTotal, '£')
         $('[data-behaviour=post-total]').text(formattedPostTotal)
 
@@ -84,8 +84,8 @@ $(document).ready(function() {
   }
 
   $('[data-behaviour=recoveries-statement-table]')
-    .selectableRows()
-    .calculateTotals()
+    .recoveriesSelectableRows()
+    .recoveriesCalculateTotals()
     .bind('rowSelect', highlightRow)
 
 });
