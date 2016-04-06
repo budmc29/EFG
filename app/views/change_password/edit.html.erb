@@ -4,6 +4,12 @@
   <h1>Change Your Password</h1>
 </div>
 
+<div class="alert alert-block">
+  <p>As a minimum passphrases should be eight characters long and include a mix of letters, numbers and symbols, but ideally they’ll be longer than that.</p>
+
+  <p>We refer to passphrases as a phrase is usually easier to remember but harder to guess than a short collection of symbols or a single word.</p>
+</div>
+
 <%= simple_form_for(current_user, url: change_password_path, html: { method: :put }) do |f| %>
 
   <%= f.input :password, label: "New Password", required: true %>
