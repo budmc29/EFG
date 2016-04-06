@@ -349,6 +349,16 @@ class Loan < ActiveRecord::Base
       cumulative_settlement_adjustments_amount
   end
 
+  def scheme
+    if loan_source == Loan::LEGACY_SFLG_SOURCE
+      :legacy
+    elsif loan_scheme == Loan::SFLG_SCHEME
+      :new
+    else
+      :efg
+    end
+  end
+
   private
 
   def cumulative_realised_amount
