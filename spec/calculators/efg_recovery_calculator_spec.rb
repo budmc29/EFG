@@ -4,7 +4,8 @@ describe EfgRecoveryCalculator do
   context "with linked and non-linked securities" do
     it "calculates the realisations attributable amount" do
       recovery = setup_recovery(
-        outstanding_non_efg_debt: Money.new(2_000_00),
+        outstanding_prior_non_efg_debt: Money.new(2_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(0),
         non_linked_security_proceeds: Money.new(3_000_00),
         linked_security_proceeds: Money.new(1_000_00),
       )
@@ -15,7 +16,8 @@ describe EfgRecoveryCalculator do
 
     it "calculates the amount due to DTI" do
       recovery = setup_recovery(
-        outstanding_non_efg_debt: Money.new(2_000_00),
+        outstanding_prior_non_efg_debt: Money.new(2_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(0),
         non_linked_security_proceeds: Money.new(3_000_00),
         linked_security_proceeds: Money.new(1_000_00),
       )
@@ -28,7 +30,8 @@ describe EfgRecoveryCalculator do
   context "with no linked security proceeds" do
     it "calculates the realisations attributable amount" do
       recovery = setup_recovery(
-        outstanding_non_efg_debt: Money.new(2_000_00),
+        outstanding_prior_non_efg_debt: Money.new(2_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(0),
         non_linked_security_proceeds: Money.new(1_000_00),
         linked_security_proceeds: Money.new(0),
       )
@@ -39,7 +42,8 @@ describe EfgRecoveryCalculator do
 
     it "calculates the amount due to DTI" do
       recovery = setup_recovery(
-        outstanding_non_efg_debt: Money.new(2_000_00),
+        outstanding_prior_non_efg_debt: Money.new(2_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(0),
         non_linked_security_proceeds: Money.new(1_000_00),
         linked_security_proceeds: Money.new(0),
       )
@@ -50,7 +54,9 @@ describe EfgRecoveryCalculator do
   end
 
   def setup_recovery(opts = {})
-    outstanding_non_efg_debt = opts.fetch(:outstanding_non_efg_debt)
+    outstanding_prior_non_efg_debt = opts.fetch(:outstanding_prior_non_efg_debt)
+    outstanding_subsequent_non_efg_debt = opts.fetch(
+      :outstanding_subsequent_non_efg_debt)
     non_linked_security_proceeds = opts.fetch(:non_linked_security_proceeds)
     linked_security_proceeds = opts.fetch(:linked_security_proceeds)
 
@@ -63,7 +69,8 @@ describe EfgRecoveryCalculator do
     FactoryGirl.build(
       :recovery,
       loan: loan,
-      outstanding_non_efg_debt: outstanding_non_efg_debt,
+      outstanding_prior_non_efg_debt: outstanding_prior_non_efg_debt,
+      outstanding_subsequent_non_efg_debt: outstanding_subsequent_non_efg_debt,
       non_linked_security_proceeds: non_linked_security_proceeds,
       linked_security_proceeds: linked_security_proceeds)
   end

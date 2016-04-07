@@ -41,7 +41,8 @@ describe Recovery do
       end
 
       %w(
-        outstanding_non_efg_debt
+        outstanding_prior_non_efg_debt
+        outstanding_subsequent_non_efg_debt
         non_linked_security_proceeds
         linked_security_proceeds
       ).each do |attr|
@@ -92,7 +93,8 @@ describe Recovery do
       }
 
       it 'behaves like the Visio document P34 example' do
-        recovery.outstanding_non_efg_debt = Money.new(2_000_00)
+        recovery.outstanding_prior_non_efg_debt = Money.new(2_000_00)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(0)
         recovery.non_linked_security_proceeds = Money.new(3_000_00)
         recovery.linked_security_proceeds = Money.new(1_000_00)
         recovery.calculate
@@ -102,7 +104,8 @@ describe Recovery do
       end
 
       it 'works' do
-        recovery.outstanding_non_efg_debt = Money.new(1_234_00)
+        recovery.outstanding_prior_non_efg_debt = Money.new(1_234_00)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(0)
         recovery.non_linked_security_proceeds = Money.new(4_321_00)
         recovery.linked_security_proceeds = Money.new(5_678_00)
         recovery.calculate
@@ -112,7 +115,8 @@ describe Recovery do
       end
 
       it 'ensures positive values' do
-        recovery.outstanding_non_efg_debt = Money.new(2_000_00)
+        recovery.outstanding_prior_non_efg_debt = Money.new(2_000_00)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(0)
         recovery.non_linked_security_proceeds = Money.new(1_000_00)
         recovery.linked_security_proceeds = Money.new(0)
         recovery.calculate
@@ -124,7 +128,8 @@ describe Recovery do
       it 'does not allow recovered amount to be greater than remaining unrecovered amount (i.e. dti_amount_claimed - previous recoveries)' do
         # setup amount_due_to_dti to be greater than dti_amount_claimed
         # i.e. 75% of non_linked_security_proceeds + linked_security_proceeds
-        recovery.outstanding_non_efg_debt = Money.new(0)
+        recovery.outstanding_prior_non_efg_debt = Money.new(0)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(0)
         recovery.non_linked_security_proceeds = Money.new(20_000_00)
         recovery.linked_security_proceeds = Money.new(5_001_00)
         recovery.calculate

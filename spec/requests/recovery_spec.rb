@@ -58,7 +58,8 @@ describe 'loan recovery' do
         expect {
           # clear recovery values
           fill_in 'recovery_recovered_on', with: ''
-          fill_in 'recovery_outstanding_non_efg_debt', with: ''
+          fill_in "recovery_outstanding_prior_non_efg_debt", with: ""
+          fill_in "recovery_outstanding_subsequent_non_efg_debt", with: ""
           fill_in 'recovery_non_linked_security_proceeds', with: ''
           fill_in 'recovery_linked_security_proceeds', with: ''
           click_button 'Submit'
@@ -187,7 +188,7 @@ describe 'loan recovery' do
       expect(recovery.seq).to eq(0)
       expect(recovery.recovered_on).to eq(Date.current)
       expect(recovery.total_proceeds_recovered).to eq(Money.new(6_789_00))
-      expect(recovery.outstanding_non_efg_debt).to eq(Money.new(2_500_00))
+      expect(recovery.outstanding_prior_non_efg_debt).to eq(Money.new(2_500_00))
       expect(recovery.non_linked_security_proceeds).to eq(Money.new(3_000_00))
       expect(recovery.linked_security_proceeds).to eq(Money.new(1_000_00))
       expect(recovery.realisations_attributable).to eq(Money.new(1_500_00))

@@ -20,7 +20,8 @@ class Recovery < ActiveRecord::Base
   end
 
   format :recovered_on, with: QuickDateFormatter
-  format :outstanding_non_efg_debt, with: MoneyFormatter.new
+  format :outstanding_prior_non_efg_debt, with: MoneyFormatter.new
+  format :outstanding_subsequent_non_efg_debt, with: MoneyFormatter.new
   format :non_linked_security_proceeds, with: MoneyFormatter.new
   format :linked_security_proceeds, with: MoneyFormatter.new
   format :realisations_attributable, with: MoneyFormatter.new
@@ -32,10 +33,11 @@ class Recovery < ActiveRecord::Base
   format :additional_interest_accrued, with: MoneyFormatter.new
   format :realisations_due_to_gov, with: MoneyFormatter.new
 
-  attr_accessible :recovered_on, :outstanding_non_efg_debt,
-    :non_linked_security_proceeds, :linked_security_proceeds,
-    :total_liabilities_behind, :total_liabilities_after_demand,
-    :additional_interest_accrued, :additional_break_costs
+  attr_accessible :recovered_on, :outstanding_prior_non_efg_debt,
+                  :outstanding_subsequent_non_efg_debt,
+                  :non_linked_security_proceeds, :linked_security_proceeds,
+                  :total_liabilities_behind, :total_liabilities_after_demand,
+                  :additional_interest_accrued, :additional_break_costs
 
   attr_accessor :amount_due_to_sec_state
 
@@ -116,8 +118,8 @@ class Recovery < ActiveRecord::Base
 
     def validate_scheme_fields
       required = if loan.efg_loan?
-        [:linked_security_proceeds, :outstanding_non_efg_debt,
-          :non_linked_security_proceeds]
+        [:linked_security_proceeds, :outstanding_prior_non_efg_debt,
+         :outstanding_subsequent_non_efg_debt, :non_linked_security_proceeds]
       else
         [:total_liabilities_behind, :total_liabilities_after_demand]
       end

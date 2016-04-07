@@ -6,7 +6,7 @@ class EfgRecoveryCalculator
   def realisations_attributable
     [
       recovery.non_linked_security_proceeds + recovery.linked_security_proceeds -
-      recovery.outstanding_non_efg_debt,
+      recovery.outstanding_prior_non_efg_debt,
       Money.new(0),
     ].max
   end
