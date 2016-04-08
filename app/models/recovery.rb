@@ -53,14 +53,15 @@ class Recovery < ActiveRecord::Base
     self.amount_due_to_dti = calculator.amount_due_to_dti
     self.amount_due_to_sec_state = calculator.amount_due_to_sec_state
 
-    amount_yet_to_be_recovered = loan.dti_amount_claimed -
-      loan.cumulative_recoveries_amount
-
     if amount_due_to_dti > amount_yet_to_be_recovered
       errors.add(:base, :recovery_too_high)
     end
 
     amount_due_to_dti
+  end
+
+  def amount_yet_to_be_recovered
+    loan.dti_amount_claimed - loan.cumulative_recoveries_amount
   end
 
   def calculator

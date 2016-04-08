@@ -114,10 +114,10 @@ module RequestSpecHelpers
   # Loan Recovery
   def fill_in_valid_efg_recovery_details
     fill_in 'recovery_recovered_on', with: Date.current.to_s(:screen)
-    fill_in "recovery_outstanding_prior_non_efg_debt", with: "£2500.00"
-    fill_in "recovery_outstanding_subsequent_non_efg_debt", with: "£0.00"
-    fill_in 'recovery_non_linked_security_proceeds', with: '£3000.00'
-    fill_in 'recovery_linked_security_proceeds', with: '£1000.00'
+    fill_in "recovery_outstanding_prior_non_efg_debt", with: "£300000.00"
+    fill_in "recovery_outstanding_subsequent_non_efg_debt", with: "£100000.00"
+    fill_in 'recovery_non_linked_security_proceeds', with: "325000.00"
+    fill_in 'recovery_linked_security_proceeds', with: "£50,000"
   end
 
   def fill_in_valid_sflg_recovery_details
