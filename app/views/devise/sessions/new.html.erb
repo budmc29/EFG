@@ -3,18 +3,6 @@
 </div>
 
 <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="alert alert-warning" style="color: black;">
-    <h2>System-wide password reset</h2>
-    <p>
-    If you haven’t changed your password since 8pm on Thursday 10 April 2014 you must
-    <%= link_to "click here", new_password_path(:user) %>
-    to request a password reset.
-    </p>
-    <p>
-    The Enterprise Finance Guarantee password policy is that you must change your password at least once every 90 days.
-    </p>
-  </div>
-
   <%= f.input :username, required: false, autofocus: true %>
   <%= f.input :password, required: false %>
 
