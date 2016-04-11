@@ -317,3 +317,7 @@ en:
 
       ask_cfe:
         message: Your message
+
+      loan_status_amendment:
+        status_amendment_type: "Type of amendment"
+        status_amendment_notes: "Notes"

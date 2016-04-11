@@ -1,0 +1,3 @@
+<div class="form-actions">
+  <%= link_to("Status Amendment", new_loan_status_amendment_path(@loan), class: 'btn') if current_user.can_create?(LoanStatusAmendment) %>
+</div>

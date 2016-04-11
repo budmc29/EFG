@@ -359,6 +359,10 @@ class Loan < ActiveRecord::Base
     end
   end
 
+  def has_status_amendment?
+    status_amendment_type.present?
+  end
+
   private
 
   def cumulative_realised_amount

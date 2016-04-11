@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160407104803) do
+ActiveRecord::Schema.define(version: 20160411095804) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "loan_id",                          null: false
@@ -25,8 +25,6 @@ ActiveRecord::Schema.define(version: 20160407104803) do
     t.string   "type",                             null: false
   end
 
-  add_index "adjustments", ["created_by_id"], name: "index_adjustments_on_created_by_id", using: :btree
-  add_index "adjustments", ["date"], name: "index_adjustments_on_date", using: :btree
   add_index "adjustments", ["loan_id", "date"], name: "index_adjustments_on_loan_id_and_date", using: :btree
   add_index "adjustments", ["loan_id"], name: "index_adjustments_on_loan_id", using: :btree
   add_index "adjustments", ["type"], name: "index_adjustments_on_type", using: :btree
@@ -420,6 +418,8 @@ ActiveRecord::Schema.define(version: 20160407104803) do
     t.decimal  "euro_conversion_rate",                           precision: 17, scale: 14
     t.integer  "loan_sub_category_id"
     t.string   "sub_lender"
+    t.string   "status_amendment_type"
+    t.text     "status_amendment_notes"
   end
 
   add_index "loans", ["legacy_id"], name: "index_loans_on_legacy_id", unique: true, using: :btree
@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(version: 20160407104803) do
   add_index "loans", ["lending_limit_id"], name: "index_loans_on_lending_limit_id", using: :btree
   add_index "loans", ["reference"], name: "index_loans_on_reference", unique: true, using: :btree
   add_index "loans", ["state"], name: "index_loans_on_state", using: :btree
+  add_index "loans", ["status_amendment_type"], name: "index_loans_on_status_amendment_type", using: :btree
 
   create_table "old_passwords", force: true do |t|
     t.string   "encrypted_password"
@@ -533,7 +534,7 @@ ActiveRecord::Schema.define(version: 20160407104803) do
     t.boolean "eligible",                           default: false
     t.boolean "public_sector_restricted",           default: false
     t.boolean "active",                             default: true
-    t.integer "state_aid_threshold",      limit: 8
+    t.integer "state_aid_threshold",      limit: 8,                 null: false
   end
 
   add_index "sic_codes", ["code"], name: "index_sic_codes_on_code", unique: true, using: :btree

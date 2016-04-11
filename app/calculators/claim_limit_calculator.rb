@@ -30,6 +30,11 @@ class ClaimLimitCalculator
     ChangeType::RepaymentFrequency
   ].freeze
 
+  EXCLUDED_STATUS_AMENDMENTS = [
+    LoanStatusAmendment::ELIGIBILITY,
+    LoanStatusAmendment::ADMINISTRATIVE,
+  ].freeze
+
   attr_reader :lender
 
   def initialize(lender)
@@ -125,6 +130,8 @@ class ClaimLimitCalculator
               loan_modifications.change_type_id IN (?)",
               ChangeTypesWithDraws.collect(&:id))
       .where(lending_limits: { phase_id: phase.id })
+      .where("status_amendment_type IS NULL OR
+              status_amendment_type NOT IN (?)", EXCLUDED_STATUS_AMENDMENTS)
   end
 
   def pre_claim_limit_realisation_adjustments

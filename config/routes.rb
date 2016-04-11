@@ -91,6 +91,7 @@ EFG::Application.routes.draw do
     resources :settlement_adjustments, only: [:new, :create]
     resources :adjustments, only: [:index]
     resources :state_aid_letters, only: [:new, :create]
+    resources :status_amendments, only: [:new, :create]
   end
 
   resources :documents, only: [] do
