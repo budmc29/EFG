@@ -63,8 +63,7 @@ class ClaimLimitCalculator
   end
 
   def percentage_remaining
-    return 0 if total_amount.zero?
-    return 100 if amount_remaining.zero?
+    return 0 if total_amount.zero? || amount_remaining.zero?
 
     (amount_remaining / total_amount * 100).round
   end
