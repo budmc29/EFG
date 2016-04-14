@@ -1,0 +1,23 @@
+<%= breadcrumbs_for_loan(@loan) %>
+
+<div class="page-header">
+  <h1>Loan Status Amendment</h1>
+</div>
+
+<p>From this page you can amend the status of a loan.</p>
+<p>
+Loans amended as <span class="label label-info">Eligibility</span> or <span class="label label-info">Administrative</span> <strong>will not be counted against the lender's claim limit</strong>.</p>
+<p>
+Loans amended as <span class="label label-info">Liability</span> or <span class="label label-info">Other</span>
+<strong>will count against the lender's claim limit</strong>.</p>
+
+<hr>
+
+<%= simple_form_for(@loan_status_amendment, url: loan_status_amendments_path(@loan), html: { class: "form-horizontal form-status-amendment-form" }) do |f| %>
+  <%= f.input(:status_amendment_type, collection: f.object.amendment_types) %>
+  <%= f.input(:status_amendment_notes, as: :text) %>
+
+  <div class="form-actions">
+    <%= f.button :submit, value: 'Submit', class: 'btn-primary', data: { 'disable-with' => 'Submitting...' } %>
+  </div>
+<% end %>

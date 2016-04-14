@@ -306,4 +306,8 @@ describe LenderUserPermissions do
   context "RevertDemandedLoan" do
     it { assert user.can_create?(RevertDemandedLoan) }
   end
+
+  context "LoanStatusAmendment" do
+    it { refute user.can_create?(LoanStatusAmendment) }
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308102522) do
+ActiveRecord::Schema.define(version: 20160411095804) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "loan_id",                          null: false
@@ -25,8 +25,6 @@ ActiveRecord::Schema.define(version: 20160308102522) do
     t.string   "type",                             null: false
   end
 
-  add_index "adjustments", ["created_by_id"], name: "index_adjustments_on_created_by_id", using: :btree
-  add_index "adjustments", ["date"], name: "index_adjustments_on_date", using: :btree
   add_index "adjustments", ["loan_id", "date"], name: "index_adjustments_on_loan_id_and_date", using: :btree
   add_index "adjustments", ["loan_id"], name: "index_adjustments_on_loan_id", using: :btree
   add_index "adjustments", ["type"], name: "index_adjustments_on_type", using: :btree
@@ -420,6 +418,8 @@ ActiveRecord::Schema.define(version: 20160308102522) do
     t.decimal  "euro_conversion_rate",                           precision: 17, scale: 14
     t.integer  "loan_sub_category_id"
     t.string   "sub_lender"
+    t.string   "status_amendment_type"
+    t.text     "status_amendment_notes"
   end
 
   add_index "loans", ["legacy_id"], name: "index_loans_on_legacy_id", unique: true, using: :btree
@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(version: 20160308102522) do
   add_index "loans", ["lending_limit_id"], name: "index_loans_on_lending_limit_id", using: :btree
   add_index "loans", ["reference"], name: "index_loans_on_reference", unique: true, using: :btree
   add_index "loans", ["state"], name: "index_loans_on_state", using: :btree
+  add_index "loans", ["status_amendment_type"], name: "index_loans_on_status_amendment_type", using: :btree
 
   create_table "old_passwords", force: true do |t|
     t.string   "encrypted_password"
@@ -499,29 +500,30 @@ ActiveRecord::Schema.define(version: 20160308102522) do
   end
 
   create_table "recoveries", force: true do |t|
-    t.integer  "loan_id",                                                  null: false
-    t.date     "recovered_on",                                             null: false
-    t.integer  "total_proceeds_recovered",       limit: 8,                 null: false
-    t.integer  "total_liabilities_after_demand", limit: 8
-    t.integer  "total_liabilities_behind",       limit: 8
-    t.integer  "additional_break_costs",         limit: 8
-    t.integer  "additional_interest_accrued",    limit: 8
-    t.integer  "amount_due_to_dti",              limit: 8,                 null: false
-    t.boolean  "realise_flag",                             default: false, null: false
-    t.integer  "created_by_id",                                            null: false
-    t.integer  "outstanding_non_efg_debt",       limit: 8
-    t.integer  "non_linked_security_proceeds",   limit: 8
-    t.integer  "linked_security_proceeds",       limit: 8
-    t.integer  "realisations_attributable",      limit: 8
-    t.integer  "realisations_due_to_gov",        limit: 8
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
+    t.integer  "loan_id",                                                       null: false
+    t.date     "recovered_on",                                                  null: false
+    t.integer  "total_proceeds_recovered",            limit: 8,                 null: false
+    t.integer  "total_liabilities_after_demand",      limit: 8
+    t.integer  "total_liabilities_behind",            limit: 8
+    t.integer  "additional_break_costs",              limit: 8
+    t.integer  "additional_interest_accrued",         limit: 8
+    t.integer  "amount_due_to_dti",                   limit: 8,                 null: false
+    t.boolean  "realise_flag",                                  default: false, null: false
+    t.integer  "created_by_id",                                                 null: false
+    t.integer  "outstanding_prior_non_efg_debt",      limit: 8
+    t.integer  "non_linked_security_proceeds",        limit: 8
+    t.integer  "linked_security_proceeds",            limit: 8
+    t.integer  "realisations_attributable",           limit: 8
+    t.integer  "realisations_due_to_gov",             limit: 8
+    t.datetime "created_at",                                                    null: false
+    t.datetime "updated_at",                                                    null: false
     t.integer  "realisation_statement_id"
     t.string   "ar_insert_timestamp"
     t.string   "ar_timestamp"
     t.string   "legacy_created_by"
     t.string   "legacy_loan_id"
-    t.integer  "seq",                                                      null: false
+    t.integer  "seq",                                                           null: false
+    t.integer  "outstanding_subsequent_non_efg_debt"
   end
 
   add_index "recoveries", ["loan_id"], name: "index_recoveries_on_loan_id", using: :btree
@@ -532,7 +534,7 @@ ActiveRecord::Schema.define(version: 20160308102522) do
     t.boolean "eligible",                           default: false
     t.boolean "public_sector_restricted",           default: false
     t.boolean "active",                             default: true
-    t.integer "state_aid_threshold",      limit: 8
+    t.integer "state_aid_threshold",      limit: 8,                 null: false
   end
 
   add_index "sic_codes", ["code"], name: "index_sic_codes_on_code", unique: true, using: :btree

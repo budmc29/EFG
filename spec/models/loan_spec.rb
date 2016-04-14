@@ -762,4 +762,25 @@ describe Loan do
       end
     end
   end
+
+  describe "#has_status_amendment?" do
+    it "returns true when status_amendment_type is set" do
+      loan = FactoryGirl.build_stubbed(
+        :loan, :guaranteed,
+        status_amendment_type: LoanStatusAmendment::ELIGIBILITY,
+      )
+
+      expect(loan).to have_status_amendment
+    end
+
+    it "returns false when status_amendment_type is not set" do
+      loan = FactoryGirl.build_stubbed(
+        :loan, :guaranteed,
+        status_amendment_type: nil,
+      )
+
+      expect(loan).not_to have_status_amendment
+
+    end
+  end
 end

@@ -20,7 +20,8 @@ class Recovery < ActiveRecord::Base
   end
 
   format :recovered_on, with: QuickDateFormatter
-  format :outstanding_non_efg_debt, with: MoneyFormatter.new
+  format :outstanding_prior_non_efg_debt, with: MoneyFormatter.new
+  format :outstanding_subsequent_non_efg_debt, with: MoneyFormatter.new
   format :non_linked_security_proceeds, with: MoneyFormatter.new
   format :linked_security_proceeds, with: MoneyFormatter.new
   format :realisations_attributable, with: MoneyFormatter.new
@@ -32,46 +33,43 @@ class Recovery < ActiveRecord::Base
   format :additional_interest_accrued, with: MoneyFormatter.new
   format :realisations_due_to_gov, with: MoneyFormatter.new
 
-  attr_accessible :recovered_on, :outstanding_non_efg_debt,
-    :non_linked_security_proceeds, :linked_security_proceeds,
-    :total_liabilities_behind, :total_liabilities_after_demand,
-    :additional_interest_accrued, :additional_break_costs
+  attr_accessible :recovered_on, :outstanding_prior_non_efg_debt,
+                  :outstanding_subsequent_non_efg_debt,
+                  :non_linked_security_proceeds, :linked_security_proceeds,
+                  :total_liabilities_behind, :total_liabilities_after_demand,
+                  :additional_interest_accrued, :additional_break_costs
 
   attr_accessor :amount_due_to_sec_state
 
+  delegate :dti_amount_claimed, :dti_interest, :dti_demand_outstanding,
+           to: :loan
+
+  def loan_guarantee_rate
+    loan.guarantee_rate / 100
+  end
+
   def calculate
-    loan_guarantee_rate = loan.guarantee_rate / 100
+    self.realisations_attributable = calculator.realisations_attributable
+    self.amount_due_to_dti = calculator.amount_due_to_dti
+    self.amount_due_to_sec_state = calculator.amount_due_to_sec_state
 
-    if loan.efg_loan?
-      # See Visio document page 34.
-      self.realisations_attributable = [
-        non_linked_security_proceeds + linked_security_proceeds - outstanding_non_efg_debt,
-        Money.new(0)
-      ].max
-
-      self.amount_due_to_dti = realisations_attributable * loan_guarantee_rate
-    else
-      self.additional_break_costs ||= Money.new(0)
-      self.additional_interest_accrued ||= Money.new(0)
-
-      magic_number = if loan.legacy_loan?
-        another_magic_number = loan.dti_amount_claimed / loan_guarantee_rate
-        another_magic_number / (another_magic_number + total_liabilities_behind)
-      else
-        interest_plus_outstanding = loan.dti_interest + loan.dti_demand_outstanding
-        interest_plus_outstanding / (interest_plus_outstanding + total_liabilities_behind)
-      end
-
-      self.amount_due_to_sec_state = total_liabilities_after_demand * loan_guarantee_rate * magic_number
-      self.amount_due_to_dti = amount_due_to_sec_state + additional_break_costs + additional_interest_accrued
-    end
-
-    amount_yet_to_be_recovered = loan.dti_amount_claimed - loan.cumulative_recoveries_amount
-    if (self.amount_due_to_dti > amount_yet_to_be_recovered)
+    if amount_due_to_dti > amount_yet_to_be_recovered
       errors.add(:base, :recovery_too_high)
     end
 
-    self.amount_due_to_dti
+    amount_due_to_dti
+  end
+
+  def amount_yet_to_be_recovered
+    loan.dti_amount_claimed - loan.cumulative_recoveries_amount
+  end
+
+  def calculator
+    @calculator ||= {
+      legacy: LegacySflgRecoveryCalculator,
+      new: SflgRecoveryCalculator,
+      efg: EfgRecoveryCalculator,
+    }.fetch(loan.scheme).new(self)
   end
 
   def save_and_update_loan
@@ -121,8 +119,8 @@ class Recovery < ActiveRecord::Base
 
     def validate_scheme_fields
       required = if loan.efg_loan?
-        [:linked_security_proceeds, :outstanding_non_efg_debt,
-          :non_linked_security_proceeds]
+        [:linked_security_proceeds, :outstanding_prior_non_efg_debt,
+         :outstanding_subsequent_non_efg_debt, :non_linked_security_proceeds]
       else
         [:total_liabilities_behind, :total_liabilities_after_demand]
       end

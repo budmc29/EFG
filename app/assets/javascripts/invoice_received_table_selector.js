@@ -1,7 +1,7 @@
 //= require accounting
 
 (function ($) {
-  $.fn.selectableRows = function () {
+  $.fn.invoiceSelectableRows = function () {
     var dataAttribute = 'data-selected'
     var rowInputSelector = 'input[type=checkbox]'
 
@@ -36,7 +36,7 @@
     })
   }
 
-  $.fn.total = function (filter) {
+  $.fn.invoiceTotal = function (filter) {
     var selector
     if(filter) {
       selector = $(filter, this)
@@ -54,15 +54,15 @@
     return totalAmountSettled
   }
 
-  $.fn.subTotal = function() {
+  $.fn.invoiceSubTotal = function() {
     function setupSubTotal(table) {
       function render () {
-        var subTotal = table.total('tbody tr[data-selected]')
+        var subTotal = table.invoiceTotal('tbody tr[data-selected]')
         var formattedSubTotal = accounting.formatMoney(subTotal, '')
 
         table.find('[data-behaviour=subtotal] input').val(formattedSubTotal)
 
-        var grandTotal = $('[data-behaviour=subtotal]').total()
+        var grandTotal = $('[data-behaviour=subtotal]').invoiceTotal()
         var formattedGrandTotal = accounting.formatMoney(grandTotal, '£')
         $('[data-behaviour=grand-total]').text(formattedGrandTotal)
       }
@@ -88,8 +88,8 @@ $(document).ready(function() {
   }
 
   $('[data-behaviour=invoice-received-table]')
-    .selectableRows()
-    .subTotal()
+    .invoiceSelectableRows()
+    .invoiceSubTotal()
     .bind('rowSelect', highlightRow)
 
   $('[data-behaviour=invoice-received-table]')

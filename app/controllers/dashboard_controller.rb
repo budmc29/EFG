@@ -2,10 +2,10 @@ class DashboardController < ApplicationController
   def show
     if current_user.can_view?(LoanAlerts)
       @lending_limit_utilisations      = setup_lending_limit_utilisations
-      @not_progressed_alerts_presenter = LoanAlerts::Presenter.new(not_progressed_loans_groups)
-      @not_drawn_alerts_presenter      = LoanAlerts::Presenter.new(not_drawn_loans_groups)
-      @not_demanded_alerts_presenter   = LoanAlerts::Presenter.new(not_demanded_loans_groups)
-      @not_closed_presenter            = LoanAlerts::Presenter.new(not_closed_loans_groups)
+      @not_progressed_alerts_presenter = not_progressed_loans_groups
+      @not_drawn_alerts_presenter      = not_drawn_loans_groups
+      @not_demanded_alerts_presenter   = not_demanded_loans_groups
+      @not_closed_presenter            = not_closed_loans_groups
     end
 
     if current_user.can_view?(ClaimLimitCalculator)
@@ -44,11 +44,7 @@ class DashboardController < ApplicationController
   end
 
   def not_closed_loans_groups
-    offered_alert = LoanAlerts::NotClosedOffered.new(current_lender)
-    offered_group = LoanAlerts::PriorityGrouping.new(offered_alert)
-
-    guaranteed_alert = LoanAlerts::NotClosedGuaranteed.new(current_lender)
-    guaranteed_group = LoanAlerts::PriorityGrouping.new(guaranteed_alert)
-    LoanAlerts::PriorityGrouping.merge(offered_group, guaranteed_group)
+    alert = LoanAlerts::NotClosed.new(current_lender)
+    LoanAlerts::PriorityGrouping.new(alert)
   end
 end

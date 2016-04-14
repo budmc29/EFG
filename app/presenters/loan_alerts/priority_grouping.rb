@@ -1,4 +1,5 @@
-# Takes an array of loans and groups them by priority for use in a dashboard loan alert graph
+# Takes an array of loans and groups them by priority for use in a dashboard
+# loan alert graph
 #
 #   high priority: loans within 10 week days of the start date
 #   medium priority: loans between 11 and 30 week days of the start date
@@ -6,102 +7,44 @@
 #
 module LoanAlerts
   class PriorityGrouping
-
-    class Combination
-      def initialize(group1, group2)
-        @group1, @group2 = group1, group2
-      end
-
-      [:high_priority_loans, :medium_priority_loans, :low_priority_loans].each do |name|
-        define_method(name) do
-          size = [group1.send(name).size, group2.send(name).size].max
-
-          Array.new(size) do |index|
-            (group1.send(name)[index] || []) + (group2.send(name)[index] || [])
-          end
-        end
-      end
-
-      private
-      attr_reader :group1, :group2
-    end
-
     def initialize(alert)
       @alert       = alert
       @loans       = alert.loans
       @start_date  = alert.start_date.to_date
       @end_date    = alert.end_date.to_date
       @date_method = alert.date_method
+      @day_count   = 0
     end
 
-    # Merge two PriorityGroups together.
-    # Used when a loan alert consists of more than one grouping of records
-    def self.merge(group1, group2)
-      Combination.new(group1, group2)
-    end
-
-    def high_priority_loans
-      @high_priority_loans ||= loans_grouped_by_date_condition do |date|
-        date <= high_priority_end_date
+    def alerts_grouped_by_priority
+      @alert.groups.map.with_index do |group, index|
+        loans = alert_groups[index]
+        Group.new(loans, group.priority, total_loan_count)
       end
     end
 
-    def medium_priority_loans
-      @medium_priority_loans ||= loans_grouped_by_date_condition do |date|
-        date.between?(medium_priority_start_date, medium_priority_end_date)
-      end
-    end
-
-    def low_priority_loans
-      @low_priority_loans ||= loans_grouped_by_date_condition do |date|
-        date >= medium_priority_end_date.advance(days: 1)
-      end
+    def total_loan_count
+      alert_groups.map do |group|
+        group.map(&:count).max
+      end.max
     end
 
     private
 
-    def loans_grouped_by_date_condition
-      loans_by_day.collect do |array|
-        array[1] if yield array[0]
-      end.compact
-    end
-
-    def days_range
-      @days_range ||= (@start_date..@end_date).select { |date| date.weekday? }
-    end
-
-    def loans_grouped_by_day
-      @loans_grouped_by_day ||= @loans.inject({}) do |memo, loan|
-        date = loan.send(@date_method)
-        # shift weekend dates to weekdays
-        date = (date + 1.day) until date.weekday?
-        date = date.to_date
-
-        memo[date] ||= []
-        memo[date] << loan
-        memo
+    def alert_groups
+      @alert_groups ||= @alert.groups.map do |group|
+        loans_by_day(group)
       end
     end
 
-    def loans_by_day
-      @loans_by_day ||= days_range.inject({}) do |memo, date|
-        return memo unless date.weekday? # ignore weekends
-        memo[date] = loans_grouped_by_day[date] || []
-        memo
-      end
-    end
+    def loans_by_day(group)
+      group.date_range.each_with_object({}) do |date, memo|
+        next unless date.weekday? # ignore weekends
 
-    def medium_priority_start_date
-      high_priority_end_date.advance(days: 1).to_date
+        loans = group.loans_with_days_remaining(@day_count)
+        memo[date] = loans
+        @day_count += 1
+      end.values
     end
-
-    def medium_priority_end_date
-      @medium_priority_end_date ||= 19.weekdays_from(medium_priority_start_date).to_date
-    end
-
-    def high_priority_end_date
-      @high_priority_end_date ||= 9.weekdays_from(@start_date).to_date
-    end
-
   end
 end

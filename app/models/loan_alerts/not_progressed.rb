@@ -6,7 +6,7 @@ class LoanAlerts::NotProgressed < LoanAlerts::Base
     super do |loans|
       loans.
         not_progressed.
-        last_updated_between(alert_range.first, alert_range.last)
+        last_updated_between(start_date, end_date)
     end
   end
 
@@ -14,7 +14,11 @@ class LoanAlerts::NotProgressed < LoanAlerts::Base
     6.months.ago.to_date
   end
 
-  def self.date_method
+  def start_date
+    self.class.start_date
+  end
+
+  def date_method
     :updated_at
   end
 end

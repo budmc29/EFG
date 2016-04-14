@@ -7,7 +7,8 @@ describe 'loan recovery' do
   context 'EFG' do
     let(:loan) {
       FactoryGirl.create(:loan, :settled,
-        dti_demand_outstanding: Money.new(6_789_00),
+        dti_demand_outstanding: Money.new(100_000_00),
+        dti_amount_claimed: Money.new(0),
         dti_interest: nil,
         settled_on: '1/5/12'
       )
@@ -23,15 +24,15 @@ describe 'loan recovery' do
           visit loan_path(loan)
           click_link 'Recovery Made'
 
-          expect(page).to have_content('£6,789.00')
+          expect(page).to have_content("£100,000.00")
           expect(page).not_to have_button('Submit')
 
           expect {
             fill_in_valid_efg_recovery_details
             click_button 'Calculate'
 
-            expect(page).to have_content('£1,500.00')
-            expect(page).to have_content('£1,125.00')
+            expect(page).to have_content("£58,333.33")
+            expect(page).to have_content("£6,250.00")
           }.not_to change(Recovery, :count)
 
           expect {
@@ -58,7 +59,8 @@ describe 'loan recovery' do
         expect {
           # clear recovery values
           fill_in 'recovery_recovered_on', with: ''
-          fill_in 'recovery_outstanding_non_efg_debt', with: ''
+          fill_in "recovery_outstanding_prior_non_efg_debt", with: ""
+          fill_in "recovery_outstanding_subsequent_non_efg_debt", with: ""
           fill_in 'recovery_non_linked_security_proceeds', with: ''
           fill_in 'recovery_linked_security_proceeds', with: ''
           click_button 'Submit'
@@ -181,21 +183,15 @@ describe 'loan recovery' do
 
   private
 
-    def verify_recovery_and_loan
-      recovery = Recovery.last
-      expect(recovery.loan).to eq(loan)
-      expect(recovery.seq).to eq(0)
-      expect(recovery.recovered_on).to eq(Date.current)
-      expect(recovery.total_proceeds_recovered).to eq(Money.new(6_789_00))
-      expect(recovery.outstanding_non_efg_debt).to eq(Money.new(2_500_00))
-      expect(recovery.non_linked_security_proceeds).to eq(Money.new(3_000_00))
-      expect(recovery.linked_security_proceeds).to eq(Money.new(1_000_00))
-      expect(recovery.realisations_attributable).to eq(Money.new(1_500_00))
-      expect(recovery.amount_due_to_dti).to eq(Money.new(1_125_00))
+  def verify_recovery_and_loan
+    recovery = Recovery.last
+    expect(recovery.loan).to eq(loan)
+    expect(recovery.seq).to eq(0)
+    expect(recovery.recovered_on).to eq(Date.current)
 
-      loan.reload
-      expect(loan.state).to eq(Loan::Recovered)
-      expect(loan.recovery_on).to eq(Date.current)
-      expect(loan.modified_by).to eq(current_user)
-    end
+    loan.reload
+    expect(loan.state).to eq(Loan::Recovered)
+    expect(loan.recovery_on).to eq(Date.current)
+    expect(loan.modified_by).to eq(current_user)
+  end
 end

@@ -10,6 +10,14 @@
     <dd><%= loan.updated_at.strftime('%d/%m/%Y %H:%M:%S') %></dd>
     <dt>Modified by:</dt>
     <dd><%= loan.modified_by.try(:name) %></dd>
+    <% if loan.has_status_amendment? %>
+      <dt>Status Amendment:</dt>
+      <dd>
+        <span class="label label-warning">
+          <%= loan.status_amendment_type %>
+        </span>
+      </dd>
+    <% end %>
   </dl>
 
   <%= insert %>

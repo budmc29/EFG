@@ -282,4 +282,8 @@ describe CfeUserPermissions do
   context "RevertDemandedLoan" do
     it { refute user.can_create?(RevertDemandedLoan) }
   end
+
+  context "LoanStatusAmendment" do
+    it { assert user.can_create?(LoanStatusAmendment) }
+  end
 end

@@ -4,6 +4,7 @@
   <%= link_to('Demand Against Guarantee', new_loan_demand_against_government_path(@loan), class: 'btn') if current_user.can_create?(LoanDemandAgainstGovernment) %>
   <%= link_to('Repay Loan', new_loan_repay_path(@loan), class: 'btn') if current_user.can_create?(LoanRepay) %>
   <%= link_to('Data Correction', loan_data_corrections_path(@loan), class: 'btn') if current_user.can_create?(DataCorrection) %>
+  <%= link_to("Status Amendment", new_loan_status_amendment_path(@loan), class: 'btn') if current_user.can_create?(LoanStatusAmendment) %>
 </div>
 
 <div class="form-actions">

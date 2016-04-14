@@ -246,7 +246,8 @@ en:
 
       recovery:
         recovered_on: 'On what date was the recovery made?'
-        outstanding_non_efg_debt: 'Enter the value of any non-EFG Debt'
+        outstanding_prior_non_efg_debt: 'Enter the value of any non-EFG Debt issued prior to/simultaneous with EFG debt'
+        outstanding_subsequent_non_efg_debt: 'Enter the value of any non-EFG Debt issued subsequent to EFG debt'
         non_linked_security_proceeds: 'Enter the value of the proceeds of any post-Settlement Security Realisations, excluding any Linked Security'
         linked_security_proceeds: 'Enter the value of the proceeds of any Linked Security'
         total_liabilities_behind: 'Enter the aggregate amount owed to the Lender other than in connection with the Scheme Facility or with any obligations being repaid from proceeds which are not Eligible Proceeds. (Variable B).'
@@ -316,3 +317,7 @@ en:
 
       ask_cfe:
         message: Your message
+
+      loan_status_amendment:
+        status_amendment_type: "Type of amendment"
+        status_amendment_notes: "Notes"

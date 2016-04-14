@@ -5,6 +5,8 @@ en:
   activemodel:
     loan_demand_against_government:
       amount_claimed: "Demand has been made against the Government Guarantee. The value of the demand is: %{amount}"
+    loan_status_amendment:
+      status_amended: "Loan status has been successfully amended to '%{amendment_type}'"
     errors:
       models:
         agreed_draw:

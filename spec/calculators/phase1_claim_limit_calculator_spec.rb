@@ -91,7 +91,7 @@ describe "Claim Limit Phase 1" do
       end
 
       it "returns 100" do
-        expect(claim_limit.percentage_remaining).to eq(100)
+        expect(claim_limit.percentage_remaining).to eq(0)
       end
     end
   end

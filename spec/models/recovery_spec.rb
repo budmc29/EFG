@@ -41,7 +41,8 @@ describe Recovery do
       end
 
       %w(
-        outstanding_non_efg_debt
+        outstanding_prior_non_efg_debt
+        outstanding_subsequent_non_efg_debt
         non_linked_security_proceeds
         linked_security_proceeds
       ).each do |attr|
@@ -82,51 +83,33 @@ describe Recovery do
       }
     }
 
-    context 'EFG' do
+    context "EFG" do
       let(:loan) {
         FactoryGirl.build(:loan, :settled,
-          amount: Money.new(50_000_00),
-          dti_demand_outstanding: Money.new(25_000_00),
-          dti_amount_claimed: Money.new(18_750_00),
+          dti_demand_outstanding: Money.new(100_000_00),
+          dti_amount_claimed: Money.new(0),
         )
       }
 
-      it 'behaves like the Visio document P34 example' do
-        recovery.outstanding_non_efg_debt = Money.new(2_000_00)
-        recovery.non_linked_security_proceeds = Money.new(3_000_00)
-        recovery.linked_security_proceeds = Money.new(1_000_00)
+      it "sets values correctly" do
+        recovery.outstanding_prior_non_efg_debt = Money.new(300_000_00)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(100_000_00)
+        recovery.non_linked_security_proceeds = Money.new(325_000_00)
+        recovery.linked_security_proceeds = Money.new(50_000_00)
+
         recovery.calculate
 
-        expect(recovery.realisations_attributable).to eq(Money.new(2_000_00))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(1_500_00))
+        expect(recovery.realisations_attributable).to eq(Money.new(58_333_33))
+        expect(recovery.amount_due_to_dti).to eq(Money.new(6_250_00))
+        expect(recovery.amount_due_to_sec_state).to eq(Money.new(0))
       end
 
-      it 'works' do
-        recovery.outstanding_non_efg_debt = Money.new(1_234_00)
-        recovery.non_linked_security_proceeds = Money.new(4_321_00)
-        recovery.linked_security_proceeds = Money.new(5_678_00)
-        recovery.calculate
-
-        expect(recovery.realisations_attributable).to eq(Money.new(8_765_00))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(6_573_75))
-      end
-
-      it 'ensures positive values' do
-        recovery.outstanding_non_efg_debt = Money.new(2_000_00)
-        recovery.non_linked_security_proceeds = Money.new(1_000_00)
-        recovery.linked_security_proceeds = Money.new(0)
-        recovery.calculate
-
-        expect(recovery.realisations_attributable).to eq(Money.new(0))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(0))
-      end
-
-      it 'does not allow recovered amount to be greater than remaining unrecovered amount (i.e. dti_amount_claimed - previous recoveries)' do
-        # setup amount_due_to_dti to be greater than dti_amount_claimed
-        # i.e. 75% of non_linked_security_proceeds + linked_security_proceeds
-        recovery.outstanding_non_efg_debt = Money.new(0)
-        recovery.non_linked_security_proceeds = Money.new(20_000_00)
+      it "does not allow recovered amount to be greater than remaining unrecovered amount (i.e. dti_amount_claimed - previous recoveries)" do
+        recovery.outstanding_prior_non_efg_debt = Money.new(0)
+        recovery.outstanding_subsequent_non_efg_debt = Money.new(0)
+        recovery.non_linked_security_proceeds = Money.new(200_000_00)
         recovery.linked_security_proceeds = Money.new(5_001_00)
+
         recovery.calculate
 
         expect(recovery.errors[:base]).not_to be_empty
@@ -144,73 +127,17 @@ describe Recovery do
         )
       }
 
-      it do
+      it "sets values correctly" do
         recovery.total_liabilities_behind = Money.new(123_00)
         recovery.total_liabilities_after_demand = Money.new(234_00)
         recovery.additional_interest_accrued = Money.new(345_00)
         recovery.additional_break_costs = Money.new(456_00)
+
         recovery.calculate
 
+        expect(recovery.realisations_attributable).to eq(Money.new(0))
         expect(recovery.amount_due_to_sec_state).to eq(Money.new(175_28))
         expect(recovery.amount_due_to_dti).to eq(Money.new(976_28))
-      end
-
-      it 'works without "additional" monies' do
-        recovery.total_liabilities_behind = Money.new(123_00)
-        recovery.total_liabilities_after_demand = Money.new(234_00)
-        recovery.calculate
-
-        expect(recovery.amount_due_to_sec_state).to eq(Money.new(175_28))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(175_28))
-      end
-
-      it 'does not allow recovered amount to be greater than remaining unrecovered amount (i.e. dti_amount_claimed - previous recoveries)' do
-        recovery.total_liabilities_behind = Money.new(0)
-        recovery.total_liabilities_after_demand = Money.new(100_002_00)
-        recovery.linked_security_proceeds = Money.new(0)
-        recovery.calculate
-
-        expect(recovery.errors[:base]).not_to be_empty
-      end
-    end
-
-    context 'legacy SFLG' do
-      let(:loan) {
-        # Training loan reference 100023-02.
-        FactoryGirl.create(:loan, :legacy_sflg, :settled,
-          amount: Money.new(5_000_00),
-          dti_amount_claimed: Money.new(3_375_00),
-          dti_interest: Money.new(100_00)
-        )
-      }
-
-      it do
-        recovery.total_liabilities_behind = Money.new(123_00)
-        recovery.total_liabilities_after_demand = Money.new(234_00)
-        recovery.additional_interest_accrued = Money.new(345_00)
-        recovery.additional_break_costs = Money.new(456_00)
-        recovery.calculate
-
-        expect(recovery.amount_due_to_sec_state).to eq(Money.new(170_83))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(971_83))
-      end
-
-      it 'works without "additional" monies' do
-        recovery.total_liabilities_behind = Money.new(123_00)
-        recovery.total_liabilities_after_demand = Money.new(234_00)
-        recovery.calculate
-
-        expect(recovery.amount_due_to_sec_state).to eq(Money.new(170_83))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(170_83))
-      end
-
-      it 'does not allow recovered amount to be greater than remaining unrecovered amount (i.e. dti_amount_claimed - previous recoveries)' do
-        recovery.total_liabilities_behind = Money.new(0)
-        recovery.total_liabilities_after_demand = Money.new(4_501_00)
-        recovery.linked_security_proceeds = Money.new(0)
-        recovery.calculate
-
-        expect(recovery.errors[:base]).not_to be_empty
       end
     end
   end

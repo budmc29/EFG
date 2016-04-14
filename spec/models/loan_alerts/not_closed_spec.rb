@@ -11,7 +11,7 @@ describe LoanAlerts::NotClosed do
         :sflg,
         :guaranteed,
         lender: lender,
-        maturity_date: 22.weeks.ago.to_date)
+        maturity_date: 20.weekdays_from(6.months.ago))
     end
 
     let!(:unclosed_sflg_loan2) do
@@ -20,7 +20,7 @@ describe LoanAlerts::NotClosed do
         :sflg,
         :guaranteed,
         lender: lender,
-        maturity_date: 21.weeks.ago.to_date)
+        maturity_date: 25.weekdays_from(6.months.ago))
     end
 
     let!(:unclosed_sflg_loan3) do
@@ -29,7 +29,7 @@ describe LoanAlerts::NotClosed do
         :sflg,
         :guaranteed,
         lender: lender,
-        maturity_date: 20.weeks.ago.to_date)
+        maturity_date: 30.weekdays_from(6.months.ago))
     end
 
     let!(:unclosed_efg_loan1) do
@@ -38,7 +38,7 @@ describe LoanAlerts::NotClosed do
         :efg,
         :guaranteed,
         lender: lender,
-        maturity_date: 11.weeks.ago.to_date)
+        maturity_date: 10.weekdays_from(3.months.ago))
     end
 
     let!(:unclosed_efg_loan2) do
@@ -47,7 +47,7 @@ describe LoanAlerts::NotClosed do
         :efg,
         :guaranteed,
         lender: lender,
-        maturity_date: 12.weeks.ago.to_date)
+        maturity_date: 5.weekdays_from(3.months.ago))
     end
 
     let!(:unclosed_efg_loan3) do
@@ -56,7 +56,7 @@ describe LoanAlerts::NotClosed do
         :efg,
         :guaranteed,
         lender: lender,
-        maturity_date: 10.weeks.ago.to_date)
+        maturity_date: 15.weekdays_from(3.months.ago))
     end
 
     let!(:already_closed_loan) do
@@ -65,7 +65,7 @@ describe LoanAlerts::NotClosed do
         :efg,
         :guaranteed,
         lender: lender,
-        maturity_date: 15.weeks.ago.to_date)
+        maturity_date: 1.weekdays_ago(3.months.ago))
     end
 
     let!(:different_lender_unclosed_loan) do
@@ -73,7 +73,7 @@ describe LoanAlerts::NotClosed do
         :loan,
         :efg,
         :guaranteed,
-        maturity_date: 10.weeks.ago.to_date)
+        maturity_date: 5.weekdays_from(3.months.ago))
     end
 
     it "fetches the alerting loans from both guaranteed and offered,
