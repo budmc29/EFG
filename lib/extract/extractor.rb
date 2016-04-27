@@ -90,6 +90,20 @@ class Extractor
         # Dump to a local sqlite file.
         destination_db database_config["extract"]
 
+        table "adjustments" do
+          primary_key 'id'
+
+          whitelist "loan_id"
+          whitelist "amount"
+          whitelist "date"
+          whitelist "notes"
+          whitelist "created_by_id"
+          whitelist "created_at"
+          whitelist "updated_at"
+          whitelist "post_claim_limit"
+          whitelist "type"
+        end
+
         table 'admin_audits' do
           batch_size 200
           primary_key 'id'
@@ -386,6 +400,7 @@ class Extractor
           anonymize("trading_name")
           anonymize("lender_reference")
           anonymize("sub_lender")
+          anonymize("status_amendment_notes")
 
           whitelist "viable_proposition"
           whitelist "would_you_lend"
@@ -501,6 +516,7 @@ class Extractor
           whitelist "not_insolvent"
           whitelist "euro_conversion_rate"
           whitelist "loan_sub_category_id"
+          whitelist "status_amendment_type"
         end
 
         table 'premium_schedules' do
@@ -543,19 +559,6 @@ class Extractor
           whitelist "obj1_perc"
           whitelist "ar_timestamp"
           whitelist "ar_insert_timestamp"
-        end
-
-        table "realisation_adjustments" do
-          primary_key 'id'
-
-          whitelist "loan_id"
-          whitelist "amount"
-          whitelist "date"
-          whitelist "notes"
-          whitelist "created_by_id"
-          whitelist "created_at"
-          whitelist "updated_at"
-          whitelist "post_claim_limit"
         end
 
         table "realisation_statements" do
