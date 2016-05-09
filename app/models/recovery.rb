@@ -118,11 +118,24 @@ class Recovery < ActiveRecord::Base
     end
 
     def validate_scheme_fields
-      required = if loan.efg_loan?
-        [:linked_security_proceeds, :outstanding_prior_non_efg_debt,
-         :outstanding_subsequent_non_efg_debt, :non_linked_security_proceeds]
+      if loan.efg_loan?
+        required = [
+          :linked_security_proceeds,
+          :outstanding_prior_non_efg_debt,
+          :non_linked_security_proceeds,
+        ]
+
+        # only newer recoveries require this field
+        # older, existing recoveries will have no value for this field
+        # so should still be valid
+        if new_record?
+          required << :outstanding_subsequent_non_efg_debt
+        end
       else
-        [:total_liabilities_behind, :total_liabilities_after_demand]
+        required = [
+          :total_liabilities_behind,
+          :total_liabilities_after_demand,
+        ]
       end
 
       required.each do |attribute|

@@ -51,6 +51,15 @@ describe Recovery do
           expect(recovery).not_to be_valid
         end
       end
+
+      it "outstanding_subsequent_non_efg_debt is not required existing
+          EFG recoveries" do
+        recovery.outstanding_subsequent_non_efg_debt = nil
+        recovery.valid?
+        recovery.save(validate: false)
+
+        expect(recovery.reload).to be_valid
+      end
     end
 
     [:sflg, :legacy_sflg].each do |scheme|

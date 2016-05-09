@@ -34,7 +34,12 @@ describe 'Realise loans' do
     recovery2 = FactoryGirl.create(:recovery, loan: loan2, recovered_on: Date.new(2011, 2, 20))
     recovery3 = FactoryGirl.create(:recovery, loan: loan3, recovered_on: Date.new(2012, 5, 5))
     recovery5 = FactoryGirl.create(:recovery, loan: loan5, recovered_on: Date.new(2012, 5, 5))
-    recovery6 = FactoryGirl.create(:recovery, loan: loan6, recovered_on: Date.new(2011, 2, 20))
+
+    # older EFG recovery before
+    # outstanding_subsequent_non_efg_debt was introduced
+    recovery6 = FactoryGirl.build(:recovery, loan: loan6, recovered_on: Date.new(2011, 2, 20), outstanding_subsequent_non_efg_debt: nil, seq: 0)
+    recovery6.valid?
+    recovery6.save(validate: false)
 
     select_loans
 
