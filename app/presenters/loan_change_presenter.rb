@@ -54,6 +54,7 @@ class LoanChangePresenter
     @premium_schedule ||= new_premium_schedule.tap do |premium_schedule|
       premium_schedule.calc_type = PremiumSchedule::RESCHEDULE_TYPE
       premium_schedule.initial_draw_amount = nil
+      premium_schedule.initial_capital_repayment_holiday = 0
       premium_schedule.seq = nil
     end
   end
