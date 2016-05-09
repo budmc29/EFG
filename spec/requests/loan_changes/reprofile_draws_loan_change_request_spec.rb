@@ -3,7 +3,6 @@ require 'rails_helper'
 describe 'Reprofile draws loan change' do
   include LoanChangeSpecHelper
 
-  it_behaves_like "loan change on loan with capital repayment holiday"
   it_behaves_like "loan change on loan with no premium schedule"
 
   before do
