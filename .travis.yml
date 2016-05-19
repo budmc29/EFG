@@ -23,7 +23,6 @@ rvm:
   - 2.1.4
 branches:
   except:
-    - master
     - release
 notifications:
   email: false
