@@ -10,7 +10,7 @@ class LoanAlerts::AlertingLoan < SimpleDelegator
   end
 
   def days_remaining
-    start_date.weekdays_until(send(date_method))
+    start_date.last_weekday.weekdays_until(send(date_method))
   end
 
   private
