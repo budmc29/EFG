@@ -47,7 +47,7 @@ describe LoanAlerts::NotProgressed do
     approaching_medium_priority_loan = FactoryGirl.create(
       :loan, :eligible,
       lender: lender,
-      updated_at: 30.weekdays_from(start_date))
+      updated_at: 31.weekdays_from(start_date))
 
     newly_low_priority_loan = FactoryGirl.create(
       :loan, :eligible,
@@ -67,7 +67,7 @@ describe LoanAlerts::NotProgressed do
     _excluded_out_of_bounds_priority_loan = FactoryGirl.create(
       :loan, :eligible,
       lender: lender,
-      updated_at: 60.weekdays_from(start_date))
+      updated_at: 61.weekdays_from(start_date))
 
     expected_ids = [approaching_medium_priority_loan,
                     mid_range_low_priority_loan,
