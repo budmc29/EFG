@@ -13,6 +13,9 @@
   <thead>
     <tr>
       <th>Reference</th>
+      <% unless current_user.is_a?(LenderUser) %>
+        <th>Lender</th>
+      <% end %>
       <th>Business name</th>
       <th>Amount</th>
       <th>Last Updated</th>
@@ -22,6 +25,9 @@
     <% @loans.each do |loan| %>
       <tr>
         <td><%= link_to(loan.reference, loan) %></td>
+        <% unless current_user.is_a?(LenderUser) %>
+          <td><%= loan_lender_name(loan) %></td>
+        <% end %>
         <td><%= link_to(loan_business_name(loan), loan) %></td>
         <td><%= loan.amount.format %></td>
         <td><%= loan.updated_at.strftime("%d %B %Y") %></td>

@@ -21,6 +21,10 @@ module LoanHelper
     title
   end
 
+  def loan_lender_name(loan)
+    loan.sub_lender.present? ?  loan.sub_lender : loan.lender.name
+  end
+
   def loan_business_name(loan)
     loan.business_name.present? ? loan.business_name : '<not assigned>'
   end
