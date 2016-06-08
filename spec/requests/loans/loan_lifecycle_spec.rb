@@ -152,7 +152,7 @@ describe 'Loan lifecycle' do
 
     expect(current_url).to eq(loan_url(loan))
 
-    click_link 'Generate Premium Schedule'
+    click_link "View Premium Schedule"
     expect(page).to have_content('£9,876.54')
     click_link "Loan #{loan.reference}"
   end
