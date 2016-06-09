@@ -1,5 +1,9 @@
 <div class="loan-summary dl-horizontal">
   <dl>
+    <% unless current_user.is_a?(LenderUser) %>
+      <dt>Lender</dt>
+      <dd><%= loan_lender_name(loan) %></dd>
+    <% end %>
     <dt>State:</dt>
     <dd><%= loan.state.humanize %> <%= "(legacy)" if loan.legacy_loan? %></dd>
     <dt>Amount:</dt>
