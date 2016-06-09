@@ -54,25 +54,29 @@ describe ReprofileDrawsLoanChange do
 
       it 'second draw must not be skipped if third or fourth is present' do
         draw_change.second_draw_amount = ''
+        draw_change.second_draw_months = ""
         expect(draw_change).not_to be_valid
 
         draw_change.fourth_draw_amount = ''
+        draw_change.fourth_draw_months = ""
         expect(draw_change).not_to be_valid
 
         draw_change.third_draw_amount = ''
+        draw_change.third_draw_months = ""
         draw_change.fourth_draw_amount = Money.new(100_00)
         expect(draw_change).not_to be_valid
 
-        draw_change.third_draw_amount = ''
         draw_change.fourth_draw_amount = ''
         expect(draw_change).to be_valid
       end
 
       it 'third draw must not be skipped if fourth is present' do
         draw_change.third_draw_amount = ''
+        draw_change.third_draw_months = ""
         expect(draw_change).not_to be_valid
 
         draw_change.fourth_draw_amount = ''
+        draw_change.fourth_draw_months = ""
         expect(draw_change).to be_valid
       end
     end

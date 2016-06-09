@@ -32,6 +32,7 @@ class PremiumSchedule < ActiveRecord::Base
   validate :initial_draw_amount_is_within_limit
   validate :total_draw_amount_less_than_or_equal_to_loan_amount
   validate :validate_capital_repayment_holiday
+  validate :additional_draws_have_amount_and_month
 
   format :initial_draw_amount, with: MoneyFormatter.new
   format :second_draw_amount, with: MoneyFormatter.new
@@ -202,6 +203,21 @@ class PremiumSchedule < ActiveRecord::Base
 
       if initial_capital_repayment_holiday >= repayment_duration
         errors.add(:initial_capital_repayment_holiday, :must_be_lt_loan_duration)
+      end
+    end
+
+    def additional_draws_have_amount_and_month
+      %i(second_draw third_draw fourth_draw).each do |draw_number|
+        amount_attr = "#{draw_number}_amount"
+        month_attr = "#{draw_number}_months"
+        draw_amount = public_send(amount_attr)
+        draw_month = public_send(month_attr)
+
+        if draw_amount.present? && draw_month.blank?
+          errors.add(month_attr, :blank)
+        elsif draw_month.present? && draw_amount.blank?
+          errors.add(amount_attr, :blank)
+        end
       end
     end
 end
