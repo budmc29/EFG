@@ -337,11 +337,9 @@ class Loan < ActiveRecord::Base
   end
 
   def rules
-    if lending_limit.try(:phase)
-      lending_limit.phase.rules
-    else
-      Phase1Rules
-    end
+    return lending_limit.phase.rules if lending_limit.try(:phase)
+    return Phase.for_date(Date.today).rules if new_record?
+    Phase.find(1).rules
   end
 
   def settled_amount

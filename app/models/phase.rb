@@ -10,6 +10,10 @@ class Phase < StaticAssociation
     { id: 8, euro_conversion_rate: BigDecimal.new('1.20744'), starts_on: Date.new(2016, 4, 1),  ends_on: Date.new(2017, 3, 31) },
   ]
 
+  def self.for_date(date)
+    Phase.all.detect { |p| date.between?(p.starts_on, p.ends_on) }
+  end
+
   def lending_limits
     LendingLimit.where(phase_id: id)
   end

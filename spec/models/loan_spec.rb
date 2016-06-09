@@ -660,6 +660,20 @@ describe Loan do
         it { should eql(Phase6Rules) }
       end
     end
+
+    it "uses current date's Phase rules when loan is new" do
+      loan = Loan.new
+      phase = Phase.find(7)
+      allow(Phase).to receive(:for_date).and_return(phase)
+
+      expect(loan.rules).to eql(phase.rules)
+    end
+
+    it "falls back to Phase 1 rules when existing loan
+        has no lending limit" do
+      loan = FactoryGirl.build_stubbed(:loan, lending_limit: nil)
+      expect(loan.rules).to eql(Phase.find(1).rules)
+    end
   end
 
   describe "#settled_amount" do
