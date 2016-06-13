@@ -126,6 +126,11 @@ describe PremiumSchedule do
       end
     end
 
+    it "must have an initial draw year not too far in the future" do
+      premium_schedule.initial_draw_year = Date.today.advance(years: 5)
+      expect(premium_schedule).not_to be_valid
+    end
+
     it 'requires initial draw amount to be more than zero' do
       premium_schedule.initial_draw_amount = 0
       expect(premium_schedule).not_to be_valid

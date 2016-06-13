@@ -31,6 +31,7 @@ class PremiumSchedule < ActiveRecord::Base
   validate :total_draw_amount_less_than_or_equal_to_loan_amount
   validate :validate_capital_repayment_holiday
   validate :additional_draws_have_amount_and_month
+  validate :initial_draw_year_is_within_five_years
 
   format :initial_draw_amount, with: MoneyFormatter.new
   format :second_draw_amount, with: MoneyFormatter.new
@@ -216,6 +217,13 @@ class PremiumSchedule < ActiveRecord::Base
         elsif draw_month.present? && draw_amount.blank?
           errors.add(amount_attr, :blank)
         end
+      end
+    end
+
+    def initial_draw_year_is_within_five_years
+      if initial_draw_year &&
+          initial_draw_year > Date.today.advance(years: 5).year
+        errors.add(:initial_draw_year, :too_far_in_the_future)
       end
     end
 end
