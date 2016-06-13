@@ -97,6 +97,7 @@ en:
               lending_limit_expired: The lending limit expired more than 6 months ago
             facility_letter_date:
               outside_lending_limit_dates: The facility letter date is not within the lending limit start and end dates
+              cannot_be_in_the_future: The facility letter date cannot be in the future.
             facility_letter_sent:
               accepted: The Facility letter and supporting documentation must have been sent to the Applicant.
         loan_guarantee:
