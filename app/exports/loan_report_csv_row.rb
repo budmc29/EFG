@@ -87,6 +87,8 @@ class LoanReportCsvRow
       Money.new(row['settled_amount'] || 0).to_s,
       Money.new(row['cumulative_pre_claim_limit_realised_amount'] || 0).to_s,
       Money.new(row['cumulative_post_claim_limit_realised_amount'] || 0).to_s,
+      Money.new(row["cumulative_pre_claim_realisation_adjustments"] || 0).to_s,
+      Money.new(row["cumulative_settlement_adjustments"] || 0).to_s,
       scheme_name(row['loan_scheme'], row['loan_source']),
       phase_name(row['lending_limit_phase_id']),
       row['sub_lender'],

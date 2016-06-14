@@ -82,6 +82,8 @@ en:
       settled_amount: Settled amount
       cumulative_pre_claim_limit_realised_amount: Cumulative Value of All Pre-Claim Limit Realisations
       cumulative_post_claim_limit_realised_amount: Cumulative Value of All Post-Claim Limit Realisations
+      cumulative_pre_claim_realisation_adjustments: Cumulative Value of All Pre-Claim Realisation Adjustments
+      cumulative_settlement_adjustments: Cumulative Value of All Settlement Adjustments
       scheme: Scheme
       phase: Phase
       sub_lender: Sub-lender

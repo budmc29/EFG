@@ -83,6 +83,21 @@ describe LoanReportCsvExport do
       )
     }
 
+    let!(:realisation_adjustment) do
+      FactoryGirl.create(:realisation_adjustment,
+                         loan: loan,
+                         amount: Money.new(1_000_00),
+                         notes: "Recovery paid to BBB in error")
+    end
+
+    let!(:settlement_adjustment) do
+      FactoryGirl.create(:settlement_adjustment,
+                         loan: loan,
+                         amount: Money.new(5_000_00),
+                         notes: "Something changed.")
+    end
+
+
     let!(:loan) {
       FactoryGirl.create(:loan,
         ded_code: ded_code,
@@ -243,6 +258,8 @@ describe LoanReportCsvExport do
           :settled_amount,
           :cumulative_pre_claim_limit_realised_amount,
           :cumulative_post_claim_limit_realised_amount,
+          :cumulative_pre_claim_realisation_adjustments,
+          :cumulative_settlement_adjustments,
           :scheme,
           :phase,
           :sub_lender,
@@ -332,6 +349,8 @@ describe LoanReportCsvExport do
       expect(row[t(:settled_amount)]).to eq('1000.00')
       expect(row[t(:cumulative_pre_claim_limit_realised_amount)]).to eq('3000.00')
       expect(row[t(:cumulative_post_claim_limit_realised_amount)]).to eq('2000.00')
+      expect(row[t(:cumulative_pre_claim_realisation_adjustments)]).to eq("1000.00")
+      expect(row[t(:cumulative_settlement_adjustments)]).to eq("5000.00")
       expect(row[t(:scheme)]).to eq('EFG')
       expect(row[t(:phase)]).to eq('Phase 5 (FY 2013/14)')
       expect(row[t(:sub_lender)]).to eql('Sub-lender 1')
