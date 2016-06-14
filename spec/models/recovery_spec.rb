@@ -33,6 +33,11 @@ describe Recovery do
       expect(recovery).not_to be_valid
     end
 
+    it "cannot have a recovered_on date in the future" do
+      recovery.recovered_on = 1.day.from_now
+      expect(recovery).not_to be_valid
+    end
+
     context 'EFG' do
       let(:loan) { FactoryGirl.build(:loan, :efg, :settled) }
 

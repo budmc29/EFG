@@ -21,6 +21,11 @@ describe LoanRemoveGuarantee do
       expect(loan_remove_guarantee).not_to be_valid
     end
 
+    it "cannot have a remove_guarantee_on  date in the future" do
+      loan_remove_guarantee.remove_guarantee_on = 1.day.from_now
+      expect(loan_remove_guarantee).not_to be_valid
+    end
+
     it 'should be invalid without remove guarantee outstanding amount' do
       loan_remove_guarantee.remove_guarantee_outstanding_amount = nil
       expect(loan_remove_guarantee).not_to be_valid

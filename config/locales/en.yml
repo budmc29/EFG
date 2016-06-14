@@ -117,6 +117,7 @@ en:
           attributes:
             dti_demanded_on:
               before_borrower_demand_date: Date that demand is made to the government cannot be before the date of borrower demand
+              cannot_be_in_the_future: "cannot be in the future"
             dti_demand_outstanding:
               greater_than_total_drawn_amount: Outstanding balance must be less than or equal to the current total amount drawn
         loan_remove_guarantee:
@@ -125,6 +126,7 @@ en:
               greater_than_total_drawn_amount: Outstanding balance must be less than or equal to the current total amount drawn
             remove_guarantee_on:
               before_initial_draw_date: Date of removal of guarantee must not be before the date of initial draw of funds
+              cannot_be_in_the_future: "cannot be in the future"
         loan_repay:
           attributes:
             repaid_on:
@@ -134,10 +136,12 @@ en:
           attributes:
             cancelled_on:
               before_loan_creation_date: Cancel date cannot be before the loan was created
+              cannot_be_in_the_future: "cannot be in the future"
         loan_no_claim:
           attributes:
             no_claim_on:
               must_be_gte_last_demand_to_borrower: 'Date of decision that no claim will be made cannot be before the most recent date of borrower demand'
+              cannot_be_in_the_future: "cannot be in the future"
         loan_transfer/sflg: &loan_transfer
           attributes:
             base:
@@ -242,6 +246,9 @@ en:
             fourth_draw_amount:
               <<: *draw_amount
         recovery:
+          attributes:
+            recovered_on:
+              cannot_be_in_the_future: "cannot be in the future"
           recovery_too_high: Amount to be recovered added to Value of proceeds of any previous recoveries paid to the government is greater than Value of settlement previously made
 
   loan_alerts:

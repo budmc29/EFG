@@ -13,6 +13,7 @@ class Recovery < ActiveRecord::Base
   validates_presence_of :recovered_on
 
   validate :validate_scheme_fields
+  validate :recovered_on_is_not_in_the_future, if: :recovered_on
   validate do
     if loan && recovered_on && recovered_on < loan.settled_on
       errors.add(:recovered_on, 'must not be before the loan was settled')
@@ -115,6 +116,12 @@ class Recovery < ActiveRecord::Base
 
     def log_loan_state_change!
       LoanStateChange.log(loan, LoanEvent::RecoveryMade, created_by)
+    end
+
+    def recovered_on_is_not_in_the_future
+      if recovered_on > Date.current
+        errors.add(:recovered_on, :cannot_be_in_the_future)
+      end
     end
 
     def validate_scheme_fields

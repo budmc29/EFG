@@ -31,5 +31,10 @@ describe LoanCancel do
       loan_cancel.cancelled_on = loan_cancel.loan.created_at
       expect(loan_cancel).to be_valid
     end
+
+    it "cannot have a cancelled_on date in the future" do
+      loan_cancel.cancelled_on = 1.day.from_now
+      expect(loan_cancel).to be_invalid
+    end
   end
 end

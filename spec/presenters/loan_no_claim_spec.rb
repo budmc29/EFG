@@ -21,5 +21,10 @@ describe LoanNoClaim do
       loan_no_claim.no_claim_on = Date.new(2012, 6, 5)
       expect(loan_no_claim).not_to be_valid
     end
+
+    it "cannot have a no_claim_on date in the future" do
+      loan_no_claim.no_claim_on = 1.day.from_now
+      expect(loan_no_claim).not_to be_valid
+    end
   end
 end
