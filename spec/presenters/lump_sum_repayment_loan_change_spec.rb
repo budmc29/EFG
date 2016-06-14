@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 describe LumpSumRepaymentLoanChange do
-  it_behaves_like 'LoanChangePresenter'
+  it_behaves_like 'LoanChangePresenter' do
+    let(:presenter_factory_options) {
+      { initial_draw_amount: Money.new(1_000_00) }
+    }
+  end
 
   describe 'validations' do
-    context '#lump_sum_repayment' do
+    describe '#lump_sum_repayment' do
       let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, amount: Money.new(15_000_00)) }
       let(:presenter) { FactoryGirl.build(:lump_sum_repayment_loan_change, loan: loan) }
 
@@ -14,7 +18,7 @@ describe LumpSumRepaymentLoanChange do
       end
 
       it 'must be greater than zero' do
-        presenter.lump_sum_repayment = '0'
+        presenter.lump_sum_repayment = Money.new(0)
         expect(presenter).not_to be_valid
       end
 
@@ -22,10 +26,41 @@ describe LumpSumRepaymentLoanChange do
         allow(loan).to receive(:cumulative_drawn_amount).and_return(Money.new(6_000_00))
         allow(loan).to receive(:cumulative_lump_sum_amount).and_return(Money.new(1_000_00))
 
-        presenter.lump_sum_repayment = '5,000.01'
+        presenter.lump_sum_repayment = Money.new(5_000_01)
+        presenter.initial_draw_amount = Money.new(0)
         expect(presenter).not_to be_valid
 
-        presenter.lump_sum_repayment = '5,000'
+        presenter.lump_sum_repayment = Money.new(4_000_00)
+        presenter.initial_draw_amount = Money.new(500_00)
+        expect(presenter).to be_valid
+      end
+    end
+
+    describe "#initial_draw_amount" do
+      it "cannot exceed the amount remaining on the loan, after all lump sum repayments" do
+        loan = FactoryGirl.create(
+          :loan,
+          :guaranteed,
+          :with_premium_schedule,
+          amount: Money.new(15_000_00)
+        )
+        presenter = FactoryGirl.build(
+          :lump_sum_repayment_loan_change,
+          loan: loan
+        )
+
+        allow(loan).to receive(:cumulative_drawn_amount).
+          and_return(Money.new(9_000_00))
+
+        allow(loan).to receive(:cumulative_lump_sum_amount).
+          and_return(Money.new(1_000_00))
+
+        presenter.lump_sum_repayment = Money.new(5_000_00)
+
+        presenter.initial_draw_amount = Money.new(4000_00)
+        expect(presenter).not_to be_valid
+
+        presenter.initial_draw_amount = Money.new(3000_00)
         expect(presenter).to be_valid
       end
     end
@@ -41,7 +76,7 @@ describe LumpSumRepaymentLoanChange do
         loan.initial_draw_change.update_column :date_of_change, Date.new(2013, 2)
         loan.premium_schedule.update_column(:legacy_premium_calculation, true)
 
-        presenter.lump_sum_repayment = Money.new(1_000_00)
+        presenter.initial_draw_amount = Money.new(500_00)
       end
 
       it 'creates a LoanChange, a PremiumSchedule, and updates the loan' do

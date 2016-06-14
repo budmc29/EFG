@@ -3,6 +3,7 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
   attr_accessible :lump_sum_repayment
 
   validate :validate_lump_sum_repayment
+  validate :validate_outstanding_balance
 
   before_save :update_loan_change
 
@@ -21,8 +22,18 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
         errors.add(:lump_sum_repayment, :required)
       elsif lump_sum_repayment <= 0
         errors.add(:lump_sum_repayment, :must_be_gt_zero)
-      elsif loan.cumulative_lump_sum_amount + lump_sum_repayment > loan.cumulative_drawn_amount
+      elsif total_lump_sum_repayments > loan.cumulative_drawn_amount
         errors.add(:lump_sum_repayment, :exceeds_amount_drawn)
       end
+    end
+
+    def validate_outstanding_balance
+      if total_lump_sum_repayments + initial_draw_amount > loan.cumulative_drawn_amount
+        errors.add(:initial_draw_amount, :exceeds_amount_remaining)
+      end
+    end
+
+    def total_lump_sum_repayments
+      loan.cumulative_lump_sum_amount + (lump_sum_repayment || Money.new(0))
     end
 end

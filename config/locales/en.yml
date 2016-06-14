@@ -44,6 +44,8 @@ en:
               greater_than_max_repayment_duration: Maturity date must not be more than than ten years (or 2 years for Type E and 3 years for Type F loans) after the date of initial draw of funds
             repayment_frequency_id:
               must_be_changed: Repayment Frequency has not changed
+            initial_draw_amount:
+              exceeds_amount_remaining: "is more than the amount remaining on the loan"
             second_draw_amount:
               no_skipping: "must not be skipped"
             second_draw_months:

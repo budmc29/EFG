@@ -22,7 +22,7 @@ describe 'Lump sum repayment loan change' do
     expect(loan_change.lump_sum_repayment).to eq(Money.new(1_234_56))
 
     premium_schedule = loan.premium_schedules.last!
-    expect(premium_schedule.initial_draw_amount).to eq(Money.new(65_432_10))
+    expect(premium_schedule.initial_draw_amount).to eq(Money.new(6_432_10))
     expect(premium_schedule.premium_cheque_month).to eq('03/2012')
     expect(premium_schedule.repayment_duration).to eq(33)
 
@@ -39,7 +39,7 @@ describe 'Lump sum repayment loan change' do
 
     fill_in :date_of_change, '1/12/11'
     fill_in :lump_sum_repayment, '1234.56'
-    fill_in :initial_draw_amount, '65,432.10'
+    fill_in :initial_draw_amount, '6,432.10'
 
     Timecop.freeze(2011, 12, 1) do
       click_button 'Submit'
