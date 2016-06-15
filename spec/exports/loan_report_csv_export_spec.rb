@@ -167,7 +167,9 @@ describe LoanReportCsvExport do
         debtor_book_coverage: 30,
         debtor_book_topup: 5,
         lender_reference: 'lenderref1',
-        sub_lender: 'Sub-lender 1'
+        sub_lender: "Sub-lender 1",
+        status_amendment_type: "Administrative",
+        status_amendment_notes: "Stuff happened.",
       )
     }
 
@@ -263,6 +265,8 @@ describe LoanReportCsvExport do
           :scheme,
           :phase,
           :sub_lender,
+          :status_amendment_type,
+          :status_amendment_notes,
         ].map {|h| t(h) }
       )
     end
@@ -354,6 +358,8 @@ describe LoanReportCsvExport do
       expect(row[t(:scheme)]).to eq('EFG')
       expect(row[t(:phase)]).to eq('Phase 5 (FY 2013/14)')
       expect(row[t(:sub_lender)]).to eql('Sub-lender 1')
+      expect(row[t(:status_amendment_type)]).to eql("Administrative")
+      expect(row[t(:status_amendment_notes)]).to eql("Stuff happened.")
     end
 
     context "without guarantee rate on loan" do

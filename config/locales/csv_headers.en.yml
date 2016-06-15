@@ -87,6 +87,8 @@ en:
       scheme: Scheme
       phase: Phase
       sub_lender: Sub-lender
+      status_amendment_type: Status Amendment Type
+      status_amendment_notes: Status Amendment Notes
 
     loan_audit_report:
       loan_reference: Loan reference

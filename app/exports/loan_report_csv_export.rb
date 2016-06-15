@@ -90,7 +90,9 @@ class LoanReportCsvExport < BaseCsvExport
       :cumulative_settlement_adjustments,
       :scheme,
       :phase,
-      :sub_lender
+      :sub_lender,
+      :status_amendment_type,
+      :status_amendment_notes,
     ]
   end
 

@@ -92,6 +92,8 @@ class LoanReportCsvRow
       scheme_name(row['loan_scheme'], row['loan_source']),
       phase_name(row['lending_limit_phase_id']),
       row['sub_lender'],
+      row["status_amendment_type"],
+      row["status_amendment_notes"],
     ]
   end
 
