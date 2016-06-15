@@ -16,8 +16,6 @@ class PremiumSchedule < ActiveRecord::Base
     :third_draw_months, :fourth_draw_amount, :fourth_draw_months,
     :loan_id, :premium_cheque_month
 
-  attr_readonly :legacy_premium_calculation
-
   validates_presence_of :loan_id, strict: true
   validates_presence_of :repayment_duration
   validates_inclusion_of :calc_type, in: [ SCHEDULE_TYPE, RESCHEDULE_TYPE, NOTIFIED_AID_TYPE ]

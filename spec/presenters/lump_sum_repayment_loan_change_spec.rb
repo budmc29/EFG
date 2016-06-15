@@ -39,11 +39,12 @@ describe LumpSumRepaymentLoanChange do
     context 'success' do
       before do
         loan.initial_draw_change.update_column :date_of_change, Date.new(2013, 2)
+        loan.premium_schedule.update_column(:legacy_premium_calculation, true)
+
+        presenter.lump_sum_repayment = Money.new(1_000_00)
       end
 
       it 'creates a LoanChange, a PremiumSchedule, and updates the loan' do
-        presenter.lump_sum_repayment = Money.new(1_000_00)
-
         Timecop.freeze(2013, 3, 1) do
           expect(presenter.save).to eq(true)
         end
@@ -60,6 +61,18 @@ describe LumpSumRepaymentLoanChange do
         premium_schedule = loan.premium_schedules.last!
         expect(premium_schedule.premium_cheque_month).to eq('05/2013')
         expect(premium_schedule.repayment_duration).to eq(57)
+      end
+
+      it "updates the legacy premium schedule calculation to false" do
+        current_premium_schedule = loan.premium_schedule
+        expect(current_premium_schedule.legacy_premium_calculation).to eq(true)
+
+        Timecop.freeze(2013, 3, 1) do
+          presenter.save
+        end
+
+        new_premium_schedule = loan.reload.premium_schedule
+        expect(new_premium_schedule.legacy_premium_calculation).to eq(false)
       end
     end
 
