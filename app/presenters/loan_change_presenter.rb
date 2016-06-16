@@ -12,7 +12,7 @@ class LoanChangePresenter
   define_model_callbacks :save
   define_model_callbacks :validation
 
-  attr_reader :created_by, :date_of_change, :loan
+  attr_reader :created_by, :date_of_change, :loan, :current_premium_schedule
   attr_accessible :date_of_change, :initial_draw_amount, :second_draw_amount,
                   :second_draw_months, :third_draw_amount, :third_draw_months,
                   :fourth_draw_amount, :fourth_draw_months,
@@ -20,6 +20,11 @@ class LoanChangePresenter
 
   validates :date_of_change, presence: true
   validate :date_of_change_not_in_the_future, if: :date_of_change
+  validate :no_skipped_draws
+  validate :draws_have_months
+
+  validates :initial_capital_repayment_holiday,
+            numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   delegate :initial_draw_amount, :initial_draw_amount=, to: :premium_schedule
   delegate :second_draw_amount, :second_draw_amount=, to: :premium_schedule
@@ -34,6 +39,7 @@ class LoanChangePresenter
   def initialize(loan, created_by)
     @loan = loan
     @created_by = created_by
+    @current_premium_schedule = loan.premium_schedule || premium_schedule
   end
 
   def attributes=(attributes)
@@ -42,16 +48,25 @@ class LoanChangePresenter
     end
   end
 
-  def current_second_draw_amount
-    premium_schedule.second_draw_amount || Money.new(0)
+  def current_second_draw
+    amount = current_premium_schedule.second_draw_amount || Money.new(0)
+    months = current_premium_schedule.second_draw_months
+
+    "#{amount.format} in month #{months}"
   end
 
-  def current_third_draw_amount
-    premium_schedule.third_draw_amount || Money.new(0)
+  def current_third_draw
+    amount = current_premium_schedule.third_draw_amount || Money.new(0)
+    months = current_premium_schedule.third_draw_months
+
+    "#{amount.format} in month #{months}"
   end
 
-  def current_fourth_draw_amount
-    premium_schedule.fourth_draw_amount || Money.new(0)
+  def current_fourth_draw
+    amount = current_premium_schedule.fourth_draw_amount || Money.new(0)
+    months = current_premium_schedule.fourth_draw_months
+
+    "#{amount.format} in month #{months}"
   end
 
   def current_repayment_duration_at_next_premium
@@ -79,12 +94,10 @@ class LoanChangePresenter
   end
 
   def premium_schedule
-    @premium_schedule ||= new_premium_schedule.tap do |premium_schedule|
-      premium_schedule.calc_type = PremiumSchedule::RESCHEDULE_TYPE
-      premium_schedule.initial_draw_amount = nil
-      premium_schedule.initial_capital_repayment_holiday = 0
-      premium_schedule.legacy_premium_calculation = false
-      premium_schedule.seq = nil
+    @premium_schedule ||= loan.premium_schedules.new.tap do |ps|
+      ps.calc_type = PremiumSchedule::RESCHEDULE_TYPE
+      ps.initial_draw_year = current_premium_schedule.initial_draw_year ||
+        Date.today.year
     end
   end
 
@@ -128,10 +141,6 @@ class LoanChangePresenter
 
   private
 
-    def new_premium_schedule
-      loan.premium_schedules.empty? ? loan.premium_schedules.new : loan.premium_schedules.last.dup
-    end
-
     def initial_draw_date
       loan.initial_draw_change.date_of_change
     end
@@ -155,5 +164,18 @@ class LoanChangePresenter
       if date_of_change > Date.current
         errors.add(:date_of_change, :cannot_be_in_the_future)
       end
+    end
+
+    def draws_have_months
+      errors.add(:second_draw_months, :required) if second_draw_amount && second_draw_months.blank?
+      errors.add(:third_draw_months, :required) if third_draw_amount && third_draw_months.blank?
+      errors.add(:fourth_draw_months, :required) if fourth_draw_amount && fourth_draw_months.blank?
+    end
+
+    def no_skipped_draws
+      if (third_draw_amount or fourth_draw_amount) and not second_draw_amount
+        errors.add(:second_draw_amount, :no_skipping)
+      end
+      errors.add(:third_draw_amount, :no_skipping) if fourth_draw_amount and not third_draw_amount
     end
 end

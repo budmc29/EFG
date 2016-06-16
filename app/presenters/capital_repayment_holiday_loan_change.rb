@@ -1,10 +1,4 @@
 class CapitalRepaymentHolidayLoanChange < LoanChangePresenter
-  delegate :initial_capital_repayment_holiday,
-           :initial_capital_repayment_holiday=,
-           to: :premium_schedule
-
-  attr_accessible :initial_capital_repayment_holiday
-
   validate :validate_capital_repayment_holiday
   before_save :update_loan_change
 

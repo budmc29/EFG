@@ -104,7 +104,7 @@ describe LumpSumRepaymentLoanChange do
       end
 
       it "updates the legacy premium schedule calculation to false" do
-        current_premium_schedule = loan.premium_schedule
+        current_premium_schedule = loan.reload.premium_schedules.last
         expect(current_premium_schedule.legacy_premium_calculation).to eq(true)
 
         Timecop.freeze(2013, 3, 1) do

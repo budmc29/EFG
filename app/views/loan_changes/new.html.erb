@@ -44,17 +44,17 @@
     </p>
 
     <h5>Second tranche drawdown</h5>
-    <%= simple_form_row 'Current second tranche drawdown amount', @presenter.current_second_draw_amount.try(:format) %>
+    <%= simple_form_row 'Current second tranche drawdown amount', @presenter.current_second_draw %>
     <%= f.input :second_draw_amount, as: :currency %>
     <%= f.input :second_draw_months, as: :months, input_html: { class: 'input-mini' } %>
 
     <h5>Third tranche drawdown</h5>
-    <%= simple_form_row 'Current third tranche drawdown amount', @presenter.current_third_draw_amount.try(:format) %>
+    <%= simple_form_row 'Current third tranche drawdown amount', @presenter.current_third_draw %>
     <%= f.input :third_draw_amount, as: :currency %>
     <%= f.input :third_draw_months, as: :months, input_html: { class: 'input-mini' } %>
 
     <h5>Fourth tranche drawdown</h5>
-    <%= simple_form_row 'Current fourth tranche drawdown amount', @presenter.current_fourth_draw_amount.try(:format) %>
+    <%= simple_form_row 'Current fourth tranche drawdown amount', @presenter.current_fourth_draw %>
     <%= f.input :fourth_draw_amount, as: :currency %>
     <%= f.input :fourth_draw_months, as: :months, input_html: { class: 'input-mini' } %>
   <% end %>

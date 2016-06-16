@@ -12,6 +12,7 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
   end
 
   private
+
     def update_loan_change
       loan_change.change_type = ChangeType::LumpSumRepayment
       loan_change.lump_sum_repayment = lump_sum_repayment
