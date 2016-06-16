@@ -3,8 +3,6 @@ require 'rails_helper'
 describe 'Lump sum repayment loan change' do
   include LoanChangeSpecHelper
 
-  it_behaves_like "loan change on loan with no premium schedule"
-
   before do
     loan.initial_draw_change.update_column(:date_of_change, Date.new(2009, 12, 25))
 
