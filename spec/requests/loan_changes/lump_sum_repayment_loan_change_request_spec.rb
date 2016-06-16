@@ -3,12 +3,19 @@ require 'rails_helper'
 describe 'Lump sum repayment loan change' do
   include LoanChangeSpecHelper
 
-  it_behaves_like "loan change on loan with tranche drawdowns"
   it_behaves_like "loan change on loan with capital repayment holiday"
   it_behaves_like "loan change on loan with no premium schedule"
 
   before do
     loan.initial_draw_change.update_column(:date_of_change, Date.new(2009, 12, 25))
+
+    premium_schedule = loan.premium_schedule
+    premium_schedule.second_draw_amount = Money.new(5_000_00)
+    premium_schedule.second_draw_months = 3
+    premium_schedule.second_draw_amount = Money.new(4_000_00)
+    premium_schedule.second_draw_months = 6
+    premium_schedule.second_draw_amount = Money.new(2_000_00)
+    premium_schedule.second_draw_months = 9
   end
 
   it do
@@ -22,9 +29,16 @@ describe 'Lump sum repayment loan change' do
     expect(loan_change.lump_sum_repayment).to eq(Money.new(1_234_56))
 
     premium_schedule = loan.premium_schedules.last!
-    expect(premium_schedule.initial_draw_amount).to eq(Money.new(6_432_10))
     expect(premium_schedule.premium_cheque_month).to eq('03/2012')
     expect(premium_schedule.repayment_duration).to eq(33)
+
+    expect(premium_schedule.initial_draw_amount).to eq(Money.new(6_432_10))
+    expect(premium_schedule.second_draw_amount).to be_nil
+    expect(premium_schedule.second_draw_months).to be_nil
+    expect(premium_schedule.third_draw_amount).to be_nil
+    expect(premium_schedule.third_draw_months).to be_nil
+    expect(premium_schedule.fourth_draw_amount).to be_nil
+    expect(premium_schedule.fourth_draw_months).to be_nil
 
     expect(loan.maturity_date).to eq(Date.new(2014, 12, 25))
     expect(loan.modified_by).to eq(current_user)

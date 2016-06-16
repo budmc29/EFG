@@ -35,18 +35,6 @@ class ReprofileDrawsLoanChange < LoanChangePresenter
     @fourth_draw_amount = value.present? ? Money.parse(value) : nil
   end
 
-  def current_second_draw_amount
-    premium_schedule.second_draw_amount || Money.new(0)
-  end
-
-  def current_third_draw_amount
-    premium_schedule.third_draw_amount || Money.new(0)
-  end
-
-  def current_fourth_draw_amount
-    premium_schedule.fourth_draw_amount || Money.new(0)
-  end
-
   private
     def update_loan_change
       loan_change.change_type = ChangeType::ReprofileDraws

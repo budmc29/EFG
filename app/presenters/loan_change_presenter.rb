@@ -13,12 +13,20 @@ class LoanChangePresenter
   define_model_callbacks :validation
 
   attr_reader :created_by, :date_of_change, :loan
-  attr_accessible :date_of_change, :initial_draw_amount
+  attr_accessible :date_of_change, :initial_draw_amount, :second_draw_amount,
+                  :second_draw_months, :third_draw_amount, :third_draw_months,
+                  :fourth_draw_amount, :fourth_draw_months
 
   validates :date_of_change, presence: true
   validate :date_of_change_not_in_the_future, if: :date_of_change
 
   delegate :initial_draw_amount, :initial_draw_amount=, to: :premium_schedule
+  delegate :second_draw_amount, :second_draw_amount=, to: :premium_schedule
+  delegate :second_draw_months, :second_draw_months=, to: :premium_schedule
+  delegate :third_draw_amount, :third_draw_amount=, to: :premium_schedule
+  delegate :third_draw_months, :third_draw_months=, to: :premium_schedule
+  delegate :fourth_draw_amount, :fourth_draw_amount=, to: :premium_schedule
+  delegate :fourth_draw_months, :fourth_draw_months=, to: :premium_schedule
 
   def initialize(loan, created_by)
     @loan = loan
@@ -29,6 +37,18 @@ class LoanChangePresenter
     sanitize_for_mass_assignment(attributes).each do |k, v|
       public_send("#{k}=", v)
     end
+  end
+
+  def current_second_draw_amount
+    premium_schedule.second_draw_amount || Money.new(0)
+  end
+
+  def current_third_draw_amount
+    premium_schedule.third_draw_amount || Money.new(0)
+  end
+
+  def current_fourth_draw_amount
+    premium_schedule.fourth_draw_amount || Money.new(0)
   end
 
   def current_repayment_duration_at_next_premium
