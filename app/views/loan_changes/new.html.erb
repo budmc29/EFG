@@ -27,6 +27,16 @@
     <%= simple_form_row 'Outstanding loan term at the next quarterly Premium collection point', @presenter.current_repayment_duration_at_next_premium %>
   <% end %>
 
+  <% unless @presenter.capital_repayment_holiday_change? %>
+    <%= field_set_tag "Capital Repayment Holiday" do %>
+      <p>
+        <span class="label label-important">IMPORTANT</span> Capital repayment holiday is optional. Leave it blank if not relevant.
+      </p>
+
+      <%= render "capital_repayment_holiday", f: f, presenter: @presenter %>
+    <% end %>
+  <% end %>
+
   <%= field_set_tag 'New Tranche Drawdowns' do %>
 
     <p>

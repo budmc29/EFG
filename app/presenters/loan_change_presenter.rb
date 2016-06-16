@@ -15,7 +15,8 @@ class LoanChangePresenter
   attr_reader :created_by, :date_of_change, :loan
   attr_accessible :date_of_change, :initial_draw_amount, :second_draw_amount,
                   :second_draw_months, :third_draw_amount, :third_draw_months,
-                  :fourth_draw_amount, :fourth_draw_months
+                  :fourth_draw_amount, :fourth_draw_months,
+                  :initial_capital_repayment_holiday
 
   validates :date_of_change, presence: true
   validate :date_of_change_not_in_the_future, if: :date_of_change
@@ -27,6 +28,8 @@ class LoanChangePresenter
   delegate :third_draw_months, :third_draw_months=, to: :premium_schedule
   delegate :fourth_draw_amount, :fourth_draw_amount=, to: :premium_schedule
   delegate :fourth_draw_months, :fourth_draw_months=, to: :premium_schedule
+  delegate :initial_capital_repayment_holiday, to: :premium_schedule
+  delegate :initial_capital_repayment_holiday=, to: :premium_schedule
 
   def initialize(loan, created_by)
     @loan = loan
@@ -53,6 +56,10 @@ class LoanChangePresenter
 
   def current_repayment_duration_at_next_premium
     loan.repayment_duration.total_months - number_of_months_from_start_date_to_next_collection
+  end
+
+  def capital_repayment_holiday_change?
+    self.class == CapitalRepaymentHolidayLoanChange
   end
 
   def date_of_change=(value)
