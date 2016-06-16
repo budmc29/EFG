@@ -29,7 +29,7 @@ describe 'Reprofile draws loan change' do
 
       loan_change = loan.loan_changes.last!
       expect(loan_change.change_type).to eq(ChangeType::ReprofileDraws)
-      expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 11))
+      expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 1))
 
       premium_schedule = loan.premium_schedules.last!
 
@@ -80,7 +80,7 @@ describe 'Reprofile draws loan change' do
     click_link 'Change Amount or Terms'
     click_link 'Reprofile Draws'
 
-    fill_in :date_of_change, '11/9/10'
+    fill_in :date_of_change, '1/9/10'
     fill_in :initial_draw_amount, '65,432.10'
     fill_in :second_draw_amount, '5,000.00'
     fill_in :second_draw_months, '6'

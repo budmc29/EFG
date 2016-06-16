@@ -25,6 +25,8 @@ en:
               inclusion: "a sub-lender must be chosen"
         loan_change:
           attributes:
+            date_of_change:
+              cannot_be_in_the_future: "cannot be in the future"
             added_months:
               required: "can't be blank"
               must_not_be_zero: "cannot be zero"

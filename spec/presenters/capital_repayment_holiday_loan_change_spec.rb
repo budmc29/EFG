@@ -24,8 +24,15 @@ describe CapitalRepaymentHolidayLoanChange do
 
   describe '#save' do
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, :fully_drawn, repayment_duration: 60, repayment_frequency_id: 4) }
-    let(:presenter) { FactoryGirl.build(:capital_repayment_holiday_loan_change, created_by: user, loan: loan) }
     let(:user) { FactoryGirl.create(:lender_user) }
+    let(:presenter) {
+      FactoryGirl.build(
+        :capital_repayment_holiday_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        created_by: user,
+        loan: loan
+      )
+    }
 
     context 'success' do
       before do

@@ -24,7 +24,7 @@ describe 'Repayment frequency loan change' do
 
     loan_change = loan.loan_changes.last!
     expect(loan_change.change_type).to eq(ChangeType::RepaymentFrequency)
-    expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 11))
+    expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 1))
     expect(loan_change.repayment_frequency_id).to eq(RepaymentFrequency::Monthly.id)
     expect(loan_change.old_repayment_frequency_id).to eq(RepaymentFrequency::Quarterly.id)
 
@@ -49,7 +49,7 @@ describe 'Repayment frequency loan change' do
     visit loan_path(loan)
     click_link 'Change Amount or Terms'
     click_link 'Repayment Frequency'
-    fill_in :date_of_change, '11/9/10'
+    fill_in :date_of_change, '1/9/10'
     fill_in :initial_draw_amount, '65,432.10'
 
     select :repayment_frequency_id, RepaymentFrequency::Monthly.name

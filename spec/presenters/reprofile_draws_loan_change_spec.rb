@@ -101,7 +101,14 @@ describe ReprofileDrawsLoanChange do
   describe '#save' do
     let(:user) { FactoryGirl.create(:lender_user) }
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, repayment_duration: 60) }
-    let(:presenter) { FactoryGirl.build(:reprofile_draws_loan_change, created_by: user, loan: loan) }
+    let(:presenter) {
+      FactoryGirl.build(
+        :reprofile_draws_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        created_by: user,
+        loan: loan
+      )
+    }
 
     before do
       loan.initial_draw_change.update_column :date_of_change, Date.new(2010, 1)

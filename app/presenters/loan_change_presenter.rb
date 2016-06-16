@@ -16,6 +16,7 @@ class LoanChangePresenter
   attr_accessible :date_of_change, :initial_draw_amount
 
   validates :date_of_change, presence: true
+  validate :date_of_change_not_in_the_future, if: :date_of_change
 
   delegate :initial_draw_amount, :initial_draw_amount=, to: :premium_schedule
 
@@ -121,5 +122,11 @@ class LoanChangePresenter
 
     def repayment_duration_at_next_premium
       current_repayment_duration_at_next_premium
+    end
+
+    def date_of_change_not_in_the_future
+      if date_of_change > Date.current
+        errors.add(:date_of_change, :cannot_be_in_the_future)
+      end
     end
 end
