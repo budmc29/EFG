@@ -7,7 +7,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -26,7 +27,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -73,7 +75,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -92,7 +95,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -107,11 +111,35 @@ describe EfgRecoveryCalculator do
     end
   end
 
+  context "with no debt" do
+    it "calculates the correct amount due to DTI" do
+      loan = FactoryGirl.build(
+        :loan, :settled,
+        amount: Money.new(100_000_00),
+        dti_demand_outstanding: Money.new(25_075_03),
+        dti_amount_claimed: Money.new(18_806_27),
+      )
+
+      recovery = setup_recovery(
+        loan: loan,
+        outstanding_prior_non_efg_debt: Money.new(0.00),
+        outstanding_subsequent_non_efg_debt: Money.new(0.00),
+        non_linked_security_proceeds: Money.new(0.00),
+        linked_security_proceeds: Money.new(25_075_03),
+      )
+
+      calculator = described_class.new(recovery)
+
+      expect(calculator.amount_due_to_dti).to eq(Money.new(0))
+    end
+  end
+
   def setup_recovery(opts = {})
     loan = opts[:loan]
     outstanding_prior_non_efg_debt = opts.fetch(:outstanding_prior_non_efg_debt)
     outstanding_subsequent_non_efg_debt = opts.fetch(
-      :outstanding_subsequent_non_efg_debt)
+      :outstanding_subsequent_non_efg_debt
+    )
     non_linked_security_proceeds = opts.fetch(:non_linked_security_proceeds)
     linked_security_proceeds = opts.fetch(:linked_security_proceeds)
 
@@ -119,7 +147,8 @@ describe EfgRecoveryCalculator do
       :loan, :settled,
       amount: Money.new(50_000_00),
       dti_demand_outstanding: Money.new(25_000_00),
-      dti_amount_claimed: Money.new(18_750_00))
+      dti_amount_claimed: Money.new(18_750_00)
+    )
 
     FactoryGirl.build(
       :recovery,
@@ -127,6 +156,7 @@ describe EfgRecoveryCalculator do
       outstanding_prior_non_efg_debt: outstanding_prior_non_efg_debt,
       outstanding_subsequent_non_efg_debt: outstanding_subsequent_non_efg_debt,
       non_linked_security_proceeds: non_linked_security_proceeds,
-      linked_security_proceeds: linked_security_proceeds)
+      linked_security_proceeds: linked_security_proceeds
+    )
   end
 end

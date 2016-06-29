@@ -53,11 +53,21 @@ class EfgRecoveryCalculator
 
   def non_linked_security_proceeds_efg_debt_amount
     remaining_non_linked_security_proceeds *
-      distrubution_of_remaining_securities
+      distribution_of_remaining_securities
   end
 
-  def distrubution_of_remaining_securities
+  def distribution_of_remaining_securities
+    return 0 unless has_debt?
+
     remaining_efg_debt / (
       remaining_efg_debt + recovery.outstanding_subsequent_non_efg_debt)
+  end
+
+  def has_debt?
+    [
+      remaining_efg_debt,
+      remaining_efg_debt,
+      recovery.outstanding_subsequent_non_efg_debt,
+    ].any? { |amount| amount != Money.new(0) }
   end
 end
