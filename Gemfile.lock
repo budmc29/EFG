@@ -127,7 +127,7 @@ GEM
     less-rails (2.2.6)
       actionpack (>= 3.1)
       less (~> 2.2.0)
-    libv8 (3.16.14.13)
+    libv8 (3.16.14.15)
     lograge (0.1.2)
       actionpack
       activesupport
@@ -341,4 +341,4 @@ DEPENDENCIES
   will_paginate (= 3.0.5)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5
