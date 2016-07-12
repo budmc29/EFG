@@ -66,6 +66,7 @@ group :development, :test do
   gem "parallel_tests", "0.16.10"
   gem "rspec-rails", "~> 3.4"
   gem "simplecov-rcov", "0.2.3"
+  gem "pry-rails"
 end
 
 group :test do
