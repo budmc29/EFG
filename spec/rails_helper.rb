@@ -59,6 +59,8 @@ RSpec.configure do |config|
   # Warden / Devise test helpers for request specs.
   config.include Warden::Test::Helpers, type: :request
 
+  config.include Formulaic::Dsl, type: :request
+
   config.before(:each, type: :request) do
     Warden.test_mode!
   end

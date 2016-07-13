@@ -72,6 +72,7 @@ end
 group :test do
   gem "capybara"
   gem "factory_girl_rails", "4.2.0"
+  gem "formulaic"
   gem "launchy", "2.1.0"
   gem "pdf-reader", "1.1.1"
   gem "rspec-collection_matchers"
