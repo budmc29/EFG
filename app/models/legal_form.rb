@@ -1,15 +1,36 @@
-class LegalForm < StaticAssociation
-  self.data = [
-    {id: 1, name: 'Sole Trader', requires_company_registration: false},
-    {id: 2, name: 'Partnership', requires_company_registration: false},
-    {id: 3, name: 'Limited-Liability Partnership (LLP)', requires_company_registration: true},
-    {id: 4, name: 'Private Limited Company (LTD)', requires_company_registration: true},
-    {id: 5, name: 'Public Limited Company (PLC)', requires_company_registration: true},
-    {id: 6, name: 'Other', requires_company_registration: false},
-  ]
+class LegalForm
+  include StaticAssociation
 
-  def self.company_registration_required?(id)
-    LegalForm.find(id).requires_company_registration
+  attr_accessor :name, :requires_company_registration
+
+  record id: 1 do |r|
+    r.name = "Sole Trader"
+    r.requires_company_registration = false
+  end
+
+  record id: 2 do |r|
+    r.name = "Partnership"
+    r.requires_company_registration = false
+  end
+
+  record id: 3 do |r|
+    r.name = "Limited-Limited Partnership (LLP)"
+    r.requires_company_registration = true
+  end
+
+  record id: 4 do |r|
+    r.name = "Private Limited Company (LTD)"
+    r.requires_company_registration = true
+  end
+
+  record id: 5 do |r|
+    r.name = "Public Limited Company (PLC)"
+    r.requires_company_registration = true
+  end
+
+  record id: 6 do |r|
+    r.name = "Other"
+    r.requires_company_registration = false
   end
 
   SoleTrader = find(1)

@@ -42,8 +42,13 @@ describe InformationDeclaration do
   before do
     # PDF table output gets a jumbled up with long lines of text
     # so stub LoanCategory#name to be short enough to test
-    fake_loan_category = LoanCategory.new.tap { |c| c.id = 1; c.name = "Category Name" }
-    allow_any_instance_of(Loan).to receive(:loan_category).and_return(fake_loan_category)
+    fake_loan_category = instance_double(
+      LoanCategory,
+      id: 1,
+      name: "Category Name"
+    )
+    allow_any_instance_of(Loan).to receive(:loan_category).
+      and_return(fake_loan_category)
   end
 
   describe "#render" do

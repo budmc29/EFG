@@ -1,33 +1,119 @@
-class LoanEvent < StaticAssociation
-  self.data = [
-    {id: 0, name: 'Reject'},
-    {id: 1, name: 'Accept'},
-    {id: 2, name: 'Loan entry'},
-    {id: 3, name: 'Cancel loan'},
-    {id: 4, name: 'Complete'},
-    {id: 5, name: 'Offer scheme facility'},
-    {id: 6, name: 'Not progressed'},
-    {id: 7, name: 'Guarantee and initial draw'},
-    {id: 8, name: 'Not drawn'},
-    {id: 9, name: 'Change amount or terms'},
-    {id: 10, name: 'Demand to borrower'},
-    {id: 11, name: 'Not demanded'},
-    {id: 12, name: 'No claim'},
-    {id: 13, name: 'Demand against government guarantee'},
-    {id: 14, name: 'Loan repaid'},
-    {id: 15, name: 'Remove guarantee'},
-    {id: 16, name: 'Transfer'},
-    {id: 17, name: 'Not closed'},
-    {id: 18, name: 'Create claim'},
-    {id: 19, name: 'Realise money'},
-    {id: 20, name: 'Recovery made'},
-    {id: 21, name: 'Legacy loan imported'},
-    {id: 22, name: 'Data correction'},
-    {id: 23, name: 'Transfer (legacy)'},
-    {id: 24, name: 'Data cleanup'},
-    {id: 25, name: 'EFG Transfer'},
-    {id: 26, name: 'Update lending limit'}
-  ]
+class LoanEvent
+  include StaticAssociation
+
+  attr_accessor :name
+
+  record id: 0 do |r|
+    r.name = "Reject"
+  end
+
+  record id: 1 do |r|
+    r.name = "Accept"
+  end
+
+  record id: 2 do |r|
+    r.name = "Loan entry"
+  end
+
+  record id: 3 do |r|
+    r.name = "Cancel loan"
+  end
+
+  record id: 4 do |r|
+    r.name = "Complete"
+  end
+
+  record id: 5 do |r|
+    r.name = "Offer scheme facility"
+  end
+
+  record id: 6 do |r|
+    r.name = "Not progressed"
+  end
+
+  record id: 7 do |r|
+    r.name = "Guarantee and initial draw"
+  end
+
+  record id: 8 do |r|
+    r.name = "Not drawn"
+  end
+
+  record id: 9 do |r|
+    r.name = "Change amount or terms"
+  end
+
+  record id: 10 do |r|
+    r.name = "Demand to borrower"
+  end
+
+  record id: 11 do |r|
+    r.name = "Not demanded"
+  end
+
+  record id: 12 do |r|
+    r.name = "No claim"
+  end
+
+  record id: 13 do |r|
+    r.name = "Demand against government guarantee"
+  end
+
+  record id: 14 do |r|
+    r.name = "Loan repaid"
+  end
+
+  record id: 15 do |r|
+    r.name = "Remove guarantee"
+  end
+
+  record id: 16 do |r|
+    r.name = "Transfer"
+  end
+
+  record id: 17 do |r|
+    r.name = "Not closed"
+  end
+
+  record id: 18 do |r|
+    r.name = "Create claim"
+  end
+
+  record id: 19 do |r|
+    r.name = "Realise money"
+  end
+
+  record id: 20 do |r|
+    r.name = "Recovery made"
+  end
+
+  record id: 21 do |r|
+    r.name = "Legacy loan imported"
+  end
+
+  record id: 22 do |r|
+    r.name = "Data correction"
+  end
+
+  record id: 23 do |r|
+    r.name = "Transfer (legacy)"
+  end
+
+  record id: 24 do |r|
+    r.name = "Data cleanup"
+  end
+
+  record id: 25 do |r|
+    r.name = "EFG Transfer"
+  end
+
+  record id: 26 do |r|
+    r.name = "Update lending limi"
+  end
+
+  def self.ids
+    all.map(&:id)
+  end
 
   Reject = find(0)
   Accept = find(1)
@@ -56,8 +142,4 @@ class LoanEvent < StaticAssociation
   DataCleanup = find(24)
   EFGTransfer = find(25)
   UpdateLendingLimit = find(26)
-
-  def self.ids
-    all.map(&:id)
-  end
 end

@@ -13,6 +13,7 @@ gem "therubyracer", "0.12"
 # rails additions
 gem "protected_attributes", "1.0.8"
 gem "simple_form", "3.0.2"
+gem "static_association", "0.1.0"
 gem "useragent", "0.4.16"
 
 # types and conversions

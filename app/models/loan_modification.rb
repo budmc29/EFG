@@ -24,7 +24,7 @@ class LoanModification < ActiveRecord::Base
   format :old_maturity_date, with: QuickDateFormatter
 
   def change_type
-    ChangeType.find(change_type_id)
+    ChangeType.find_by_id(change_type_id)
   end
 
   def change_type=(change_type)

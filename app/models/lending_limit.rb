@@ -1,5 +1,6 @@
 class LendingLimit < ActiveRecord::Base
   include FormatterConcern
+  extend StaticAssociation::AssociationHelpers
 
   USAGE_LOAN_STATES = [
     Loan::Guaranteed,
@@ -14,6 +15,8 @@ class LendingLimit < ActiveRecord::Base
     Loan::Realised,
     Loan::Recovered
   ]
+
+  belongs_to_static :phase
 
   belongs_to :lender
   belongs_to :modified_by, class_name: 'User'
@@ -60,10 +63,6 @@ class LendingLimit < ActiveRecord::Base
   def available?
     ends_on_with_grace_period = ends_on.advance(days: 30)
     active && (starts_on..ends_on_with_grace_period).cover?(Date.current)
-  end
-
-  def phase
-    Phase.find(phase_id)
   end
 
   def unavailable?

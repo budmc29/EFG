@@ -1,5 +1,9 @@
-class LoanFacility < StaticAssociation
-  self.data = [
-    { id: 1, name: 'EFG Training' }
-  ]
+class LoanFacility
+  include StaticAssociation
+
+  attr_accessor :name
+
+  record id: 1 do |r|
+    r.name = "EFG Training"
+  end
 end

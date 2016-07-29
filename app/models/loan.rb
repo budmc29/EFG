@@ -5,6 +5,7 @@ class IncorrectLoanStateError < StandardError; end
 
 class Loan < ActiveRecord::Base
   include FormatterConcern
+  extend StaticAssociation::AssociationHelpers
 
   Rejected = 'rejected'.freeze
   Eligible = 'eligible'.freeze
@@ -39,6 +40,15 @@ class Loan < ActiveRecord::Base
   # All new loans have SFLG source
   SFLG_SOURCE = 'S'
   LEGACY_SFLG_SOURCE = 'L'
+
+  belongs_to_static :cancelled_reason, class_name: "CancelReason"
+  belongs_to_static :interest_rate_type
+  belongs_to_static :legal_form
+  belongs_to_static :loan_category
+  belongs_to_static :loan_category
+  belongs_to_static :loan_sub_category
+  belongs_to_static :reason, class_name: "LoanReason"
+  belongs_to_static :repayment_frequency
 
   belongs_to :lender
   belongs_to :lending_limit
@@ -163,10 +173,6 @@ class Loan < ActiveRecord::Base
     cumulative_drawn_amount >= amount
   end
 
-  def cancelled_reason
-    CancelReason.find(cancelled_reason_id)
-  end
-
   def cumulative_adjusted_realised_amount
     cumulative_realised_amount - cumulative_realisation_adjustments_amount
   end
@@ -237,30 +243,6 @@ class Loan < ActiveRecord::Base
 
   def has_state?(*states)
     states.include?(state)
-  end
-
-  def loan_category
-    LoanCategory.find(loan_category_id)
-  end
-
-  def loan_sub_category
-    LoanSubCategory.find(loan_sub_category_id)
-  end
-
-  def reason
-    LoanReason.find(reason_id)
-  end
-
-  def interest_rate_type
-    InterestRateType.find(interest_rate_type_id)
-  end
-
-  def legal_form
-    LegalForm.find(legal_form_id)
-  end
-
-  def repayment_frequency
-    RepaymentFrequency.find(repayment_frequency_id)
   end
 
   def loan_security_types

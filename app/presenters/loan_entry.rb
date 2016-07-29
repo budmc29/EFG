@@ -56,13 +56,20 @@ class LoanEntry
   attribute :debtor_book_topup
   attribute :sub_lender
 
+  attribute :legal_form, read_only: true
+
   delegate :calculate_state_aid, :reason, :sic, to: :loan
   delegate :sub_lender_names, to: :lender
 
   validates_presence_of :business_name, :fees, :interest_rate,
     :interest_rate_type_id, :legal_form_id, :repayment_frequency_id
   validates_presence_of :state_aid
-  validates_presence_of :company_registration, if: ->(loan_entry) { loan_entry.legal_form_id.present? && LegalForm.company_registration_required?(loan_entry.legal_form_id) }
+
+  validates_presence_of :company_registration, if: ->(loan_entry) do
+    loan_entry.legal_form &&
+      loan_entry.legal_form.requires_company_registration
+  end
+
   validate :postcode_allowed
   validate :state_aid_calculated, if: :recalculate_state_aid?
   validate :state_aid_within_sic_threshold, if: :state_aid
