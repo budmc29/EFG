@@ -16,7 +16,7 @@ describe RepaymentDuration do
 
       describe '#max_months' do
         it "should return maximum number of loans months based on loan category minimum term months" do
-          expect(repayment_duration.max_months).to eq(24)
+          expect(repayment_duration.max_months).to eq(36)
         end
       end
     end

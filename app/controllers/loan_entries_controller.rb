@@ -17,14 +17,10 @@ class LoanEntriesController < ApplicationController
       @loan_entry.save_as_incomplete
       redirect_to loan_url(@loan_entry.loan)
     when 'State Aid Calculation'
-      if @loan_entry.premium_schedule_required_for_state_aid_calculation?
-        @loan_entry.save_as_incomplete
-        redirect_to edit_loan_premium_schedule_url(@loan_entry.loan, redirect: 'loan_entry')
-      else
-        @loan_entry.calculate_state_aid
-        @loan_entry.save_as_incomplete
-        redirect_to new_loan_entry_url(@loan_entry.loan, anchor: 'loan_entry_state_aid')
-      end
+      @loan_entry.calculate_state_aid
+      @loan_entry.save_as_incomplete
+      anchor = "loan_entry_state_aid"
+      redirect_to new_loan_entry_url(@loan_entry.loan, anchor: anchor)
     else
       if @loan_entry.save
         if @loan_entry.complete?

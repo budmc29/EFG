@@ -642,7 +642,7 @@ describe Loan do
 
     context 'SFLG' do
       let(:loan) { FactoryGirl.build(:loan, :sflg) }
-      it { should eql(Phase5Rules) }
+      it { should eql(Phase8Rules) }
     end
 
     context 'EFG' do

@@ -17,14 +17,6 @@ describe 'Loan lifecycle' do
       lender.lending_limits.first.update_attribute(:phase_id, phase)
     end
 
-    context "phase 5" do
-      let(:phase) { 5 }
-
-      it "can progress through to realised" do
-        phase_5_loan_lifecycle_steps
-      end
-    end
-
     context 'phase 6' do
       let(:phase) { 6 }
 
@@ -237,11 +229,6 @@ describe 'Loan lifecycle' do
     fill_in 'Amount', with: '100.00'
     fill_in 'Date', with: '22/09/2014'
     click_button 'Submit'
-  end
-
-  def phase_5_loan_lifecycle_steps
-    loan = loan_lifecycle_steps_up_to_complete
-    loan_lifecycle_steps_from_offered(loan)
   end
 
   def loan_lifecycle_steps_up_to_complete

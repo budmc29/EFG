@@ -110,7 +110,7 @@ describe 'eligibility checks' do
     expect(current_url).to eq(loan_eligibility_decision_url(loan.id))
 
     expect(loan.state).to eq(Loan::Rejected)
-    expect(page).to have_content(I18n.t('validators.amount.amount.invalid', maximum: '£1,000,000.00', minimum: '£1,000.00'))
+    expect(page).to have_content(I18n.t('validators.amount.amount.invalid', maximum: '£1,200,000.00', minimum: '£1,000.00'))
 
     # email eligibility decision
 

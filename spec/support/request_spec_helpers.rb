@@ -63,12 +63,6 @@ module RequestSpecHelpers
     fill_in 'loan_entry_fees', with: '123.45'
   end
 
-  def fill_in_valid_loan_entry_details_phase_5(loan)
-    fill_in_valid_loan_entry_details(loan)
-    calculate_state_aid(loan)
-    check 'loan_entry_state_aid_is_valid'
-  end
-
   def fill_in_valid_loan_entry_details_phase_6(loan)
     fill_in_valid_loan_entry_details(loan)
     click_button 'State Aid Calculation'
@@ -83,9 +77,6 @@ module RequestSpecHelpers
 
   def calculate_state_aid(loan)
     click_button 'State Aid Calculation'
-    page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
-    page.fill_in 'premium_schedule_initial_draw_amount', with: (loan.amount - Money.new(1_000_00)).to_s
-    click_button 'Submit'
   end
 
   # Offer Facility
