@@ -70,4 +70,6 @@ RSpec.configure do |config|
   end
 
   config.raise_errors_for_deprecations!
+
+  config.include FactoryGirl::Syntax::Methods
 end
