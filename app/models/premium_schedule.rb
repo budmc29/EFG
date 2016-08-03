@@ -81,12 +81,14 @@ class PremiumSchedule < ActiveRecord::Base
           quarter: loan_quarter,
           repayment_frequency: repayment_frequency,
           repayment_duration: repayment_duration,
-          repayment_holiday: initial_capital_repayment_holiday
+          repayment_holiday: initial_capital_repayment_holiday,
+          fixed_repayment_amount: fixed_repayment_amount,
         ).amount
       end
 
       Money.new((outstanding_loan_value_at_quarter.to_d * 100) * premium_rate_per_quarter)
     end
+    @premiums
   end
 
   def save_and_update_loan_state_aid

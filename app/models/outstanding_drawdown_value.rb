@@ -1,10 +1,11 @@
 class OutstandingDrawdownValue
   def initialize(args)
-    @drawdown            = args[:drawdown]
-    @quarter             = args[:quarter]
-    @repayment_frequency = args[:repayment_frequency]
-    @repayment_duration  = args[:repayment_duration]
-    @repayment_holiday   = args[:repayment_holiday]
+    @drawdown               = args[:drawdown]
+    @quarter                = args[:quarter]
+    @repayment_frequency    = args[:repayment_frequency]
+    @repayment_duration     = args[:repayment_duration]
+    @repayment_holiday      = args[:repayment_holiday]
+    @fixed_repayment_amount = args[:fixed_repayment_amount]
   end
 
   def amount
@@ -14,11 +15,13 @@ class OutstandingDrawdownValue
 
   private
 
-  attr_reader :drawdown, :quarter, :repayment_frequency
+  attr_reader :drawdown, :quarter, :repayment_frequency, :fixed_repayment_amount
 
   def amount_of_drawdown_repaid
     if repayment_holiday_active?
       Money.new(0)
+    elsif fixed_repayment_amount
+      fixed_repayment_amount * months_of_drawdown_repayment_so_far
     else
       (drawdown.amount * months_of_drawdown_repayment_so_far) / total_drawdown_repayment_months
     end
