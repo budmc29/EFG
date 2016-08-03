@@ -94,10 +94,12 @@ class LoanChangePresenter
   end
 
   def premium_schedule
-    @premium_schedule ||= loan.premium_schedules.new.tap do |ps|
-      ps.calc_type = PremiumSchedule::RESCHEDULE_TYPE
-      ps.initial_draw_year = current_premium_schedule.initial_draw_year ||
-        Date.today.year
+    @premium_schedule ||= loan.premium_schedules.new.tap do |p|
+      p.calc_type = PremiumSchedule::RESCHEDULE_TYPE
+      p.repayment_profile = current_premium_schedule.repayment_profile
+      p.fixed_repayment_amount = current_premium_schedule.fixed_repayment_amount
+      p.initial_draw_year = current_premium_schedule.initial_draw_year ||
+                            Date.today.year
     end
   end
 

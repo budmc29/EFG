@@ -14,6 +14,9 @@ describe 'Lump sum repayment loan change' do
     premium_schedule.third_draw_months = 6
     premium_schedule.fourth_draw_amount = Money.new(2_000_00)
     premium_schedule.fourth_draw_months = 9
+    premium_schedule.repayment_profile =
+      PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+    premium_schedule.fixed_repayment_amount = Money.new(1_000_00)
     premium_schedule.save
   end
 
@@ -38,6 +41,9 @@ describe 'Lump sum repayment loan change' do
     expect(premium_schedule.repayment_duration).to eq(33)
 
     expect(premium_schedule.calc_type).to eq(PremiumSchedule::RESCHEDULE_TYPE)
+    expect(premium_schedule.repayment_profile).
+      to eq(PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE)
+    expect(premium_schedule.fixed_repayment_amount).to eq(Money.new(1_000_00))
     expect(premium_schedule.initial_draw_year).to eq(2010)
     expect(premium_schedule.initial_draw_amount).to eq(Money.new(6_432_10))
     expect(premium_schedule.second_draw_amount).to be_nil

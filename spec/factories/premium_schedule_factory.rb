@@ -6,6 +6,7 @@ FactoryGirl.define do
     repayment_duration 12
     calc_type 'S'
     legacy_premium_calculation true
+    repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
 
     factory :rescheduled_premium_schedule do
       calc_type 'R'

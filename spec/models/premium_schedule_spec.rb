@@ -163,6 +163,10 @@ describe PremiumSchedule do
       expect(premium_schedule).to be_valid
     end
 
+    it "validates repayment profile" do
+      expect(premium_schedule).to validate_with(RepaymentProfileValidator)
+    end
+
     %w(
       second_draw
       third_draw

@@ -12,6 +12,8 @@
 <%= simple_form_for(@premium_schedule, url: loan_premium_schedule_path(@loan, redirect: params[:redirect]), html: {method: :put, class: 'form-horizontal form-state-aid-calculation'}) do |f| %>
   <%= f.input :initial_draw_year, as: :string, placeholder: 'yyyy' %>
   <%= f.input :initial_draw_amount, as: :currency %>
+  <%= f.input :repayment_profile, as: :radio_buttons, collection: [["Repay to Zero", PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE], ["Repayment Amount", PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE]], wrapper_html: {class: 'radio-buttons-inline'} %>
+  <%= f.input :fixed_repayment_amount, as: :currency %>
   <%= f.input :repayment_duration, as: :months, disabled: true, input_html: { class: 'input-mini' } %>
 
   <%= field_set_tag 'Draw Information' do %>

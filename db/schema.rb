@@ -477,6 +477,8 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.datetime "ar_timestamp"
     t.datetime "ar_insert_timestamp"
     t.boolean  "legacy_premium_calculation",                                          default: false
+    t.string   "repayment_profile"
+    t.integer  "fixed_repayment_amount",            limit: 8
   end
 
   add_index "premium_schedules", ["legacy_loan_id"], name: "index_premium_schedules_on_legacy_loan_id", using: :btree

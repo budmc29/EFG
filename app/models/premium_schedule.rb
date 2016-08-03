@@ -6,6 +6,13 @@ class PremiumSchedule < ActiveRecord::Base
   RESCHEDULE_TYPE = 'R'.freeze
   NOTIFIED_AID_TYPE = 'N'.freeze
 
+  FIXED_TERM_REPAYMENT_PROFILE = "fixed_term".freeze
+  FIXED_AMOUNT_REPAYMENT_PROFILE = "fixed_amount".freeze
+  REPAYMENT_PROFILES = [
+    FIXED_TERM_REPAYMENT_PROFILE,
+    FIXED_AMOUNT_REPAYMENT_PROFILE
+  ].freeze
+
   MAX_INITIAL_DRAW = Money.new(9_999_999_99)
 
   belongs_to :loan, inverse_of: :premium_schedules
@@ -14,13 +21,16 @@ class PremiumSchedule < ActiveRecord::Base
     :initial_capital_repayment_holiday,
     :second_draw_amount, :second_draw_months, :third_draw_amount,
     :third_draw_months, :fourth_draw_amount, :fourth_draw_months,
-    :loan_id, :premium_cheque_month
+    :loan_id, :premium_cheque_month, :repayment_profile,
+    :fixed_repayment_amount
 
   validates_presence_of :loan_id, strict: true
   validates_presence_of :repayment_duration
   validates_inclusion_of :calc_type, in: [ SCHEDULE_TYPE, RESCHEDULE_TYPE, NOTIFIED_AID_TYPE ]
   validates_presence_of :initial_draw_year, unless: :reschedule?
   validates_format_of :premium_cheque_month, with: /\A\d{2}\/\d{4}\z/, if: :reschedule?, message: :invalid_format
+
+  validates_with RepaymentProfileValidator
 
   %w(second_draw_months third_draw_months fourth_draw_months).each do |attr|
     validates_inclusion_of attr, in: 0..120, allow_blank: true, message: :invalid
@@ -37,6 +47,7 @@ class PremiumSchedule < ActiveRecord::Base
   format :second_draw_amount, with: MoneyFormatter.new
   format :third_draw_amount, with: MoneyFormatter.new
   format :fourth_draw_amount, with: MoneyFormatter.new
+  format :fixed_repayment_amount, with: MoneyFormatter.new
 
   def reschedule?
     calc_type == RESCHEDULE_TYPE

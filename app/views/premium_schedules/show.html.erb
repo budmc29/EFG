@@ -26,6 +26,8 @@
   <p>You must include a completed Direct Debit Mandate when you accept the loan you have been offered.</p>
 
   <dl>
+    <dt>Repayment Profile</dt>
+    <dd><%= repayment_profile_name(@premium_schedule.repayment_profile) %>
     <dt>Amount of Initial Premium Payment</dt>
     <dd><%= @premium_schedule.initial_premium_cheque.format %></dd>
     <dt>Month of Second Direct Debit Premium Collection</dt>

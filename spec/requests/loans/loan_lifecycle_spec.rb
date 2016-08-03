@@ -260,10 +260,11 @@ describe 'Loan lifecycle' do
 
   def generate_premium_schedule(loan)
     click_link "Generate Premium Schedule"
-    page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
-    page.fill_in 'premium_schedule_initial_draw_amount',
-      with: (loan.amount - Money.new(1_000_00)).to_s
-    click_button 'Submit'
+    fill_in "premium_schedule_initial_draw_year", with: Date.current.year
+    fill_in "premium_schedule_initial_draw_amount",
+            with: (loan.amount - Money.new(1_000_00)).to_s
+    choose "premium_schedule_repayment_profile_fixed_term"
+    click_button "Submit"
   end
 
   def loan_lifecycle_steps_from_offered(loan)

@@ -44,3 +44,9 @@ en:
         invalid: 'must be between 1% and 30%'
       total_prepayment:
         invalid: 'The sum of the Guaranteed Pre-payment Percentage and non-EFG Pre-payment Percentage must be no more than 100%'
+    repayment_profile:
+      repayment_profile:
+        blank: "can't be blank"
+        invalid: "not an allowed value"
+      fixed_repayment_amount:
+        blank: "can't be blank"

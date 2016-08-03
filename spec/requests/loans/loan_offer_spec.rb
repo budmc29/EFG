@@ -69,7 +69,8 @@ describe 'loan offer' do
       expected_text = I18n.t('premium_schedule.not_yet_generated')
       expect(page).to have_content(expected_text)
 
-      page.fill_in :premium_schedule_initial_draw_year, with: '2014'
+      fill_in :premium_schedule_initial_draw_year, with: "2014"
+      choose :premium_schedule_repayment_profile_fixed_term
       click_button 'Submit'
 
       expect(page.current_url).to eq(new_loan_offer_url(loan))

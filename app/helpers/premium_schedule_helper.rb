@@ -32,4 +32,10 @@ module PremiumScheduleHelper
     premium_schedule.reschedule? ? "Revised Premium Schedule" : "Premium Schedule"
   end
 
+  def repayment_profile_name(repayment_profile)
+    {
+      PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE => "Repay to Zero",
+      PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE => "Repayment Amount"
+    }.fetch(repayment_profile)
+  end
 end
