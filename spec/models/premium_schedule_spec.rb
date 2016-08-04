@@ -193,6 +193,36 @@ describe PremiumSchedule do
       subject { premium_schedule }
     end
 
+    describe "#repayment_duration" do
+      it "is auto-calculated when repayment profile is fixed amount" do
+        premium_schedule.
+          repayment_profile = PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+        premium_schedule.initial_draw_amount = Money.new(10_000_00)
+        premium_schedule.second_draw_amount = Money.new(2_000_00)
+        premium_schedule.second_draw_months = 3
+        premium_schedule.third_draw_amount = Money.new(3_000_00)
+        premium_schedule.third_draw_months = 6
+        premium_schedule.fourth_draw_amount = Money.new(4_500_00)
+        premium_schedule.fourth_draw_months = 9
+        premium_schedule.fixed_repayment_amount = Money.new(1_000_00)
+
+        premium_schedule.valid?
+
+        expect(premium_schedule.repayment_duration).to eq(19)
+      end
+
+      it "does not change repayment duration when repayment profile is
+          fixed term" do
+        premium_schedule.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        premium_schedule.repayment_duration = 10
+
+        premium_schedule.valid?
+
+        expect(premium_schedule.repayment_duration).to eq(10)
+      end
+    end
+
     context 'when rescheduling' do
       let(:loan) { rescheduled_premium_schedule.loan }
       let(:rescheduled_premium_schedule) { FactoryGirl.build(:rescheduled_premium_schedule) }

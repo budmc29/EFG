@@ -43,6 +43,8 @@ class PremiumSchedule < ActiveRecord::Base
   validate :additional_draws_have_amount_and_month
   validate :initial_draw_year_is_within_five_years
 
+  before_validation :calculate_repayment_duration
+
   format :initial_draw_amount, with: MoneyFormatter.new
   format :second_draw_amount, with: MoneyFormatter.new
   format :third_draw_amount, with: MoneyFormatter.new
@@ -239,4 +241,10 @@ class PremiumSchedule < ActiveRecord::Base
         errors.add(:initial_draw_year, :too_far_in_the_future)
       end
     end
+
+  def calculate_repayment_duration
+    return unless repayment_profile == FIXED_AMOUNT_REPAYMENT_PROFILE
+
+    self.repayment_duration = (total_draw_amount / fixed_repayment_amount).floor
+  end
 end
