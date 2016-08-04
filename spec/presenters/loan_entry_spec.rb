@@ -44,6 +44,11 @@ describe LoanEntry do
       expect(loan_entry).not_to be_valid
     end
 
+    it "must have a repayment profile" do
+      loan_entry.repayment_profile = nil
+      expect(loan_entry).not_to be_valid
+    end
+
     context '#postcode' do
       it 'is required' do
         loan_entry.postcode = ''
@@ -321,6 +326,40 @@ describe LoanEntry do
       it "should require debtor book topup less than or equal to 30" do
         loan_entry.debtor_book_topup = 30.1
         expect(loan_entry).not_to be_valid
+      end
+    end
+
+    describe "#repayment_duration" do
+      it "is auto-calculated when repayment profile is fixed amount" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+        loan_entry.amount = Money.new(10_500_00)
+        loan_entry.fixed_repayment_amount = Money.new(1_000_00)
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(10)
+      end
+
+      it "does not change repayment duration when repayment profile is
+          fixed term" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        loan_entry.repayment_duration = 10
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(10)
+      end
+
+      it "sets repayment duration to 0 when no duration is given" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        loan_entry.repayment_duration = nil
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(0)
       end
     end
 

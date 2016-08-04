@@ -15,7 +15,7 @@ module LoanPresenter
     define_model_callbacks :save
     define_model_callbacks :validation
 
-    def valid?
+    def valid?(context = nil)
       run_callbacks :validation do
         super
       end
