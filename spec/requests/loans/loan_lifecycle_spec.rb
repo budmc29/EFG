@@ -23,6 +23,7 @@ describe 'Loan lifecycle' do
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -33,6 +34,7 @@ describe 'Loan lifecycle' do
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -43,6 +45,7 @@ describe 'Loan lifecycle' do
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -265,6 +268,10 @@ describe 'Loan lifecycle' do
             with: (loan.amount - Money.new(1_000_00)).to_s
     choose "premium_schedule_repayment_profile_fixed_term"
     click_button "Submit"
+  end
+
+  def open_loan_summary(loan)
+    click_link "Loan #{loan.reference}"
   end
 
   def loan_lifecycle_steps_from_offered(loan)

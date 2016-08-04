@@ -39,6 +39,7 @@ class PremiumSchedulesController < ApplicationController
   end
 
   helper_method :leave_premium_schedule_path
+
   def leave_premium_schedule_path(loan)
     if params[:redirect] == 'loan_entry'
       new_loan_entry_path(loan)
@@ -49,7 +50,7 @@ class PremiumSchedulesController < ApplicationController
     elsif params[:redirect] == 'loan_offer'
       new_loan_offer_path(loan)
     else
-      loan_path(loan)
+      loan_premium_schedule_path(loan)
     end
   end
 
