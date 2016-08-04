@@ -17,6 +17,7 @@ FactoryGirl.define do
     collateral_exhausted true
     not_insolvent true
     amount 12345
+    repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
     repayment_duration 24
     turnover 12345
     trading_date 2.years.ago

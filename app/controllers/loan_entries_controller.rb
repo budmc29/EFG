@@ -17,8 +17,9 @@ class LoanEntriesController < ApplicationController
       @loan_entry.save_as_incomplete
       redirect_to loan_url(@loan_entry.loan)
     when 'State Aid Calculation'
-      @loan_entry.calculate_state_aid
-      @loan_entry.save_as_incomplete
+      @loan_entry.save_as_incomplete do |loan_entry|
+        loan_entry.calculate_state_aid
+      end
       anchor = "loan_entry_state_aid"
       redirect_to new_loan_entry_url(@loan_entry.loan, anchor: anchor)
     else

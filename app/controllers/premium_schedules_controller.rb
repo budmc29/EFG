@@ -33,9 +33,8 @@ class PremiumSchedulesController < ApplicationController
   end
 
   def load_premium_schedule
-    @premium_schedule = @loan.premium_schedule || @loan.premium_schedules.build
-    @premium_schedule.initial_draw_amount ||= @loan.amount.dup
-    @premium_schedule.repayment_duration = @loan.repayment_duration.total_months
+    @premium_schedule = @loan.premium_schedule ||
+                        PremiumSchedule.from_loan(@loan)
   end
 
   helper_method :leave_premium_schedule_path

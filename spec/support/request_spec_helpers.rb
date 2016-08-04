@@ -28,6 +28,7 @@ module RequestSpecHelpers
     choose 'loan_eligibility_check_not_insolvent_true'
     fill_in 'loan_eligibility_check_amount', with: '50000.89'
     select lender.lending_limits.first.name, from: 'loan_eligibility_check_lending_limit_id'
+    choose "loan_eligibility_check_repayment_profile_fixed_term"
     fill_in_duration_input 'repayment_duration', 2, 6
     fill_in 'loan_eligibility_check_turnover', with: '1234567.89'
     fill_in 'loan_eligibility_check_trading_date', with: '31/1/2012'

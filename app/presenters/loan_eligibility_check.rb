@@ -21,6 +21,8 @@ class LoanEligibilityCheck
   attribute :trading_date
   attribute :loan_scheme
   attribute :loan_source
+  attribute :repayment_profile
+  attribute :fixed_repayment_amount
 
   delegate :created_by, :created_by=, :loan_category, :reason, :sic, to: :loan
 
@@ -38,6 +40,8 @@ class LoanEligibilityCheck
     errors.add(:amount, :greater_than, count: 0) unless amount && amount.cents > 0
     errors.add(:sic_code, :not_recognised) if sic_code.blank?
   end
+
+  validates_with RepaymentProfileValidator
 
   after_save :save_ineligibility_reasons, unless: :eligible?
 

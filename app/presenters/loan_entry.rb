@@ -65,7 +65,7 @@ class LoanEntry
 
   validates_presence_of :business_name, :fees, :interest_rate,
                         :interest_rate_type_id, :legal_form_id,
-                        :repayment_frequency_id, :repayment_profile
+                        :repayment_frequency_id
   validates_presence_of :state_aid
 
   validates_presence_of :company_registration, if: ->(loan_entry) do
@@ -85,6 +85,8 @@ class LoanEntry
     errors.add(:declaration_signed, :accepted) unless self.declaration_signed
   end
 
+  validates_with RepaymentProfileValidator
+
   validate :validate_eligibility
   validate :category_validations
 
@@ -97,6 +99,7 @@ class LoanEntry
   def save_as_incomplete
     run_callbacks :validation do
       loan.state = Loan::Incomplete
+      yield self if block_given?
       loan.save(validate: false)
     end
   end

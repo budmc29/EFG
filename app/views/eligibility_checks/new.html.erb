@@ -13,9 +13,23 @@
   <% end %>
 
   <%= field_set_tag 'About the Borrower and Their Facility' do %>
-    <%= f.input :amount, as: :currency %>
-    <%= f.input :lending_limit_id, as: :select, collection: @loan_eligibility_check.lender.current_lending_limits, prompt: 'Please select' %>
-    <%= f.input :repayment_duration, as: :duration %>
+    <div class="repayment-profile">
+      <%= f.input :amount,
+                  as: :currency,
+                  input_html: { "data-repayment-profile-total-amount" => "" } %>
+
+      <%= f.input :lending_limit_id, as: :select, collection: @loan_eligibility_check.lender.current_lending_limits, prompt: "Please select" %>
+
+      <%= f.input :repayment_profile,
+        as: :radio_buttons,
+        collection: [["Repay to Zero", PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE],
+                    ["Repayment Amount", PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE]],
+        wrapper_html: { class: 'radio-buttons-inline', "data-repayment-profile" => ""} %>
+
+      <%= f.input :fixed_repayment_amount, as: :currency, wrapper_html: { "data-repayment-amount" => "" } %>
+      <%= f.input :repayment_duration, as: :duration, wrapper_html: { "data-repayment-duration" => "" }, input_html: { class: 'input-mini' } %>
+    </div>
+
     <%= f.input :turnover, as: :currency %>
     <%= f.input :trading_date, as: :quick_date %>
     <%= f.input :sic_code, as: :sic_code, collection: SicCode.active, input_html: { class: 'input-xxlarge' } %>

@@ -266,7 +266,6 @@ describe 'Loan lifecycle' do
     fill_in "premium_schedule_initial_draw_year", with: Date.current.year
     fill_in "premium_schedule_initial_draw_amount",
             with: (loan.amount - Money.new(1_000_00)).to_s
-    choose "premium_schedule_repayment_profile_fixed_term"
     click_button "Submit"
   end
 

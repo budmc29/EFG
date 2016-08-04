@@ -51,6 +51,15 @@ class PremiumSchedule < ActiveRecord::Base
   format :fourth_draw_amount, with: MoneyFormatter.new
   format :fixed_repayment_amount, with: MoneyFormatter.new
 
+  def self.from_loan(loan)
+    loan.premium_schedules.build.tap do |ps|
+      ps.initial_draw_amount ||= loan.amount.dup
+      ps.repayment_profile ||= loan.repayment_profile
+      ps.fixed_repayment_amount ||= loan.fixed_repayment_amount
+      ps.repayment_duration = loan.repayment_duration.total_months
+    end
+  end
+
   def reschedule?
     calc_type == RESCHEDULE_TYPE
   end
