@@ -14,6 +14,12 @@ module LoanPresenter
 
     define_model_callbacks :save
     define_model_callbacks :validation
+
+    def valid?
+      run_callbacks :validation do
+        super
+      end
+    end
   end
 
   module ClassMethods
@@ -50,9 +56,7 @@ module LoanPresenter
   end
 
   def save
-    run_callbacks :validation do
-      return false unless valid?
-    end
+    return false unless valid?
 
     loan.transaction do
       run_callbacks :save do
