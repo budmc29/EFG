@@ -28,13 +28,28 @@
 
   <%= field_set_tag 'Loan' do %>
     <%= f.input :lender_reference %>
-    <%= f.input :amount, as: :currency %>
-    <%= f.input :lending_limit_id, as: :select, collection: @loan_entry.lender.lending_limits.where(id: @loan_entry.lending_limit_id) %>
-    <%= f.input :repayment_duration, as: :duration %>
+
+    <div class="repayment-profile">
+      <%= f.input :amount,
+                  as: :currency,
+                  input_html: { "data-repayment-profile-total-amount" => "" } %>
+
+      <%= f.input :lending_limit_id, as: :select, collection: @loan_entry.lender.lending_limits.where(id: @loan_entry.lending_limit_id) %>
+
+      <%= f.input :repayment_profile,
+        as: :radio_buttons,
+        collection: [["Repay to Zero", PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE],
+                    ["Repayment Amount", PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE]],
+        wrapper_html: { class: 'radio-buttons-inline', "data-repayment-profile" => ""} %>
+
+      <%= f.input :fixed_repayment_amount, as: :currency, wrapper_html: { "data-repayment-amount" => "" } %>
+      <%= f.input :repayment_duration, as: :duration, wrapper_html: { "data-repayment-duration" => "" }, input_html: { class: 'input-mini' } %>
+    </div>
+
     <%= f.input :repayment_frequency_id, as: :select, collection: RepaymentFrequency.selectable, prompt: 'Please select', input_html: { class: 'input-xxlarge' } %>
     <%= simple_form_row t('simple_form.labels.loan_entry.sic_code'), @loan.sic_code %>
     <%= simple_form_row t('simple_form.labels.loan_entry.sic_desc'), @loan.sic_desc %>
-    
+
     <%= f.input :reason_id do %>
       <%= f.select(
         :reason_id,

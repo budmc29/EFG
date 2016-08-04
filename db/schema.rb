@@ -421,6 +421,8 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.string   "sub_lender"
     t.string   "status_amendment_type"
     t.text     "status_amendment_notes"
+    t.string   "repayment_profile"
+    t.integer  "fixed_repayment_amount",              limit: 8
   end
 
   add_index "loans", ["legacy_id"], name: "index_loans_on_legacy_id", unique: true, using: :btree

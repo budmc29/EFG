@@ -55,6 +55,8 @@ class LoanEntry
   attribute :debtor_book_coverage
   attribute :debtor_book_topup
   attribute :sub_lender
+  attribute :repayment_profile
+  attribute :fixed_repayment_amount
 
   attribute :legal_form, read_only: true
 

@@ -139,6 +139,7 @@ class Loan < ActiveRecord::Base
   format :recovery_on, with: QuickDateFormatter
   format :settled_amount, with: MoneyFormatter.new
   format :postcode, with: PostcodeFormatter
+  format :fixed_repayment_amount, with: MoneyFormatter.new
 
   before_create :set_reference
 
