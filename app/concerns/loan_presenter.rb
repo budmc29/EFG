@@ -13,6 +13,7 @@ module LoanPresenter
     delegate :modified_by, :modified_by=, to: :loan
 
     define_model_callbacks :save
+    define_model_callbacks :validation
   end
 
   module ClassMethods
@@ -42,13 +43,21 @@ module LoanPresenter
     false
   end
 
+  def valid?
+    run_callbacks :validation do
+      super
+    end
+  end
+
   def save
-    return false unless valid?
+    run_callbacks :validation do
+      return false unless valid?
+    end
+
     loan.transaction do
       run_callbacks :save do
         loan.save!
       end
     end
   end
-
 end
