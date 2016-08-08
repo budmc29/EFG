@@ -11,7 +11,7 @@
 
 <hr>
 
-<%= simple_form_for(@presenter, url: loan_loan_changes_path(@loan, type: params[:type]), html: { class: 'form-horizontal form-loan-change' }) do |f| %>
+<%= simple_form_for(@presenter, url: loan_loan_changes_path(@loan, type: params[:type]), html: { class: "form-horizontal form-loan-change #{params[:type]}_loan_change" }) do |f| %>
   <%= render_errors_on_base(f.object.errors) %>
 
   <%= f.input :date_of_change, as: :quick_date %>
@@ -23,9 +23,20 @@
 
     <%= simple_form_row 'Next quarterly Premium month due', @presenter.next_premium_cheque_month %>
 
-    <%= f.input :initial_draw_amount, as: :currency %>
+    <%= f.input :initial_draw_amount,
+                as: :currency,
+                input_html: { "data-repayment-profile-total-amount" => "" } %>
 
-    <%= simple_form_row 'Outstanding loan term at the next quarterly Premium collection point', @presenter.current_repayment_duration_at_next_premium %>
+    <%= f.input :current_repayment_duration_at_next_premium,
+                as: :months,
+                disabled: true,
+                wrapper_html: {
+                  "data-repayment-duration" => "",
+                  "data-original-value-months" => @presenter.current_repayment_duration_at_next_premium
+                },
+                input_html: {
+                  "data-repayment-duration-months" => "",
+                } %>
   <% end %>
 
   <% unless @presenter.capital_repayment_holiday_change? %>

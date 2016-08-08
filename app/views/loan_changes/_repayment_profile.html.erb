@@ -5,6 +5,9 @@
             collection: repayment_profile_options,
             wrapper_html: {
               class: "radio-buttons-inline",
+              "data-repayment-profile" => "",
             } %>
 
-<%= f.input :fixed_repayment_amount, as: :currency %>
+<%= f.input :fixed_repayment_amount,
+            as: :currency,
+            wrapper_html: { "data-repayment-amount" => "" } %>

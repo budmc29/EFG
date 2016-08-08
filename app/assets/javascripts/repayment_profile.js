@@ -1,5 +1,11 @@
 (function($) {
-  $.fn.repaymentProfile = function() {
+  $.fn.repaymentProfile = function(config) {
+    var defaultConfig = {
+      durationAsYearsAndMonths: true,
+      editableFixedTermDuration: true,
+    }
+    var config = $.extend(defaultConfig, config)
+
     return this.each(function(_, element) {
       var parentElement = $(element)
       var totalAmount = parentElement.
@@ -15,6 +21,7 @@
         find("[data-repayment-duration-years]")
       var repaymentDurationMonths = repaymentDuration.
         find("[data-repayment-duration-months]")
+      var originalRepaymentValueMonths = repaymentDuration.data("original-value-months")
 
       toggleFieldVisibility()
 
@@ -28,8 +35,16 @@
         if (selectedRepaymentProfile == "fixed_term") {
           fixedRepaymentAmount.slideUp()
           repaymentDuration.slideDown()
-          repaymentDurationYears.prop("disabled", false)
-          repaymentDurationMonths.prop("disabled", false)
+
+          if (config.editableFixedTermDuration) {
+            repaymentDurationYears.prop("disabled", false)
+            repaymentDurationMonths.prop("disabled", false)
+          }
+
+          if (originalRepaymentValueMonths) {
+            repaymentDurationMonths.val(originalRepaymentValueMonths)
+          }
+
           fixedRepaymentAmountInput.prop("disabled", true)
         } else if (selectedRepaymentProfile == "fixed_amount") {
           fixedRepaymentAmountInput.prop("disabled", false)
@@ -52,16 +67,16 @@
           totalAmount.val() / fixedRepaymentAmountInput.val()
         )
 
-        years = Math.floor(totalMonths / 12)
-        months = totalMonths % 12
+        if (config.durationAsYearsAndMonths) {
+          years = Math.floor(totalMonths / 12)
+          months = totalMonths % 12
 
-        repaymentDurationYears.val(years)
-        repaymentDurationMonths.val(months)
+          repaymentDurationYears.val(years)
+          repaymentDurationMonths.val(months)
+        } else {
+          repaymentDuration.find("input").val(totalMonths)
+        }
       }
     })
   }
 })(jQuery)
-
-$(document).ready(function() {
-  $('.repayment-profile').repaymentProfile()
-})
