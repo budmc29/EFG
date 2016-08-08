@@ -1,0 +1,10 @@
+<%= simple_form_row "Current repayment frequency", f.object.repayment_frequency.name %>
+
+<%= f.input :repayment_profile,
+            as: :radio_buttons,
+            collection: repayment_profile_options,
+            wrapper_html: {
+              class: "radio-buttons-inline",
+            } %>
+
+<%= f.input :fixed_repayment_amount, as: :currency %>

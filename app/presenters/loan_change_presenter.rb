@@ -35,6 +35,10 @@ class LoanChangePresenter
   delegate :fourth_draw_months, :fourth_draw_months=, to: :premium_schedule
   delegate :initial_capital_repayment_holiday, to: :premium_schedule
   delegate :initial_capital_repayment_holiday=, to: :premium_schedule
+  delegate :repayment_profile, to: :premium_schedule
+  delegate :repayment_profile=, to: :premium_schedule
+  delegate :fixed_repayment_amount, to: :premium_schedule
+  delegate :fixed_repayment_amount=, to: :premium_schedule
 
   def initialize(loan, created_by)
     @loan = loan
@@ -127,6 +131,9 @@ class LoanChangePresenter
   def valid?
     run_callbacks :validation do
       super
+
+      # show loan change specific errors first
+      return false unless errors.empty?
 
       premium_schedule.premium_cheque_month = next_premium_cheque_month
       premium_schedule.repayment_duration = repayment_duration_at_next_premium

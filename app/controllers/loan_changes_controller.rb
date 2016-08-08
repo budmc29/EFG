@@ -4,6 +4,7 @@ class LoanChangesController < ApplicationController
     'lump_sum_repayment' => LumpSumRepaymentLoanChange,
     'repayment_duration' => RepaymentDurationLoanChange,
     'repayment_frequency' => RepaymentFrequencyLoanChange,
+    "repayment_profile" => RepaymentProfileLoanChange,
     'reprofile_draws' => ReprofileDrawsLoanChange,
   }
 

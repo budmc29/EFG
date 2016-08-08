@@ -60,9 +60,7 @@ describe 'Reprofile draws loan change' do
       fill_in :second_draw_amount, '5,000.00'
       fill_in :second_draw_months, '6'
 
-      Timecop.freeze(2010, 9, 1) do
-        click_button 'Submit'
-      end
+      click_button "Submit"
 
       within '.loan_change_initial_draw_amount' do
         expect(page).to have_content("must not be blank")

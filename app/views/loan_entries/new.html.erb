@@ -38,8 +38,7 @@
 
       <%= f.input :repayment_profile,
         as: :radio_buttons,
-        collection: [["Repay to Zero", PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE],
-                    ["Repayment Amount", PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE]],
+        collection: repayment_profile_options,
         wrapper_html: { class: 'radio-buttons-inline', "data-repayment-profile" => ""} %>
 
       <%= f.input :fixed_repayment_amount, as: :currency, wrapper_html: { "data-repayment-amount" => "" } %>

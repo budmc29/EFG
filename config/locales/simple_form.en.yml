@@ -46,6 +46,8 @@ en:
         date_of_change: 'What is the date when the change to be recorded occurred?'
         added_months: Number of Months to extend or reduce the loan term (please note that if reducing the term, the figure must be entered as a negative value)
         amount_drawn: 'What is the amount now being drawn that is to be recorded? (This should include any further draws it is known will take place before the next Premium Payment is due)'
+        current_repayment_duration_at_next_premium: "Outstanding loan term at the next quarterly Premium collection point"
+        fixed_repayment_amount: "Amount of monthly repayment"
         lump_sum_repayment: 'What is the amount of the lump sum repayment?'
         initial_draw_amount: 'What is the outstanding balance at the next quarterly Premium collection point, taking account of any draws or repayments which may be made between now and the relevant quarter date?'
         initial_capital_repayment_holiday: What is the length of the initial capital repayment holiday?

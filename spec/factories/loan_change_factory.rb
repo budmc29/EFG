@@ -41,6 +41,5 @@ FactoryGirl.define do
         FactoryGirl.attributes_for(:rescheduled_premium_schedule, loan: loan_change.loan)
       }
     end
-
   end
 end

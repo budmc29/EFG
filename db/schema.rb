@@ -244,6 +244,10 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.string   "type"
     t.integer  "repayment_frequency_id"
     t.integer  "old_repayment_frequency_id"
+    t.string   "repayment_profile"
+    t.string   "old_repayment_profile"
+    t.integer  "fixed_repayment_amount",     limit: 8
+    t.integer  "old_fixed_repayment_amount", limit: 8
   end
 
   add_index "loan_modifications", ["loan_id", "seq"], name: "index_loan_changes_on_loan_id_and_seq", unique: true, using: :btree

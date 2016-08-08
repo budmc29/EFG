@@ -9,6 +9,7 @@ class LoanChange < LoanModification
     ChangeType::ReprofileDraws,
     ChangeType::DecreaseTerm,
     ChangeType::RepaymentFrequency,
+    ChangeType::RepaymentProfile,
   ].map(&:id)
 
   validates_inclusion_of :change_type_id, in: ALLOWED_CHANGE_TYPE_IDS, strict: true

@@ -79,6 +79,10 @@ class ChangeType
     r.name = "Sub-lender"
   end
 
+  record id: "k" do |r|
+    r.name = "Repayment Profile"
+  end
+
   BusinessName = find("1")
   CapitalRepaymentHoliday = find("2")
   ChangeRepayments = find("3")
@@ -98,4 +102,5 @@ class ChangeType
   CompanyRegistration = find("h")
   GenericFields = find("i")
   SubLender = find("j")
+  RepaymentProfile = find("k")
 end
