@@ -86,20 +86,21 @@ class PremiumSchedule < ActiveRecord::Base
 
   def premiums
     @premiums ||= loan_quarters.map do |loan_quarter|
-      outstanding_loan_value_at_quarter = drawdowns.inject(Money.new(0)) do |sum, drawdown|
-        sum + OutstandingDrawdownValue.new(
-          drawdown: drawdown,
+      outstanding_loan_value_at_quarter =
+        outstanding_value_class.new(
+          drawdowns: drawdowns,
           quarter: loan_quarter,
           repayment_frequency: repayment_frequency,
           repayment_duration: repayment_duration,
           repayment_holiday: initial_capital_repayment_holiday,
           fixed_repayment_amount: fixed_repayment_amount,
         ).amount
-      end
 
-      Money.new((outstanding_loan_value_at_quarter.to_d * 100) * premium_rate_per_quarter)
+      Money.new(
+        (outstanding_loan_value_at_quarter.to_d * 100) *
+        premium_rate_per_quarter
+      )
     end
-    @premiums
   end
 
   def save_and_update_loan_state_aid
@@ -163,6 +164,14 @@ class PremiumSchedule < ActiveRecord::Base
   end
 
   private
+
+  def outstanding_value_class
+    if fixed_repayment_amount
+      FixedRepaymentAmountOutstandingLoanValue
+    else
+      FixedRepaymentDurationOutstandingLoanValue
+    end
+  end
 
     def initial_draw_amount_is_within_limit
       if initial_draw_amount.blank?
