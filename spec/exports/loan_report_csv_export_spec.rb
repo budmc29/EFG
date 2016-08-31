@@ -170,6 +170,8 @@ describe LoanReportCsvExport do
         sub_lender: "Sub-lender 1",
         status_amendment_type: "Administrative",
         status_amendment_notes: "Stuff happened.",
+        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        fixed_repayment_amount: Money.new(1_000_00),
       )
     }
 
@@ -267,6 +269,8 @@ describe LoanReportCsvExport do
           :sub_lender,
           :status_amendment_type,
           :status_amendment_notes,
+          :repayment_profile,
+          :fixed_repayment_amount,
         ].map {|h| t(h) }
       )
     end
@@ -360,6 +364,8 @@ describe LoanReportCsvExport do
       expect(row[t(:sub_lender)]).to eql('Sub-lender 1')
       expect(row[t(:status_amendment_type)]).to eql("Administrative")
       expect(row[t(:status_amendment_notes)]).to eql("Stuff happened.")
+      expect(row[t(:repayment_profile)]).to eql("Fixed amount")
+      expect(row[t(:fixed_repayment_amount)]).to eql("1000.00")
     end
 
     context "without guarantee rate on loan" do

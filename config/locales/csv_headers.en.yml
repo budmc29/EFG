@@ -89,6 +89,8 @@ en:
       sub_lender: Sub-lender
       status_amendment_type: Status Amendment Type
       status_amendment_notes: Status Amendment Notes
+      repayment_profile: Repayment repayment_profile
+      fixed_repayment_amount: Fixed repayment amount
 
     loan_audit_report:
       loan_reference: Loan reference

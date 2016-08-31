@@ -93,6 +93,8 @@ class LoanReportCsvExport < BaseCsvExport
       :sub_lender,
       :status_amendment_type,
       :status_amendment_notes,
+      :repayment_profile,
+      :fixed_repayment_amount,
     ]
   end
 
