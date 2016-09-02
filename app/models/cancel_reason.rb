@@ -18,4 +18,6 @@ class CancelReason
   record id: 4 do |r|
     r.name = "Other"
   end
+
+  Other = find(4)
 end

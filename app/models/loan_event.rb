@@ -111,6 +111,10 @@ class LoanEvent
     r.name = "Update lending limi"
   end
 
+  record id: 27 do |r|
+    r.name = "Amend Completed Loan"
+  end
+
   def self.ids
     all.map(&:id)
   end
@@ -142,4 +146,5 @@ class LoanEvent
   DataCleanup = find(24)
   EFGTransfer = find(25)
   UpdateLendingLimit = find(26)
+  AmendCompletedLoan = find(27)
 end

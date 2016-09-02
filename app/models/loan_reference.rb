@@ -29,6 +29,10 @@ class LoanReference
     string + "+" + INITIAL_VERSION
   end
 
+  def self.increment(reference)
+    new(reference).increment
+  end
+
   def initialize(reference)
     @reference = reference
     raise InvalidLoanReference, "#{reference} is not a valid loan reference" unless valid_reference?
