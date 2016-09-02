@@ -24,8 +24,8 @@ class LoanCategoryValidators
 
   CategoryFAndH = [
     PresenceValidator.new(attributes: :invoice_discount_limit),
-    PercentageValidator.new(attribute: :debtor_book_coverage, minimum: 1.0, maximum: 99.9),
-    PercentageValidator.new(attribute: :debtor_book_topup, minimum: 1.0, maximum: 30.0),
+    PercentageValidator.new(attribute: :invoice_prepayment_coverage_percentage, minimum: 1.0, maximum: 99.9),
+    PercentageValidator.new(attribute: :invoice_prepayment_topup_percentage, minimum: 1.0, maximum: 30.0),
     PercentageValidator.new(attribute: :total_prepayment, minimum: 0, maximum: 100.0),
   ].freeze
 

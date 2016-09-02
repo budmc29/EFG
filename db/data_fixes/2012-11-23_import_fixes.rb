@@ -16,8 +16,8 @@ ActiveRecord::Base.transaction do
     transferred_loan.security_proportion = transferred_from.security_proportion
     transferred_loan.original_overdraft_proportion = transferred_from.original_overdraft_proportion
     transferred_loan.refinance_security_proportion = transferred_from.refinance_security_proportion
-    transferred_loan.debtor_book_coverage = transferred_from.debtor_book_coverage
-    transferred_loan.debtor_book_topup = transferred_from.debtor_book_topup
+    transferred_loan.invoice_prepayment_coverage_percentage = transferred_from.invoice_prepayment_coverage_percentage
+    transferred_loan.invoice_prepayment_topup_percentage = transferred_from.invoice_prepayment_topup_percentage
     transferred_loan.save!
   end
 

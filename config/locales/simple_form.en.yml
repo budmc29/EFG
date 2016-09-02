@@ -100,8 +100,8 @@ en:
         overdraft_limit: What is the limit of the Applicant's current facility (prior to the granting of the EFG facility)?
         overdraft_maintained: "Are you able to confirm that if the Applicant’s current, or previous, facility has been cancelled or reduced in the preceding three months that you have re-assessed the facts, circumstances and matters contributing to the decision and concluded that the facility satisfies the eligibility criteria for EFG?"
         invoice_discount_limit: What limit can be supported under Normal Commercial Lending Policy without EFG?
-        debtor_book_coverage: What pre-payment percentage can be supported for this applicant under Normal Commercial lending Policy without EFG?
-        debtor_book_topup: What Guaranteed Pre-Payment Percentage will be provided to the Applicant? (Not to exceed the lower of 30% or the difference between the non-EFG Pre-payment Percentage which can be supported for the Applicant under Normal Commercial Lending Policy and 100%)
+        invoice_prepayment_coverage_percentage: What pre-payment percentage can be supported for this applicant under Normal Commercial lending Policy without EFG?
+        invoice_prepayment_topup_percentage: What Guaranteed Pre-Payment Percentage will be provided to the Applicant? (Not to exceed the lower of 30% or the difference between the non-EFG Pre-payment Percentage which can be supported for the Applicant under Normal Commercial Lending Policy and 100%)
         notified_aid: Is the intensity of Notified Aid calculated for this project less than 40% for non-Objective 1 loans or less than 60% for Objective 1 loans?
         lender_reference: Lender's loan reference
         loan_sub_category_id: 'What type of debt instrument is the facility to be guaranteed?'
