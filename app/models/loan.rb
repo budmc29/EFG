@@ -273,6 +273,7 @@ class Loan < ActiveRecord::Base
 
   def created_from_transfer?
     return false if reference.blank?
+    return false if efg_loan? # only SFLG loans can be transferred
     reference[-2,2].to_i > 1
   end
 

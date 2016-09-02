@@ -72,6 +72,8 @@ describe LoanOffer do
     end
 
     it "should be valid when a transferred loan without a lending limit" do
+      loan.loan_source = Loan::SFLG_SOURCE
+      loan.loan_scheme = Loan::SFLG_SCHEME
       loan.reference = 'ABCDEFG+02'
       loan.lending_limit = nil
 

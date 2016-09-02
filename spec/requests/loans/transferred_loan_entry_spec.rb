@@ -3,7 +3,9 @@ require "rails_helper"
 describe "Transferred loan entry" do
   let(:current_user) { FactoryGirl.create(:lender_user) }
 
-  let(:loan) { FactoryGirl.create(:loan, :transferred, lender: current_user.lender) }
+  let(:loan) do
+    FactoryGirl.create(:loan, :sflg, :transferred, lender: current_user.lender)
+  end
 
   let!(:sub_lender) do
     FactoryGirl.create(:sub_lender, lender: loan.lender, name: "ACME sublender")

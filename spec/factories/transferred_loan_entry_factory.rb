@@ -7,7 +7,13 @@ FactoryGirl.define do
 
     initialize_with {
       premium_schedule = FactoryGirl.create(:premium_schedule)
-      loan = FactoryGirl.create(:loan, :incomplete, :transferred, premium_schedules: [ premium_schedule ])
+      loan = FactoryGirl.create(
+        :loan,
+        :sflg,
+        :incomplete,
+        :transferred,
+        premium_schedules: [ premium_schedule ]
+      )
       new(loan)
     }
   end

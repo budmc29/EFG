@@ -206,17 +206,22 @@ describe Loan do
 
   describe "#created_from_transfer?" do
     it "returns true when a loan has been transferred from another loan" do
-      loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-02')
+      loan = FactoryGirl.build(:loan, :sflg, reference: "Q9HTDF7-02")
       expect(loan).to be_created_from_transfer
     end
 
     it "returns false when loan with next incremented loan reference does not exist" do
-      loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-01')
+      loan = FactoryGirl.build(:loan, :sflg, reference: "Q9HTDF7-01")
       expect(loan).not_to be_created_from_transfer
     end
 
     it "returns false when loan has no reference" do
       expect(Loan.new).to_not be_created_from_transfer
+    end
+
+    it "returns false when loan is not in SFLG scheme" do
+      loan = FactoryGirl.build(:loan, :efg, reference: "Q9HTDF7-02")
+      expect(loan).not_to be_created_from_transfer
     end
   end
 
