@@ -39,7 +39,7 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.amount_due_to_dti).to eq(Money.new(0))
+      expect(calculator.amount_due_to_dti).to eq(Money.new(37_500_00))
     end
   end
 
@@ -87,7 +87,7 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.realisations_attributable).to eq(Money.new(58_333_33))
+      expect(calculator.realisations_attributable).to eq(Money.new(58_250_00))
     end
 
     it "reduces the amount due to DTI relative to non-EFG debt" do
@@ -107,30 +107,30 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.amount_due_to_dti).to eq(Money.new(6_250_00))
+      expect(calculator.amount_due_to_dti).to eq(Money.new(43_687_50))
     end
   end
 
-  context "with no debt" do
+  context "with remaining non-linked securities" do
     it "calculates the correct amount due to DTI" do
       loan = FactoryGirl.build(
         :loan, :settled,
-        amount: Money.new(100_000_00),
-        dti_demand_outstanding: Money.new(25_075_03),
-        dti_amount_claimed: Money.new(18_806_27),
+        amount: Money.new(70_000_00),
+        dti_demand_outstanding: Money.new(57_166_74),
+        dti_amount_claimed: Money.new(42_875_05),
       )
 
       recovery = setup_recovery(
         loan: loan,
-        outstanding_prior_non_efg_debt: Money.new(0.00),
-        outstanding_subsequent_non_efg_debt: Money.new(0.00),
-        non_linked_security_proceeds: Money.new(0.00),
-        linked_security_proceeds: Money.new(25_075_03),
+        outstanding_prior_non_efg_debt: Money.new(50_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(30_000_00),
+        non_linked_security_proceeds: Money.new(70_000_00),
+        linked_security_proceeds: Money.new(20_000_00),
       )
 
       calculator = described_class.new(recovery)
 
-      expect(calculator.amount_due_to_dti).to eq(Money.new(0))
+      expect(calculator.amount_due_to_dti).to eq(Money.new(23_250_00))
     end
   end
 

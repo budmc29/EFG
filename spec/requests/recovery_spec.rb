@@ -31,8 +31,8 @@ describe 'loan recovery' do
             fill_in_valid_efg_recovery_details
             click_button 'Calculate'
 
-            expect(page).to have_content("£58,333.33")
-            expect(page).to have_content("£6,250.00")
+            expect(page).to have_content("£58,250.00")
+            expect(page).to have_content("£43,687.50")
           }.not_to change(Recovery, :count)
 
           expect {

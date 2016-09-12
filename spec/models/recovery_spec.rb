@@ -113,8 +113,8 @@ describe Recovery do
 
         recovery.calculate
 
-        expect(recovery.realisations_attributable).to eq(Money.new(58_333_33))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(6_250_00))
+        expect(recovery.realisations_attributable).to eq(Money.new(58_250_00))
+        expect(recovery.amount_due_to_dti).to eq(Money.new(43_687_50))
         expect(recovery.amount_due_to_sec_state).to eq(Money.new(0))
       end
 
