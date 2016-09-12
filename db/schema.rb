@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(version: 20161108123644) do
     t.integer  "created_by_id",                               null: false
     t.integer  "modified_by_id",                              null: false
     t.text     "allowed_facility_types"
+    t.boolean  "new_legal_agreement_signed",  default: false
   end
 
   add_index "lenders", ["legacy_id"], name: "index_lenders_on_legacy_id", unique: true, using: :btree
@@ -427,7 +428,7 @@ ActiveRecord::Schema.define(version: 20161108123644) do
     t.string   "status_amendment_type"
     t.text     "status_amendment_notes"
     t.string   "repayment_profile"
-    t.integer  "fixed_repayment_amount",              limit: 8
+    t.integer  "fixed_repayment_amount",                    limit: 8
     t.string   "facility_type"
     t.boolean  "turnover_allowed"
     t.boolean  "within_efg_limits"

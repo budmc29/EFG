@@ -37,7 +37,8 @@ module ApplicationHelper
   end
 
   def current_user_access_restricted?
-    current_user.disabled? || current_user.locked?
+    current_user.disabled? || current_user.locked? ||
+      (current_lender && current_lender.new_legal_agreement_signed?)
   end
 
   def google_analytics
