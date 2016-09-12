@@ -2,6 +2,7 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
   attr_reader :lump_sum_repayment
   attr_accessible :lump_sum_repayment
 
+  validates_presence_of :initial_draw_amount
   validate :validate_lump_sum_repayment
   validate :validate_outstanding_balance
 
@@ -29,6 +30,8 @@ class LumpSumRepaymentLoanChange < LoanChangePresenter
     end
 
     def validate_outstanding_balance
+      return unless initial_draw_amount.present?
+
       if total_lump_sum_repayments + initial_draw_amount > loan.cumulative_drawn_amount
         errors.add(:initial_draw_amount, :exceeds_amount_remaining)
       end

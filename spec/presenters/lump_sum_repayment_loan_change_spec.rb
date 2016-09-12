@@ -37,6 +37,12 @@ describe LumpSumRepaymentLoanChange do
     end
 
     describe "#initial_draw_amount" do
+      it "is required" do
+        presenter = build(:lump_sum_repayment_loan_change)
+        presenter.initial_draw_amount = nil
+        expect(presenter).not_to be_valid
+      end
+
       it "cannot exceed the amount remaining on the loan, after all lump sum repayments" do
         loan = FactoryGirl.create(
           :loan,
