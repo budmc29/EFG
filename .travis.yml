@@ -1,6 +1,10 @@
 language: ruby
 sudo: false
 bundler_args: --without development
+env:
+  global:
+    - DEVISE_SECRET_KEY=example_secret_key
+    - DEVISE_PEPPER=example_pepper
 before_install:
   - cp config/database.travis.yml config/database.yml
   - export PARALLEL_TEST_PROCESSORS=8
