@@ -3,8 +3,10 @@ sudo: false
 bundler_args: --without development
 env:
   global:
-    - DEVISE_SECRET_KEY=example_secret_key
-    - DEVISE_PEPPER=example_pepper
+    DEVISE_SECRET_KEY: example_secret_key
+    DEVISE_PEPPER: example_pepper
+    SECRET_TOKEN: example_secret_token
+    LENDER_SUPPORT_EMAIL: support@example.com
 before_install:
   - cp config/database.travis.yml config/database.yml
   - export PARALLEL_TEST_PROCESSORS=8
