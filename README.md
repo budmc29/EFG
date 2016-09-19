@@ -7,6 +7,10 @@ Enterprise Finance Guarantee
 
 ## Getting started
 
+[Dotenv](https://github.com/bkeepers/dotenv) is used for managing environment variables in development:
+
+    cp .env.example .env
+
 You will need MySQL and an app-specific MySQL user - see `config/database.yml` for details.
 
     bundle install
