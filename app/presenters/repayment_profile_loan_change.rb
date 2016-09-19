@@ -6,10 +6,16 @@ class RepaymentProfileLoanChange < LoanChangePresenter
   validates_with RepaymentProfileValidator
 
   validate :repayment_profile_is_changing
+  validate :new_loan_term_is_allowed
 
   before_validation :set_repayment_duration
 
   before_save :set_attributes
+
+  def loan_term_months_so_far
+    (next_premium_cheque_date.year * 12 + next_premium_cheque_date.month) -
+      (initial_draw_date.year * 12 + initial_draw_date.month)
+  end
 
   private
 
@@ -46,5 +52,25 @@ class RepaymentProfileLoanChange < LoanChangePresenter
       (second_draw_amount || Money.new(0)) +
       (third_draw_amount || Money.new(0)) +
       (fourth_draw_amount || Money.new(0))
+  end
+
+  def new_loan_term_is_allowed
+    if loan_change.repayment_duration > max_remaining_months
+      errors.add(
+        :current_repayment_duration_at_next_premium,
+        :exceeds_threshold,
+        max_months: repayment_duration_max_months,
+        months_so_far: loan_term_months_so_far,
+        max_remaining_months: max_remaining_months
+      )
+    end
+  end
+
+  def max_remaining_months
+    repayment_duration_max_months - loan_term_months_so_far
+  end
+
+  def repayment_duration_max_months
+    RepaymentDuration.new(loan).max_months
   end
 end

@@ -14,6 +14,37 @@ describe RepaymentProfileLoanChange do
         repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
       expect(presenter).not_to be_valid
     end
+
+    it "does not allow the new loan term to exceed the loan's maximum term,
+        including any months in the loan term that have already passed
+        up to the next premium collection month" do
+      loan = create(
+        :loan,
+        :guaranteed,
+        :with_premium_schedule,
+        amount: Money.new(350_000_00),
+        repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
+        repayment_duration: 120, # 10 years
+        maturity_date: 10.years.from_now,
+      )
+
+      loan_initial_draw = loan.initial_draw_change
+      # next premium cheque month is the 75 month of the term
+      # leaving max allowed new term at 45 months
+      loan_initial_draw.date_of_change = 73.months.ago
+      loan_initial_draw.save!
+
+      presenter = build(
+        :repayment_profile_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        initial_draw_amount: Money.new(46_000_00),
+        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        fixed_repayment_amount: Money.new(1_000_00), # 46 monthly repayments
+        loan: loan,
+      )
+
+      expect(presenter).not_to be_valid
+    end
   end
 
   describe "#save" do

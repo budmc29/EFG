@@ -89,8 +89,14 @@ class LoanChangePresenter
     @loan_change ||= loan.loan_changes.new
   end
 
+  def next_premium_cheque_date
+    initial_draw_date.advance(
+      months: number_of_months_from_start_date_to_next_collection
+    )
+  end
+
   def next_premium_cheque_month
-    initial_draw_date.advance(months: number_of_months_from_start_date_to_next_collection).strftime('%m/%Y')
+    next_premium_cheque_date.strftime("%m/%Y")
   end
 
   def persisted?
