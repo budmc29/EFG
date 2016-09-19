@@ -794,7 +794,20 @@ describe Loan do
       )
 
       expect(loan).not_to have_status_amendment
+    end
+  end
 
+  describe "#initial_draw_date" do
+    it "returns nil when loan is not yet guaranteed" do
+      loan = build(:loan, :completed)
+      expect(loan.initial_draw_date).to be_nil
+    end
+
+    it "returns the initial draw date when loan is guaranteed" do
+      loan = create(:loan, :guaranteed)
+      loan.initial_draw_change.update_column(:date_of_change, 1.day.ago)
+
+      expect(loan.initial_draw_date).to eq(1.day.ago.to_date)
     end
   end
 end

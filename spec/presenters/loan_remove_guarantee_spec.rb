@@ -45,10 +45,10 @@ describe LoanRemoveGuarantee do
     end
 
     it "should be invalid when remove guarantee date is before initial draw date" do
-      loan_remove_guarantee.remove_guarantee_on = loan.initial_draw_change.date_of_change - 1.day
+      loan_remove_guarantee.remove_guarantee_on = loan.initial_draw_date - 1.day
       expect(loan_remove_guarantee).not_to be_valid
 
-      loan_remove_guarantee.remove_guarantee_on = loan.initial_draw_change.date_of_change
+      loan_remove_guarantee.remove_guarantee_on = loan.initial_draw_date
       expect(loan_remove_guarantee).to be_valid
     end
   end

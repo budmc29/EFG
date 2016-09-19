@@ -19,7 +19,7 @@ describe LoanRepay do
     end
 
     it 'should be invalid if repaid date is before initial draw date' do
-      initial_draw_date = loan_repay.loan.initial_draw_change.date_of_change
+      initial_draw_date = loan_repay.loan.initial_draw_date
 
       loan_repay.repaid_on = initial_draw_date - 1.day
       expect(loan_repay).not_to be_valid

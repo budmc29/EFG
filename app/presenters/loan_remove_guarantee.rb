@@ -25,7 +25,7 @@ class LoanRemoveGuarantee
   end
 
   def remove_guarantee_on_is_not_before_initial_draw_date
-    if remove_guarantee_on < loan.initial_draw_change.date_of_change
+    if remove_guarantee_on < loan.initial_draw_date
       errors.add(:remove_guarantee_on, :before_initial_draw_date)
     end
   end

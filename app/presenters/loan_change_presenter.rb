@@ -151,7 +151,7 @@ class LoanChangePresenter
   private
 
     def initial_draw_date
-      loan.initial_draw_change.date_of_change
+      loan.initial_draw_date
     end
 
     def number_of_months_from_start_date_to_next_collection

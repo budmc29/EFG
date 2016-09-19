@@ -222,6 +222,10 @@ class Loan < ActiveRecord::Base
     amount > cumulative_drawn_amount
   end
 
+  def initial_draw_date
+    initial_draw_change && initial_draw_change.date_of_change
+  end
+
   def last_realisation_amount
     loan_realisations.present? ? loan_realisations.last.realised_amount : Money.new(0)
   end

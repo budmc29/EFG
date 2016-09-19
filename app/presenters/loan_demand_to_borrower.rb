@@ -42,7 +42,7 @@ class LoanDemandToBorrower
   end
 
   def validate_gte_loan_initial_draw_date
-    if borrower_demanded_on < loan.initial_draw_change.date_of_change
+    if borrower_demanded_on < loan.initial_draw_date
       errors.add(:borrower_demanded_on, :must_be_after_loan_initial_draw_date)
     end
   end
