@@ -1,5 +1,8 @@
 class RepaymentProfileLoanChange < LoanChangePresenter
-  delegate :repayment_frequency, to: :loan
+  delegate :initial_draw_date,
+           :maturity_date,
+           :repayment_frequency,
+           to: :loan
 
   attr_accessible :repayment_profile, :fixed_repayment_amount
 

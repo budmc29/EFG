@@ -37,6 +37,8 @@
                 input_html: {
                   "data-repayment-duration-months" => "",
                 } %>
+
+    <%= yield :additional_term_fields %>
   <% end %>
 
   <% unless @presenter.capital_repayment_holiday_change? %>

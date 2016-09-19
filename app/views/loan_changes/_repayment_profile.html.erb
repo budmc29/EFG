@@ -11,3 +11,14 @@
 <%= f.input :fixed_repayment_amount,
             as: :currency,
             wrapper_html: { "data-repayment-amount" => "" } %>
+
+<% content_for :additional_term_fields do %>
+  <%= f.input :maturity_date,
+              as: :quick_date,
+              disabled: true,
+              input_html: {
+                "data-repayment-profile-maturity-date" => "",
+                "data-loan-term-months-so-far" => f.object.loan_term_months_so_far,
+                "data-initial-draw-date" => f.object.initial_draw_date.to_s(:screen),
+              } %>
+<% end %>
