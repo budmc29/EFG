@@ -24,6 +24,10 @@
         find("[data-repayment-duration-months]")
       var originalRepaymentValueMonths = repaymentDuration.data("original-value-months")
 
+      var remainingLoanTerm = parentElement.find("[data-remaining-loan-term]")
+      var remainingLoanTermYears = remainingLoanTerm.find("[data-repayment-duration-years]")
+      var remainingLoanTermMonths = remainingLoanTerm.find("[data-repayment-duration-months]")
+
       toggleFieldVisibility()
 
       repaymentProfile.on("change", "input", toggleFieldVisibility)
@@ -36,6 +40,7 @@
         repaymentProfile.on("change", calculateMaturityDate)
         totalAmount.on("keyup", calculateMaturityDate)
         fixedRepaymentAmountInput.on("keyup", calculateMaturityDate)
+        remainingLoanTerm.on("keyup", calculateMaturityDate)
       }
 
       function toggleFieldVisibility() {
@@ -43,7 +48,7 @@
 
         if (selectedRepaymentProfile == "fixed_term") {
           fixedRepaymentAmount.val("").slideUp()
-          repaymentDuration.slideDown()
+          repaymentDuration.slideUp()
 
           if (config.editableFixedTermDuration) {
             repaymentDurationYears.prop("disabled", false)
@@ -54,6 +59,8 @@
             repaymentDurationMonths.val(originalRepaymentValueMonths)
           }
 
+          remainingLoanTerm.slideDown()
+
           fixedRepaymentAmountInput.prop("disabled", true)
         } else if (selectedRepaymentProfile == "fixed_amount") {
           fixedRepaymentAmountInput.prop("disabled", false)
@@ -61,6 +68,9 @@
           fixedRepaymentAmount.slideDown()
           repaymentDurationYears.val("").prop("disabled", true)
           repaymentDurationMonths.val("").prop("disabled", true)
+          remainingLoanTermYears.val("")
+          remainingLoanTermMonths.val("")
+          remainingLoanTerm.slideUp()
           calculateDuration()
         } else {
           fixedRepaymentAmount.hide()
@@ -88,6 +98,8 @@
       }
 
       function calculateMaturityDate() {
+        var selectedRepaymentProfile = repaymentProfile.find(":checked").val()
+
         var maturityDate = parentElement.find("[data-repayment-profile-maturity-date]")
         var initialDrawDate = Date.parse(maturityDate.data("initial-draw-date"))
 
@@ -95,7 +107,14 @@
         var newLoanTermMonths = repaymentDurationMonths.val() * 1
         var totalAdditionalMonths = termMonthsSoFar + newLoanTermMonths
 
-        var newMaturityDate = initialDrawDate.add(totalAdditionalMonths).months()
+        if (selectedRepaymentProfile == "fixed_term") {
+          var remainingLoanTermTotalMonths = remainingLoanTermYears.val() * 12 +
+            remainingLoanTermMonths.val() * 1
+          var newMaturityDate = initialDrawDate.
+            add(termMonthsSoFar + remainingLoanTermTotalMonths).months()
+        } else {
+          var newMaturityDate = initialDrawDate.add(totalAdditionalMonths).months()
+        }
 
         maturityDate.val(newMaturityDate.toLocaleDateString("en-GB"))
       }
