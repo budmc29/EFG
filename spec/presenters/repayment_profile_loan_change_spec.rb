@@ -135,6 +135,8 @@ describe RepaymentProfileLoanChange do
         amount: Money.new(40_000_00),
         repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
         fixed_repayment_amount: Money.new(1_000_00),
+        repayment_duration: 24,
+        maturity_date: 13.months.from_now,
       )
 
       loan_initial_draw = loan.initial_draw_change
@@ -164,6 +166,8 @@ describe RepaymentProfileLoanChange do
       # term months so far from next premium cheque date (12 months) +
       # specified remaining term (29 months)
       expect(loan_change.repayment_duration).to eq(41)
+      expect(loan_change.maturity_date).to eq(30.months.from_now.to_date)
+      expect(loan_change.old_maturity_date).to eq(13.months.from_now.to_date)
     end
 
     it "updates the loan" do
@@ -174,6 +178,8 @@ describe RepaymentProfileLoanChange do
         :with_premium_schedule,
         amount: Money.new(40_000_00),
         repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
+        repayment_duration: 24,
+        maturity_date: 13.months.from_now,
       )
 
       loan_initial_draw = loan.initial_draw_change
@@ -199,6 +205,7 @@ describe RepaymentProfileLoanChange do
       # term months so far from next premium cheque date (12 months) +
       # remaining term (20 months)
       expect(loan.repayment_duration.total_months).to eq(32)
+      expect(loan.maturity_date).to eq(21.months.from_now.to_date)
     end
   end
 end

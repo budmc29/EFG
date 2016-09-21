@@ -49,10 +49,17 @@ class RepaymentProfileLoanChange < LoanChangePresenter
     loan_change.old_repayment_profile = loan.repayment_profile
     loan_change.fixed_repayment_amount = fixed_repayment_amount
     loan_change.old_fixed_repayment_amount = loan.fixed_repayment_amount
+    loan_change.maturity_date = new_maturity_date
+    loan_change.old_maturity_date = loan.maturity_date
 
     loan.repayment_profile = repayment_profile
     loan.fixed_repayment_amount = fixed_repayment_amount
     loan.repayment_duration = loan_change.repayment_duration
+    loan.maturity_date = new_maturity_date
+  end
+
+  def new_maturity_date
+    initial_draw_date.advance(months: loan_change.repayment_duration)
   end
 
   def set_repayment_duration
