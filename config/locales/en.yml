@@ -27,8 +27,6 @@ en:
           attributes:
             current_repayment_duration_at_next_premium:
               exceeds_threshold: "New loan term exceeds the maximum allowed %{max_months} months. %{months_so_far} months of the loan term have already passed, leaving a maximum of %{max_remaining_months} months remaining."
-            remaining_loan_term:
-              exceeds_threshold: "New loan term exceeds the maximum allowed %{max_months} months. %{months_so_far} months of the loan term have already passed, leaving a maximum of %{max_remaining_months} months remaining."
             date_of_change:
               cannot_be_in_the_future: "cannot be in the future"
             added_months:

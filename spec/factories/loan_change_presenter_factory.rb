@@ -32,7 +32,6 @@ FactoryGirl.define do
 
     factory :repayment_profile_loan_change, class: RepaymentProfileLoanChange do
       repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
-      remaining_loan_term { { years: 1, months: 8 } }
     end
   end
 end

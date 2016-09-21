@@ -13,12 +13,6 @@
             wrapper_html: { "data-repayment-amount" => "" } %>
 
 <% content_for :additional_term_fields do %>
-  <%= f.input :remaining_loan_term,
-              as: :duration,
-              wrapper_html: {
-                "data-remaining-loan-term" => ""
-              } %>
-
   <%= f.input :maturity_date,
               as: :quick_date,
               disabled: true,

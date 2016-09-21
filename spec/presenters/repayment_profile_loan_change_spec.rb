@@ -8,8 +8,11 @@ describe RepaymentProfileLoanChange do
       expect(presenter).to validate_with(RepaymentProfileValidator)
     end
 
-    it "must have remaining loan term when repaying to zero" do
-      presenter.remaining_loan_term = nil
+    it "must have current_repayment_duration_at_next_premium
+        when repaying to zero" do
+      presenter.repayment_profile =
+        PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+      presenter.current_repayment_duration_at_next_premium = nil
       expect(presenter).not_to be_valid
     end
 
@@ -42,11 +45,12 @@ describe RepaymentProfileLoanChange do
 
       presenter = build(
         :repayment_profile_loan_change,
-        date_of_change: Date.new(2013, 3, 1),
-        initial_draw_amount: Money.new(46_000_00),
-        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
-        fixed_repayment_amount: Money.new(1_000_00), # 46 monthly repayments
         loan: loan,
+        date_of_change: Date.new(2013, 3, 1),
+        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        # 46 monthly repayments
+        initial_draw_amount: Money.new(46_000_00),
+        fixed_repayment_amount: Money.new(1_000_00),
       )
 
       expect(presenter).not_to be_valid
@@ -74,11 +78,12 @@ describe RepaymentProfileLoanChange do
 
       presenter = build(
         :repayment_profile_loan_change,
-        date_of_change: Date.new(2013, 3, 1),
-        initial_draw_amount: Money.new(46_000_00),
-        repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
-        remaining_loan_term: { years: 3, months: 10 }, # 46 monthly repayments
         loan: loan,
+        date_of_change: Date.new(2013, 3, 1),
+        repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
+        # 46 monthly repayments
+        initial_draw_amount: Money.new(46_000_00),
+        current_repayment_duration_at_next_premium: { years: 3, months: 10 },
       )
 
       expect(presenter).not_to be_valid
@@ -103,12 +108,12 @@ describe RepaymentProfileLoanChange do
 
       presenter = build(
         :repayment_profile_loan_change,
-        date_of_change: Date.new(2013, 3, 1),
-        initial_draw_amount: Money.new(30_000_00),
-        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
-        fixed_repayment_amount: Money.new(1_000_00),
-        created_by: user,
         loan: loan,
+        created_by: user,
+        date_of_change: Date.new(2013, 3, 1),
+        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        initial_draw_amount: Money.new(30_000_00),
+        fixed_repayment_amount: Money.new(1_000_00),
       )
 
       presenter.save
@@ -145,12 +150,12 @@ describe RepaymentProfileLoanChange do
 
       presenter = build(
         :repayment_profile_loan_change,
-        date_of_change: Date.new(2013, 3, 1),
-        initial_draw_amount: Money.new(30_000_00),
-        repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
-        remaining_loan_term: { years: 2, months: 5 },
-        created_by: user,
         loan: loan,
+        created_by: user,
+        date_of_change: Date.new(2013, 3, 1),
+        repayment_profile: PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE,
+        initial_draw_amount: Money.new(30_000_00),
+        current_repayment_duration_at_next_premium: { years: 2, months: 5 },
       )
 
       presenter.save
@@ -166,6 +171,7 @@ describe RepaymentProfileLoanChange do
       # term months so far from next premium cheque date (12 months) +
       # specified remaining term (29 months)
       expect(loan_change.repayment_duration).to eq(41)
+      expect(loan_change.old_repayment_duration).to eq(24)
       expect(loan_change.maturity_date).to eq(30.months.from_now.to_date)
       expect(loan_change.old_maturity_date).to eq(13.months.from_now.to_date)
     end
@@ -188,12 +194,13 @@ describe RepaymentProfileLoanChange do
 
       presenter = build(
         :repayment_profile_loan_change,
+        loan: loan,
+        created_by: user,
         date_of_change: Date.new(2013, 3, 1),
         repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        # 20 monthly repayments
         initial_draw_amount: Money.new(20_000_00),
-        fixed_repayment_amount: Money.new(1_000_00), # 20 monthly repayments
-        created_by: user,
-        loan: loan,
+        fixed_repayment_amount: Money.new(1_000_00),
       )
 
       presenter.save
