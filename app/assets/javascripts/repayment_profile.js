@@ -78,7 +78,8 @@
         if (!fixedRepaymentAmountInput.val()) return
 
         var totalMonths = Math.ceil(
-          totalAmount.val() / fixedRepaymentAmountInput.val()
+          new Money(totalAmount.val()).toFloat() /
+          new Money(fixedRepaymentAmountInput.val()).toFloat()
         )
 
         if (config.durationAsYearsAndMonths) {
