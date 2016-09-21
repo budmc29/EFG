@@ -7,12 +7,12 @@ class DurationInput < SimpleForm::Inputs::Base
         [
           duration_fields.text_field(
             :years,
-            input_html_options.merge("data-repayment-duration-years" => "")
+            input_html_options.merge("data-duration-years" => "")
           ),
           add_on("years"),
           duration_fields.text_field(
             :months,
-            input_html_options.merge("data-repayment-duration-months" => "")
+            input_html_options.merge("data-duration-months" => "")
           ),
           add_on("months"),
         ].join(" ").html_safe
