@@ -24,7 +24,7 @@
               disabled: true,
               input_html: {
                 "data-repayment-profile-maturity-date" => "",
-                "data-loan-term-months-so-far" => f.object.loan_term_months_so_far,
+                "data-loan-term-months-so-far" => f.object.months_from_loan_start_to_next_premium_collection,
                 "data-initial-draw-date" => f.object.initial_draw_date.to_s(:screen),
               } %>
 <% end %>

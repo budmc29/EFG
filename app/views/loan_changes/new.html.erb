@@ -21,7 +21,7 @@
   <%= field_set_tag 'Outstanding Loan Balance &amp; Term'.html_safe do %>
     <%= simple_form_row 'Original loan amount', @loan.amount.format %>
 
-    <%= simple_form_row 'Next quarterly Premium month due', @presenter.next_premium_cheque_month %>
+    <%= simple_form_row 'Next quarterly Premium month due', @presenter.next_premium_collection_month %>
 
     <%= f.input :initial_draw_amount,
                 as: :currency,

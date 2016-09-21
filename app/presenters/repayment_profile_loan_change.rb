@@ -18,11 +18,6 @@ class RepaymentProfileLoanChange < LoanChangePresenter
 
   before_save :set_attributes
 
-  def loan_term_months_so_far
-    (next_premium_cheque_date.year * 12 + next_premium_cheque_date.month) -
-      (initial_draw_date.year * 12 + initial_draw_date.month)
-  end
-
   def remaining_loan_term
     MonthDurationFormatter.format(@remaining_loan_term)
   end
@@ -62,14 +57,15 @@ class RepaymentProfileLoanChange < LoanChangePresenter
 
   def set_repayment_duration
     if repay_to_zero?
-      loan_change.repayment_duration = loan_term_months_so_far
+      loan_change.repayment_duration =
+        months_from_loan_start_to_next_premium_collection
       if remaining_loan_term
         loan_change.repayment_duration += remaining_loan_term.total_months
       end
     else
       remaining_duration = (total_draw_amount / fixed_repayment_amount).floor
-      loan_change.repayment_duration = loan_term_months_so_far +
-                                       remaining_duration
+      loan_change.repayment_duration =
+        months_from_loan_start_to_next_premium_collection + remaining_duration
     end
   end
 
@@ -86,14 +82,15 @@ class RepaymentProfileLoanChange < LoanChangePresenter
         loan_term_validation_error_key,
         :exceeds_threshold,
         max_months: repayment_duration_max_months,
-        months_so_far: loan_term_months_so_far,
+        months_so_far: months_from_loan_start_to_next_premium_collection,
         max_remaining_months: max_remaining_months
       )
     end
   end
 
   def max_remaining_months
-    repayment_duration_max_months - loan_term_months_so_far
+    repayment_duration_max_months -
+      months_from_loan_start_to_next_premium_collection
   end
 
   def repayment_duration_max_months

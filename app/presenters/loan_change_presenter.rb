@@ -74,7 +74,8 @@ class LoanChangePresenter
   end
 
   def current_repayment_duration_at_next_premium
-    loan.repayment_duration.total_months - number_of_months_from_start_date_to_next_collection
+    loan.repayment_duration.total_months -
+      months_from_loan_start_to_next_premium_collection
   end
 
   def capital_repayment_holiday_change?
@@ -89,14 +90,12 @@ class LoanChangePresenter
     @loan_change ||= loan.loan_changes.new
   end
 
-  def next_premium_cheque_date
-    initial_draw_date.advance(
-      months: number_of_months_from_start_date_to_next_collection
-    )
+  def next_premium_collection_date
+    next_premium_collection.date
   end
 
-  def next_premium_cheque_month
-    next_premium_cheque_date.strftime("%m/%Y")
+  def next_premium_collection_month
+    next_premium_collection_date.strftime("%m/%Y")
   end
 
   def persisted?
@@ -141,7 +140,7 @@ class LoanChangePresenter
       # show loan change specific errors first
       return false unless errors.empty?
 
-      premium_schedule.premium_cheque_month = next_premium_cheque_month
+      premium_schedule.premium_cheque_month = next_premium_collection_month
       premium_schedule.repayment_duration = repayment_duration_at_next_premium
 
       if premium_schedule.invalid?
@@ -154,22 +153,17 @@ class LoanChangePresenter
     errors.empty?
   end
 
+  def months_from_loan_start_to_next_premium_collection
+    next_premium_collection.total_months_from_start_to_next_collection
+  end
+
   private
 
-    def initial_draw_date
-      loan.initial_draw_date
-    end
-
-    def number_of_months_from_start_date_to_next_collection
-      today = Date.current
-      today_months = today.year * 12 + today.month
-      initial_draw_date_months = initial_draw_date.year * 12 + initial_draw_date.month
-      difference_in_months = today_months - initial_draw_date_months
-
-      months = (difference_in_months.to_f / 3).ceil * 3
-      months += 3 if today.beginning_of_month == initial_draw_date.advance(months: months).beginning_of_month
-      months
-    end
+  def next_premium_collection
+    @next_premium_collection ||= NextPremiumCollection.new(
+      from_date: loan.initial_draw_date, to_date: Date.current
+    )
+  end
 
     def repayment_duration_at_next_premium
       current_repayment_duration_at_next_premium
