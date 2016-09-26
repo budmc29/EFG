@@ -74,8 +74,10 @@ class LoanChangePresenter
   end
 
   def current_repayment_duration_at_next_premium
-    loan.repayment_duration.total_months -
+    MonthDuration.new(
+      loan.repayment_duration.total_months -
       months_from_loan_start_to_next_premium_collection
+    )
   end
 
   def capital_repayment_holiday_change?
@@ -166,7 +168,7 @@ class LoanChangePresenter
   end
 
     def repayment_duration_at_next_premium
-      current_repayment_duration_at_next_premium
+      current_repayment_duration_at_next_premium.total_months
     end
 
     def date_of_change_not_in_the_future
