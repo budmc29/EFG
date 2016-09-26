@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160411095804) do
+ActiveRecord::Schema.define(version: 20160926155411) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "loan_id",                          null: false
@@ -103,18 +103,19 @@ ActiveRecord::Schema.define(version: 20160411095804) do
   add_index "ded_codes", ["code"], name: "index_ded_codes_on_code", unique: true, using: :btree
 
   create_table "demand_to_borrowers", force: true do |t|
-    t.integer  "loan_id",                       null: false
-    t.integer  "seq",                           null: false
-    t.integer  "created_by_id",                 null: false
-    t.date     "date_of_demand",                null: false
-    t.integer  "demanded_amount",     limit: 8, null: false
-    t.date     "modified_date",                 null: false
+    t.integer  "loan_id",                               null: false
+    t.integer  "seq",                                   null: false
+    t.integer  "created_by_id",                         null: false
+    t.date     "date_of_demand",                        null: false
+    t.integer  "demanded_amount",             limit: 8, null: false
+    t.date     "modified_date",                         null: false
     t.integer  "legacy_loan_id"
     t.string   "legacy_created_by"
     t.datetime "ar_timestamp"
     t.datetime "ar_insert_timestamp"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "outstanding_facility_amount", limit: 8
   end
 
   add_index "demand_to_borrowers", ["loan_id", "seq"], name: "index_demand_to_borrowers_on_loan_id_and_seq", unique: true, using: :btree

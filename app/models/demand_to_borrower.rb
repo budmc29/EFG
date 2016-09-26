@@ -2,7 +2,7 @@ class DemandToBorrower < ActiveRecord::Base
   include FormatterConcern
   include Sequenceable
 
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: "User"
   belongs_to :loan
 
   validates_presence_of :created_by, strict: true
@@ -13,5 +13,5 @@ class DemandToBorrower < ActiveRecord::Base
 
   format :date_of_demand, with: QuickDateFormatter
   format :demanded_amount, with: MoneyFormatter.new
-
+  format :outstanding_facility_amount, with: MoneyFormatter.new
 end

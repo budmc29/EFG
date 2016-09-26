@@ -3,7 +3,7 @@ class LoanDemandToBorrowersController < ApplicationController
   rescue_from_incorrect_loan_state_error
 
   def new
-    @loan = current_lender.loans.find(params[:loan_id])
+    @loan = loan_with_blank_demanded_values
     @loan_demand_to_borrower = LoanDemandToBorrower.new(@loan)
   end
 
@@ -21,6 +21,15 @@ class LoanDemandToBorrowersController < ApplicationController
   end
 
   private
+
+  def loan_with_blank_demanded_values
+    current_lender.loans.find(params[:loan_id]).tap do |l|
+      l.amount_demanded = nil
+      l.borrower_demanded_on = nil
+      l.borrower_demand_outstanding = nil
+    end
+  end
+
   def verify_create_permission
     enforce_create_permission(LoanDemandToBorrower)
   end

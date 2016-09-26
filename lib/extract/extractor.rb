@@ -189,6 +189,7 @@ class Extractor
           whitelist "created_by_id"
           whitelist "date_of_demand"
           whitelist "demanded_amount"
+          whitelist "outstanding_facility_amount"
           whitelist "modified_date"
           whitelist "legacy_loan_id"
           whitelist "legacy_created_by"

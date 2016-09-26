@@ -98,6 +98,10 @@ module RequestSpecHelpers
 
   # Loan Demand to Borrower
   def fill_in_valid_demand_to_borrower_details
+    fill_in(
+      "loan_demand_to_borrower_borrower_demand_outstanding",
+      with: "9000"
+    )
     fill_in 'loan_demand_to_borrower_amount_demanded', with: '10000'
     fill_in 'loan_demand_to_borrower_borrower_demanded_on', with: Date.current.to_s(:screen)
   end

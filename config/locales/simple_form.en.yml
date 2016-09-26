@@ -135,6 +135,7 @@ en:
       loan_demand_to_borrower:
         amount_demanded: 'What was the amount for which demand was made on the borrower (as recorded on the demand letter)?'
         borrower_demanded_on: 'What was the date that demand was made on the borrower (date of demand letter)?'
+        borrower_demand_outstanding: "What is the outstanding Scheme Facility Balance owed by the Borrower to the Lender as at the date of Final Demand?"
 
       loan_repay:
         repaid_on: 'What was the date the facility was repaid by the borrower?'
