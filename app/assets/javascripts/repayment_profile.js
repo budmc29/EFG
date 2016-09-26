@@ -26,7 +26,7 @@
         calculateMaturityDate()
       })
 
-      outstandingBalance.on("keyup", function() {
+      outstandingBalance.on("change keyup", function() {
         calculateDuration()
         calculateMaturityDate()
       })
