@@ -339,6 +339,10 @@ class Extractor
           whitelist "created_at"
           whitelist "updated_at"
           whitelist "type"
+          whitelist "repayment_profile"
+          whitelist "old_repayment_profile"
+          whitelist "fixed_repayment_amount"
+          whitelist "old_fixed_repayment_amount"
         end
 
         table 'loan_realisations' do
@@ -518,6 +522,8 @@ class Extractor
           whitelist "euro_conversion_rate"
           whitelist "loan_sub_category_id"
           whitelist "status_amendment_type"
+          whitelist "repayment_profile"
+          whitelist "fixed_repayment_amount"
         end
 
         table 'premium_schedules' do
@@ -560,6 +566,8 @@ class Extractor
           whitelist "ar_timestamp"
           whitelist "ar_insert_timestamp"
           whitelist "legacy_premium_calculation"
+          whitelist "repayment_profile"
+          whitelist "fixed_repayment_amount"
         end
 
         table "realisation_statements" do
