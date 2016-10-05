@@ -85,7 +85,7 @@ en:
               accepted: A customer declaration must have been received before a loan can be entered.
             state_aid:
               blank: must be calculated
-              recalculate: must be re-calculated when you change the loan term
+              recalculate: must be re-calculated when you change the loan term or amount
               exceeds_sic_threshold: 'calculated state aid exceeds the allowed amount of %{threshold}'
             loan_security_types:
               present: choose at least one security

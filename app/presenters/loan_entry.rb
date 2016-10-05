@@ -74,7 +74,7 @@ class LoanEntry
   end
 
   validate :postcode_allowed
-  validate :state_aid_calculated, if: :recalculate_state_aid?
+  validate :state_aid_calculated
   validate :state_aid_within_sic_threshold, if: :state_aid
   validate :repayment_frequency_allowed
   validate :company_turnover_is_allowed, if: :turnover
@@ -125,12 +125,10 @@ class LoanEntry
     errors.add(:postcode, :invalid) unless postcode.full?
   end
 
-  def recalculate_state_aid?
-    loan.repayment_duration_changed?
-  end
-
   def state_aid_calculated
-    errors.add(:state_aid, :recalculate)
+    if loan.repayment_duration_changed? || loan.amount_changed?
+      errors.add(:state_aid, :recalculate)
+    end
   end
 
   def validate_eligibility

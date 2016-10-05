@@ -5,8 +5,10 @@ describe LoanEntry do
   let(:loan_entry) { FactoryGirl.build(:loan_entry) }
 
   before(:each) do
-    # ensure recalculate state aid validation does not fail
-    allow(loan_entry).to receive(:recalculate_state_aid?).and_return(false)
+    # skip state aid validation as the repayment duration and loan
+    # amount will always be considered changed when working with an
+    # unsaved loan record, which is what `build(:loan_entry)` uses
+    allow(loan_entry).to receive(:state_aid_calculated).and_return(true)
   end
 
   describe "validations" do
@@ -364,12 +366,24 @@ describe LoanEntry do
     end
 
     context "when repayment duration is changed" do
-      before(:each) do
-        # ensure recalculate state aid validation fails
-        allow(loan_entry).to receive(:recalculate_state_aid?).and_return(true)
-      end
+      it "state aid must be recalculated" do
+        # remove stub from previous before block
+        allow(loan_entry).to receive(:state_aid_calculated).and_call_original
 
-      it "should require a recalculation of state aid" do
+        loan_entry.repayment_duration = 30
+
+        expect(loan_entry).not_to be_valid
+        expect(loan_entry.error_on(:state_aid).size).to eq(1)
+      end
+    end
+
+    context "when amount is changed" do
+      it "state aid must be recalculated" do
+        # remove stub from previous before block
+        allow(loan_entry).to receive(:state_aid_calculated).and_call_original
+
+        loan_entry.amount = Money.new(100_000_00)
+
         expect(loan_entry).not_to be_valid
         expect(loan_entry.error_on(:state_aid).size).to eq(1)
       end
