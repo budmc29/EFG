@@ -32,11 +32,11 @@ class FixedRepaymentAmountOutstandingLoanValue
     if repayment_frequency == RepaymentFrequency::InterestOnly
       0
     else
-      quarter.last_month - total_drawdown_repayment_months - repayment_holiday
+      quarter.last_month - leftover_months_at_end_of_term - repayment_holiday
     end
   end
 
-  def total_drawdown_repayment_months
+  def leftover_months_at_end_of_term
     (quarter.last_month % repayment_frequency.months_per_repayment_period)
   end
 

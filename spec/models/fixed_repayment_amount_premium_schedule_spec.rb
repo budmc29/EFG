@@ -215,7 +215,7 @@ describe "Fixed Repayment Amount Premium Schedule" do
       repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
       fixed_repayment_amount: Money.new(1_666_66),
       initial_draw_amount: Money.new(100_000_00),
-      repayment_duration: 66,
+      repayment_duration: 60,
       legacy_premium_calculation: false,
       initial_capital_repayment_holiday: 6
     )

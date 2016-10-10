@@ -165,6 +165,10 @@ class PremiumSchedule < ActiveRecord::Base
 
   private
 
+  def fixed_amount_repayment_profile?
+    repayment_profile == FIXED_AMOUNT_REPAYMENT_PROFILE
+  end
+
   def outstanding_value_class
     if fixed_repayment_amount
       FixedRepaymentAmountOutstandingLoanValue
@@ -217,7 +221,11 @@ class PremiumSchedule < ActiveRecord::Base
           quarters = 1 if quarters.zero?
           quarters
         else
-          (repayment_duration.to_f / 3).ceil
+          total_months = repayment_duration.to_f
+          if fixed_amount_repayment_profile?
+            total_months += initial_capital_repayment_holiday.to_f
+          end
+          (total_months / 3).ceil
         end
       end
     end
