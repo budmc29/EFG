@@ -387,6 +387,16 @@ describe LoanReportCsvExport do
         expect(row[t(:premium_rate)]).to eq('2.0')
       end
     end
+
+    context "when loan has no repayment profile" do
+      before do
+        loan.update_column(:repayment_profile, nil)
+      end
+
+      it "exports a blank field for repayment profile" do
+        expect(row[t(:repayment_profile)]).to be_blank
+      end
+    end
   end
 
   private

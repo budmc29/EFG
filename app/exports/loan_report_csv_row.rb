@@ -94,7 +94,7 @@ class LoanReportCsvRow
       row['sub_lender'],
       row["status_amendment_type"],
       row["status_amendment_notes"],
-      row["repayment_profile"].humanize,
+      row["repayment_profile"].try(:humanize),
       row["fixed_repayment_amount"] ? Money.new(row["fixed_repayment_amount"]).to_s : nil,
     ]
   end
