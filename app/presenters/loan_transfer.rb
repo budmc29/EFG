@@ -1,22 +1,28 @@
-class LoanTransfer::Base
+class LoanTransfer
   include LoanPresenter
 
-  ALLOWED_LOAN_TRANSFER_STATES = [Loan::Guaranteed, Loan::Demanded, Loan::Repaid]
+  ALLOWED_LOAN_TRANSFER_STATES = [
+    Loan::Guaranteed,
+    Loan::Demanded,
+    Loan::Repaid,
+  ].freeze
 
   attr_reader :loan_to_transfer, :new_loan
 
   attr_accessor :new_amount, :lender
 
   attribute :amount
+  attribute :facility_letter_date
   attribute :reference
   attribute :declaration_signed
 
   attr_accessible :new_amount
 
-  validates_presence_of :amount, :new_amount, :reference, :lender
+  validates_presence_of :amount, :new_amount, :reference, :lender,
+                        :facility_letter_date
 
   validate do
-    errors.add(:declaration_signed, :accepted) unless self.declaration_signed
+    errors.add(:declaration_signed, :accepted) unless declaration_signed
   end
 
   def new_amount=(value)
@@ -24,7 +30,12 @@ class LoanTransfer::Base
   end
 
   def loan_to_transfer
-    raise NotImplementedError, "Define in sub-class"
+    @loan_to_transfer ||= Loan.where(
+      reference: reference,
+      amount: amount.cents,
+      facility_letter_date: facility_letter_date,
+      state: ALLOWED_LOAN_TRANSFER_STATES
+    ).first
   end
 
   def save
@@ -36,16 +47,17 @@ class LoanTransfer::Base
       loan_to_transfer.save!
 
       @new_loan                      = loan_to_transfer.dup
-      new_loan.lender                = self.lender
-      new_loan.amount                = self.new_amount
-      new_loan.reference             = reference_class.new(loan_to_transfer.reference).increment
+      new_loan.lender                = lender
+      new_loan.amount                = new_amount
+      new_loan.reference             = new_loan_reference
       new_loan.state                 = Loan::Incomplete
       new_loan.repayment_duration    = 0
       new_loan.transferred_from_id   = loan_to_transfer.id
       new_loan.lending_limit         = lender.lending_limits.active.first
       new_loan.created_by            = modified_by
       new_loan.modified_by           = modified_by
-      new_loan.loan_security_types   = loan_to_transfer.loan_security_types.collect(&:id)
+      new_loan.loan_security_types   =
+        loan_to_transfer.loan_security_types.map(&:id)
 
       %w(
         legacy_id
@@ -107,18 +119,13 @@ class LoanTransfer::Base
     errors.empty?
   end
 
-  def reference_class
-    raise NotImplementedError, "Define in sub-class"
-  end
-
-  def loan_event
-    raise NotImplementedError, "Define in sub-class"
-  end
-
   def log_loan_state_changes!
     [loan_to_transfer, new_loan].each do |loan|
-      LoanStateChange.log(loan, loan_event, loan.modified_by)
+      LoanStateChange.log(loan, LoanEvent::Transfer, loan.modified_by)
     end
   end
 
+  def new_loan_reference
+    LoanReference.increment(loan_to_transfer.reference)
+  end
 end

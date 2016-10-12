@@ -69,11 +69,8 @@
           <% if current_user.can_create?(RealisationStatement) %>
             <%= nav.item 'Recoveries Statement Received', new_realise_loan_path %>
           <% end %>
-          <% if current_user.can_create?(LoanTransfer::Sflg) %>
+          <% if current_user.can_create?(LoanTransfer) %>
             <%= nav.item 'Transfer a Loan', new_loan_transfer_path %>
-          <% end %>
-          <% if current_user.can_create?(LoanTransfer::LegacySflg) %>
-            <%= nav.item 'Transfer a Legacy Loan', new_legacy_loan_transfer_path %>
           <% end %>
 
           <%= nav.dropdown('Reports', collapse: true) do |dropdown| %>

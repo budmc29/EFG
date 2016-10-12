@@ -125,12 +125,8 @@ describe CfeUserPermissions do
     it { refute user.can_create?(TransferredLoanEntry) }
   end
 
-  context 'LoanTransfer::LegacySflg' do
-    it { refute user.can_create?(LoanTransfer::LegacySflg) }
-  end
-
-  context 'LoanTransfer::Sflg' do
-    it { refute user.can_create?(LoanTransfer::Sflg) }
+  context "LoanTransfer" do
+    it { refute user.can_create?(LoanTransfer) }
   end
 
   context 'LoanReport' do

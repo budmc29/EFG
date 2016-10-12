@@ -125,12 +125,8 @@ describe LenderUserPermissions do
     it { assert user.can_create?(TransferredLoanEntry) }
   end
 
-  context 'LoanTransfer::LegacySflg' do
-    it { assert user.can_create?(LoanTransfer::LegacySflg) }
-  end
-
-  context 'LoanTransfer::Sflg' do
-    it { assert user.can_create?(LoanTransfer::Sflg) }
+  context "LoanTransfer" do
+    it { assert user.can_create?(LoanTransfer) }
   end
 
   context 'LoanReport' do

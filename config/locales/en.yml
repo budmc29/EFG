@@ -152,7 +152,7 @@ en:
             no_claim_on:
               must_be_gte_last_demand_to_borrower: 'Date of decision that no claim will be made cannot be before the most recent date of borrower demand'
               cannot_be_in_the_future: "cannot be in the future"
-        loan_transfer/sflg: &loan_transfer
+        loan_transfer:
           attributes:
             base:
               cannot_be_transferred: 'A suitable loan matching these criteria could not be found. Please note that all details supplied about the original loan must be correct, and it must be an SFLG scheme loan in one of the following states: "Guaranteed", "Lender demand" or "Repaid".'
@@ -161,8 +161,6 @@ en:
               cannot_be_greater: cannot exceed the original loan amount
             declaration_signed:
               accepted: A customer declaration must have been received before a loan can be transferred
-        loan_transfer/legacy_sflg:
-          <<: *loan_transfer
         transferred_loan_entry:
           attributes:
             state_aid:

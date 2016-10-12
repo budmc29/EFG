@@ -144,7 +144,6 @@ EFG::Application.routes.draw do
   end
 
   resources :loan_transfers, only: [:show, :new, :create]
-  resources :legacy_loan_transfers, only: [:show, :new, :create]
 
   resource :loan_report, only: [:new, :create]
 
