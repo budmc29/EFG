@@ -14,7 +14,7 @@ class LegalForm
   end
 
   record id: 3 do |r|
-    r.name = "Limited-Limited Partnership (LLP)"
+    r.name = "Limited-Liability Partnership (LLP)"
     r.requires_company_registration = true
   end
 
