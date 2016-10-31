@@ -10,7 +10,6 @@ describe LoanEligibilityCheck do
 
     %w(
       amount
-      repayment_duration
       lending_limit_id
       turnover
       trading_date
@@ -252,4 +251,39 @@ describe LoanEligibilityCheck do
       expect(loan_eligibility_check.loan.sic_eligible).to be_nil
     end
   end
+
+  describe "#repayment_duration" do
+    it "is auto-calculated when repayment profile is fixed amount" do
+      loan_eligibility_check.
+        repayment_profile = PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+      loan_eligibility_check.amount = Money.new(10_500_00)
+      loan_eligibility_check.fixed_repayment_amount = Money.new(1_000_00)
+
+      loan_eligibility_check.valid?
+
+      expect(loan_eligibility_check.repayment_duration.total_months).to eq(10)
+    end
+
+    it "does not change repayment duration when repayment profile is
+        fixed term" do
+      loan_eligibility_check.
+        repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+      loan_eligibility_check.repayment_duration = 10
+
+      loan_eligibility_check.valid?
+
+      expect(loan_eligibility_check.repayment_duration.total_months).to eq(10)
+    end
+
+    it "sets repayment duration to 0 when no duration is given" do
+      loan_eligibility_check.
+        repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+      loan_eligibility_check.repayment_duration = nil
+
+      loan_eligibility_check.valid?
+
+      expect(loan_eligibility_check.repayment_duration.total_months).to eq(0)
+    end
+  end
+
 end

@@ -43,6 +43,8 @@ class LoanEligibilityCheck
 
   validates_with RepaymentProfileValidator
 
+  before_validation :calculate_repayment_duration
+
   after_save :save_ineligibility_reasons, unless: :eligible?
 
   def transition_to
@@ -97,4 +99,13 @@ class LoanEligibilityCheck
         validator.validate(self)
       end
     end
+
+  def calculate_repayment_duration
+    unless repayment_profile == PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+      self.repayment_duration ||= 0
+      return
+    end
+
+    self.repayment_duration = (amount / fixed_repayment_amount).floor
+  end
 end
