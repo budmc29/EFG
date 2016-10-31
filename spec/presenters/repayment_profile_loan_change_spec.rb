@@ -144,8 +144,10 @@ describe RepaymentProfileLoanChange do
         maturity_date: 13.months.from_now,
       )
 
+      initial_draw_date = 11.months.ago.to_date
+
       loan_initial_draw = loan.initial_draw_change
-      loan_initial_draw.date_of_change = 11.months.ago
+      loan_initial_draw.date_of_change = initial_draw_date
       loan_initial_draw.save!
 
       presenter = build(
@@ -172,7 +174,8 @@ describe RepaymentProfileLoanChange do
       # specified remaining term (29 months)
       expect(loan_change.repayment_duration).to eq(41)
       expect(loan_change.old_repayment_duration).to eq(24)
-      expect(loan_change.maturity_date).to eq(30.months.from_now.to_date)
+      expect(loan_change.maturity_date).
+        to eq(initial_draw_date.advance(months: 41))
       expect(loan_change.old_maturity_date).to eq(13.months.from_now.to_date)
     end
 
@@ -188,8 +191,10 @@ describe RepaymentProfileLoanChange do
         maturity_date: 13.months.from_now,
       )
 
+      initial_draw_date = 11.months.ago.to_date
+
       loan_initial_draw = loan.initial_draw_change
-      loan_initial_draw.date_of_change = 11.months.ago
+      loan_initial_draw.date_of_change = initial_draw_date
       loan_initial_draw.save!
 
       presenter = build(
@@ -212,7 +217,7 @@ describe RepaymentProfileLoanChange do
       # term months so far from next premium cheque date (12 months) +
       # remaining term (20 months)
       expect(loan.repayment_duration.total_months).to eq(32)
-      expect(loan.maturity_date).to eq(21.months.from_now.to_date)
+      expect(loan.maturity_date).to eq(initial_draw_date.advance(months: 32))
     end
   end
 end
