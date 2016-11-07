@@ -56,7 +56,7 @@ class LoanDemandToBorrower
   def outstanding_amount_is_less_than_demanded_amount
     return unless borrower_demand_outstanding && amount_demanded
 
-    if borrower_demand_outstanding >= amount_demanded
+    if borrower_demand_outstanding > amount_demanded
       errors.add(:borrower_demand_outstanding, :too_high)
     end
   end

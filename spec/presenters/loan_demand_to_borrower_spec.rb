@@ -47,10 +47,15 @@ describe LoanDemandToBorrower do
       expect(loan_demand_to_borrower).to be_valid
     end
 
-    it "must have an outstanding balance lower than the demanded amount" do
-      loan_demand_to_borrower.borrower_demand_outstanding = Money.new(10_000_00)
+    it "must have an outstanding balance less than or equal to
+        the demanded amount" do
+      loan_demand_to_borrower.borrower_demand_outstanding = Money.new(10_001_00)
       loan_demand_to_borrower.amount_demanded = Money.new(10_000_00)
       expect(loan_demand_to_borrower).not_to be_valid
+
+      loan_demand_to_borrower.borrower_demand_outstanding = Money.new(10_000_00)
+      loan_demand_to_borrower.amount_demanded = Money.new(10_000_00)
+      expect(loan_demand_to_borrower).to be_valid
     end
   end
 

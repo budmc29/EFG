@@ -68,7 +68,7 @@ en:
               must_be_after_loan_initial_draw_date: 'Demand date cannot be before initial draw date'
               cannot_be_in_the_future: 'cannot be in the future'
             borrower_demand_outstanding:
-              too_high: "should be lower than the amount for which the demand was made on the borrower, as recorded on the demand letter"
+              too_high: "should be less than or equal to the amount for which the demand was made on the borrower, as recorded on the demand letter"
         loan_eligibility_check:
           attributes:
             sic_code:
