@@ -111,7 +111,7 @@ describe 'Realise loans' do
   end
 
   it 'should show error text when there are no loans to recover' do
-    loan = FactoryGirl.create(:loan, :recovered, id: 1, recovery_on: Date.new(2011, 2, 20))
+    loan = FactoryGirl.create(:loan, :recovered, recovery_on: Date.new(2011, 2, 20))
 
     navigate_to_form # go back to form so new loan record lender is in form
     select loan.lender.name, from: 'realisation_statement_received_lender_id'
