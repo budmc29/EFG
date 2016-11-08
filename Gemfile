@@ -65,7 +65,7 @@ group :development, :test do
   gem "brakeman", "2.0.0"
   gem "ci_reporter", "1.8.4"
   gem "dotenv-rails", "2.1.1"
-  gem "parallel_tests", "0.16.10"
+  gem "parallel_tests", "~> 2.7"
   gem "rspec-rails", "~> 3.4"
   gem "simplecov-rcov", "0.2.3"
   gem "pry-rails"
@@ -73,6 +73,8 @@ end
 
 group :test do
   gem "capybara"
+  gem "capybara-webkit"
+  gem "database_cleaner"
   gem "factory_girl_rails", "4.2.0"
   gem "formulaic"
   gem "launchy", "2.1.0"
