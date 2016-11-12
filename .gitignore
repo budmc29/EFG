@@ -20,3 +20,4 @@ config/database.yml
 .DS_Store
 import_data/*
 brakeman-output.tabs
+.env

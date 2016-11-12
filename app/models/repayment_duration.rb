@@ -27,7 +27,7 @@ class RepaymentDuration
 
   def months_between_draw_date_and_maturity_date
     month_count         = 1 # count the initial draw month
-    comparison_date     = initial_draw_date = loan.initial_draw_change.date_of_change
+    comparison_date     = initial_draw_date = loan.initial_draw_date
     comparison_end_date = maturity_date.prev_month
 
     # count the number of months between initial draw date and one month prior to maturity date

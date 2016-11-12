@@ -5,8 +5,10 @@ describe LoanEntry do
   let(:loan_entry) { FactoryGirl.build(:loan_entry) }
 
   before(:each) do
-    # ensure recalculate state aid validation does not fail
-    allow(loan_entry).to receive(:recalculate_state_aid?).and_return(false)
+    # skip state aid validation as the repayment duration and loan
+    # amount will always be considered changed when working with an
+    # unsaved loan record, which is what `build(:loan_entry)` uses
+    allow(loan_entry).to receive(:state_aid_calculated).and_return(true)
   end
 
   describe "validations" do
@@ -41,6 +43,11 @@ describe LoanEntry do
 
     it "should be invalid without an amount" do
       loan_entry.amount = nil
+      expect(loan_entry).not_to be_valid
+    end
+
+    it "must have a repayment profile" do
+      loan_entry.repayment_profile = nil
       expect(loan_entry).not_to be_valid
     end
 
@@ -324,13 +331,59 @@ describe LoanEntry do
       end
     end
 
-    context "when repayment duration is changed" do
-      before(:each) do
-        # ensure recalculate state aid validation fails
-        allow(loan_entry).to receive(:recalculate_state_aid?).and_return(true)
+    describe "#repayment_duration" do
+      it "is auto-calculated when repayment profile is fixed amount" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+        loan_entry.amount = Money.new(10_500_00)
+        loan_entry.fixed_repayment_amount = Money.new(1_000_00)
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(10)
       end
 
-      it "should require a recalculation of state aid" do
+      it "does not change repayment duration when repayment profile is
+          fixed term" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        loan_entry.repayment_duration = 10
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(10)
+      end
+
+      it "sets repayment duration to 0 when no duration is given" do
+        loan_entry.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        loan_entry.repayment_duration = nil
+
+        loan_entry.valid?
+
+        expect(loan_entry.repayment_duration.total_months).to eq(0)
+      end
+    end
+
+    context "when repayment duration is changed" do
+      it "state aid must be recalculated" do
+        # remove stub from previous before block
+        allow(loan_entry).to receive(:state_aid_calculated).and_call_original
+
+        loan_entry.repayment_duration = 30
+
+        expect(loan_entry).not_to be_valid
+        expect(loan_entry.error_on(:state_aid).size).to eq(1)
+      end
+    end
+
+    context "when amount is changed" do
+      it "state aid must be recalculated" do
+        # remove stub from previous before block
+        allow(loan_entry).to receive(:state_aid_calculated).and_call_original
+
+        loan_entry.amount = Money.new(100_000_00)
+
         expect(loan_entry).not_to be_valid
         expect(loan_entry.error_on(:state_aid).size).to eq(1)
       end

@@ -75,12 +75,17 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-webkit (1.11.1)
+      capybara (>= 2.3.0, < 2.8.0)
+      json
     chronic (0.10.2)
     ci_reporter (1.8.4)
       builder (>= 2.1.2)
+    coderay (1.1.1)
     commonjs (0.2.7)
     composite_primary_keys (7.0.16)
       activerecord (~> 4.1.7)
+    database_cleaner (1.5.3)
     devise (3.5.6)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -98,6 +103,10 @@ GEM
       zxcvbn-js (~> 4.2.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    dotenv (2.1.1)
+    dotenv-rails (2.1.1)
+      dotenv (= 2.1.1)
+      railties (>= 4.0, < 5.1)
     erubis (2.7.0)
     exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
@@ -109,6 +118,10 @@ GEM
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     fastercsv (1.5.5)
+    formulaic (0.3.0)
+      activesupport
+      capybara
+      i18n
     haml (4.0.7)
       tilt
     hashie (3.4.3)
@@ -127,12 +140,13 @@ GEM
     less-rails (2.2.6)
       actionpack (>= 3.1)
       less (~> 2.2.0)
-    libv8 (3.16.14.13)
+    libv8 (3.16.14.15)
     lograge (0.1.2)
       actionpack
       activesupport
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    method_source (0.8.2)
     mime-types (2.99.1)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
@@ -144,7 +158,7 @@ GEM
       mini_portile2 (~> 2.0.0.rc2)
     orm_adapter (0.5.0)
     parallel (1.6.2)
-    parallel_tests (0.16.10)
+    parallel_tests (2.7.0)
       parallel
     pdf-core (0.6.1)
     pdf-reader (1.1.1)
@@ -162,6 +176,12 @@ GEM
     progressbar (0.11.0)
     protected_attributes (1.0.8)
       activemodel (>= 4.0.1, < 5.0)
+    pry (0.10.3)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-rails (0.3.4)
+      pry (>= 0.9.10)
     rack (1.5.5)
     rack-ssl-enforcer (0.2.9)
     rack-test (0.6.3)
@@ -237,6 +257,7 @@ GEM
     slim (1.3.9)
       temple (~> 0.6.3)
       tilt (~> 1.3, >= 1.3.3)
+    slop (3.6.0)
     sprockets (2.11.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -247,6 +268,8 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     sqlite3 (1.3.6)
+    static_association (0.1.0)
+      activesupport (>= 3.0.0)
     statsd-ruby (1.0.0)
     temple (0.6.10)
     terminal-table (1.5.2)
@@ -298,27 +321,32 @@ DEPENDENCIES
   builder (= 3.1.4)
   canable (= 0.3.0)
   capybara
+  capybara-webkit
   ci_reporter (= 1.8.4)
   data-anonymization!
+  database_cleaner
   devise (~> 3.5)
   devise-encryptable (~> 0.2)
   devise_security_extension (~> 0.8)
   devise_zxcvbn (~> 2.1)
+  dotenv-rails (= 2.1.1)
   exception_notification (= 4.0.1)
   factory_girl_rails (= 4.2.0)
+  formulaic
   jquery-rails (= 3.1.3)
   launchy (= 2.1.0)
   less-rails (= 2.2.6)
   lograge (= 0.1.2)
   money (= 5.1.1)
   mysql2 (= 0.3.20)
-  parallel_tests (= 0.16.10)
+  parallel_tests (~> 2.7)
   pdf-reader (= 1.1.1)
   plek (= 0.3.0)
   prawn (~> 2.1)
   prawn-table (~> 0.2)
   progressbar (= 0.11.0)
   protected_attributes (= 1.0.8)
+  pry-rails
   rack-ssl-enforcer
   rails (= 4.1.15)
   rspec-collection_matchers
@@ -328,6 +356,7 @@ DEPENDENCIES
   simple_form (= 3.0.2)
   simplecov-rcov (= 0.2.3)
   sqlite3 (= 1.3.6)
+  static_association (= 0.1.0)
   statsd-ruby (= 1.0.0)
   therubyracer (= 0.12)
   timecop
@@ -341,4 +370,4 @@ DEPENDENCIES
   will_paginate (= 3.0.5)
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

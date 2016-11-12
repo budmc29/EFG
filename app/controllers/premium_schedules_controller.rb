@@ -33,12 +33,12 @@ class PremiumSchedulesController < ApplicationController
   end
 
   def load_premium_schedule
-    @premium_schedule = @loan.premium_schedule || @loan.premium_schedules.build
-    @premium_schedule.initial_draw_amount ||= @loan.amount.dup
-    @premium_schedule.repayment_duration = @loan.repayment_duration.total_months
+    @premium_schedule = @loan.premium_schedule ||
+                        PremiumSchedule.from_loan(@loan)
   end
 
   helper_method :leave_premium_schedule_path
+
   def leave_premium_schedule_path(loan)
     if params[:redirect] == 'loan_entry'
       new_loan_entry_path(loan)
@@ -49,7 +49,7 @@ class PremiumSchedulesController < ApplicationController
     elsif params[:redirect] == 'loan_offer'
       new_loan_offer_path(loan)
     else
-      loan_path(loan)
+      loan_premium_schedule_path(loan)
     end
   end
 

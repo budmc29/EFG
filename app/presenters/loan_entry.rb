@@ -55,16 +55,26 @@ class LoanEntry
   attribute :debtor_book_coverage
   attribute :debtor_book_topup
   attribute :sub_lender
+  attribute :repayment_profile
+  attribute :fixed_repayment_amount
+
+  attribute :legal_form, read_only: true
 
   delegate :calculate_state_aid, :reason, :sic, to: :loan
   delegate :sub_lender_names, to: :lender
 
   validates_presence_of :business_name, :fees, :interest_rate,
-    :interest_rate_type_id, :legal_form_id, :repayment_frequency_id
+                        :interest_rate_type_id, :legal_form_id,
+                        :repayment_frequency_id
   validates_presence_of :state_aid
-  validates_presence_of :company_registration, if: ->(loan_entry) { loan_entry.legal_form_id.present? && LegalForm.company_registration_required?(loan_entry.legal_form_id) }
+
+  validates_presence_of :company_registration, if: ->(loan_entry) do
+    loan_entry.legal_form &&
+      loan_entry.legal_form.requires_company_registration
+  end
+
   validate :postcode_allowed
-  validate :state_aid_calculated, if: :recalculate_state_aid?
+  validate :state_aid_calculated
   validate :state_aid_within_sic_threshold, if: :state_aid
   validate :repayment_frequency_allowed
   validate :company_turnover_is_allowed, if: :turnover
@@ -75,16 +85,23 @@ class LoanEntry
     errors.add(:declaration_signed, :accepted) unless self.declaration_signed
   end
 
+  validates_with RepaymentProfileValidator
+
   validate :validate_eligibility
   validate :category_validations
+
+  before_validation :calculate_repayment_duration
 
   def premium_schedule_required_for_state_aid_calculation?
     loan.rules.premium_schedule_required_for_state_aid_calculation?
   end
 
   def save_as_incomplete
-    loan.state = Loan::Incomplete
-    loan.save(validate: false)
+    run_callbacks :validation do
+      loan.state = Loan::Incomplete
+      yield self if block_given?
+      loan.save(validate: false)
+    end
   end
 
   def complete?
@@ -108,12 +125,10 @@ class LoanEntry
     errors.add(:postcode, :invalid) unless postcode.full?
   end
 
-  def recalculate_state_aid?
-    loan.repayment_duration_changed?
-  end
-
   def state_aid_calculated
-    errors.add(:state_aid, :recalculate)
+    if loan.repayment_duration_changed? || loan.amount_changed?
+      errors.add(:state_aid, :recalculate)
+    end
   end
 
   def validate_eligibility
@@ -126,5 +141,14 @@ class LoanEntry
     if state_aid > state_aid_threshold
       errors.add(:state_aid, :exceeds_sic_threshold, threshold: state_aid_threshold.format(no_cents: true))
     end
+  end
+
+  def calculate_repayment_duration
+    unless repayment_profile == PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+      self.repayment_duration ||= 0
+      return
+    end
+
+    self.repayment_duration = (amount / fixed_repayment_amount).floor
   end
 end

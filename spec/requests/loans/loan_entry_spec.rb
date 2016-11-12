@@ -3,61 +3,57 @@ require 'rails_helper'
 describe 'loan entry' do
   let(:lender) { FactoryGirl.create(:lender) }
   let(:current_user) { FactoryGirl.create(:lender_user, lender: lender) }
-  let(:lending_limit) { FactoryGirl.create(:lending_limit, phase_id: 5, lender: lender) }
+  let(:lending_limit) { FactoryGirl.create(:lending_limit, :phase_8, lender: lender) }
   let(:loan) { FactoryGirl.create(:loan, lender: lender, loan_category_id: LoanCategory::TypeB.id, lending_limit: lending_limit) }
 
   before { login_as(current_user, scope: :user) }
 
-  context 'Phase 6' do
-    let(:lending_limit) { FactoryGirl.create(:lending_limit, phase_id: 6, lender: lender) }
+  let(:lending_limit) { FactoryGirl.create(:lending_limit, phase_id: 8, lender: lender) }
 
-    it 'can transition the loan to Complete' do
-      visit loan_path(loan)
-      click_link 'Loan Entry'
+  it "can transition the loan to Complete" do
+    visit loan_path(loan)
+    click_link "Loan Entry"
 
-      fill_in_valid_loan_entry_details_phase_6(loan)
-      click_button 'Submit'
+    fill_in_valid_loan_entry_details_phase_8(loan)
+    click_button "Submit"
 
-      loan = Loan.last
+    loan = Loan.last
 
-      expect(current_path).to eq(complete_loan_entry_path(loan))
+    expect(current_path).to eq(complete_loan_entry_path(loan))
 
-      expect(loan.state).to eq(Loan::Completed)
-      expect(loan.declaration_signed).to eql(true)
-      expect(loan.business_name).to eq('Widgets Ltd.')
-      expect(loan.trading_name).to eq('Brilliant Widgets')
-      expect(loan.company_registration).to eq('0123456789')
-      expect(loan.postcode).to eq('N8 4HF')
-      expect(loan.sortcode).to eq('03-12-45')
-      expect(loan.lender_reference).to eq('lenderref1')
-      expect(loan.generic1).to eq('Generic 1')
-      expect(loan.generic2).to eq('Generic 2')
-      expect(loan.generic3).to eq('Generic 3')
-      expect(loan.generic4).to eq('Generic 4')
-      expect(loan.generic5).to eq('Generic 5')
-      expect(loan.interest_rate_type).to eq(InterestRateType.find(1))
-      expect(loan.interest_rate).to eq(2.25)
-      expect(loan.fees).to eq(Money.new(12345))
-      expect(loan.modified_by).to eq(current_user)
-      expect(loan.state_aid).to eq(Money.new(794_98, 'EUR'))
+    expect(loan.state).to eq(Loan::Completed)
+    expect(loan.declaration_signed).to eql(true)
+    expect(loan.business_name).to eq("Widgets Ltd.")
+    expect(loan.trading_name).to eq("Brilliant Widgets")
+    expect(loan.company_registration).to eq("0123456789")
+    expect(loan.postcode).to eq("N8 4HF")
+    expect(loan.sortcode).to eq("03-12-45")
+    expect(loan.lender_reference).to eq("lenderref1")
+    expect(loan.generic1).to eq("Generic 1")
+    expect(loan.generic2).to eq("Generic 2")
+    expect(loan.generic3).to eq("Generic 3")
+    expect(loan.generic4).to eq("Generic 4")
+    expect(loan.generic5).to eq("Generic 5")
+    expect(loan.interest_rate_type).to eq(InterestRateType.find(1))
+    expect(loan.interest_rate).to eq(2.25)
+    expect(loan.fees).to eq(Money.new(12345))
+    expect(loan.modified_by).to eq(current_user)
+    expect(loan.state_aid).to eq(Money.new(794_98, "EUR"))
 
-      should_log_loan_state_change(loan, Loan::Completed, 4, current_user)
-    end
+    should_log_loan_state_change(loan, Loan::Completed, 4, current_user)
   end
 
-  context 'Phase 5' do
-    it 'can transition the loan to Complete' do
-      visit loan_path(loan)
-      click_link 'Loan Entry'
+  it "can transition the loan to Complete" do
+    visit loan_path(loan)
+    click_link "Loan Entry"
 
-      fill_in_valid_loan_entry_details_phase_5(loan)
-      click_button 'Submit'
+    fill_in_valid_loan_entry_details_phase_8(loan)
+    click_button "Submit"
 
-      loan = Loan.last
+    loan = Loan.last
 
-      expect(current_path).to eq(complete_loan_entry_path(loan))
-      expect(loan.state_aid).to eq(Money.new(3_098_74, 'EUR'))
-    end
+    expect(current_path).to eq(complete_loan_entry_path(loan))
+    expect(loan.state_aid).to eq(Money.new(794_98, "EUR"))
   end
 
   it 'does not continue with invalid values' do
@@ -88,7 +84,7 @@ describe 'loan entry' do
     visit loan_path(loan)
     click_link 'Loan Entry'
 
-    fill_in_valid_loan_entry_details_phase_5(loan)
+    fill_in_valid_loan_entry_details_phase_8(loan)
 
     click_button 'Submit'
 
@@ -143,23 +139,14 @@ describe 'loan entry' do
   it "should require recalculation of state aid when the loan repayment duration is changed" do
     visit new_loan_entry_path(loan)
 
-    fill_in_valid_loan_entry_details_phase_5(loan)
-
-    loan.reload
-    expect(loan.state_aid).to eq(Money.new(3_098_74, 'EUR'))
-
-    fill_in "loan_entry_repayment_duration_months", with: loan.repayment_duration.total_months + 12
+    fill_in_valid_loan_entry_details_phase_8(loan)
+    fill_in "loan_entry_repayment_duration_years", with: loan.repayment_duration.years + 1
     click_button 'Submit'
 
     expect(page).to have_content("must be re-calculated when you change the loan term")
 
     calculate_state_aid(loan)
-
-    click_button 'Submit'
-
-    loan.reload
-
-    expect(loan.state_aid).to eq(Money.new(2_680_60, 'EUR'))
+    click_button "Submit"
 
     expect(current_path).to eq(complete_loan_entry_path(loan))
   end
@@ -168,7 +155,7 @@ describe 'loan entry' do
     it "should allow selection of sub-category" do
       visit new_loan_entry_path(loan)
 
-      fill_in_valid_loan_entry_details_phase_5(loan)
+      fill_in_valid_loan_entry_details_phase_8(loan)
 
       # switch to Category E
       select "Type E - Revolving Credit Guarantee", from: "loan_entry_loan_category_id"
@@ -192,7 +179,7 @@ describe 'loan entry' do
     it "should require the selection of a sub-lender" do
       visit new_loan_entry_path(loan)
 
-      fill_in_valid_loan_entry_details_phase_5(loan)
+      fill_in_valid_loan_entry_details_phase_8(loan)
 
       click_button 'Submit'
 

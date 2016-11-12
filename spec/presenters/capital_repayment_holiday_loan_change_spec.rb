@@ -22,10 +22,36 @@ describe CapitalRepaymentHolidayLoanChange do
     end
   end
 
+  describe "#current_repayment_duration_at_next_premium" do
+    it "returns the remaining loan term as a MonthDuration" do
+      loan = FactoryGirl.create(
+        :loan,
+        :guaranteed,
+        :with_premium_schedule,
+        :fully_drawn,
+        repayment_duration: 120,
+      )
+      loan.initial_draw_change.update_column(:date_of_change, 29.months.ago)
+      presenter = FactoryGirl.build(
+        :capital_repayment_holiday_loan_change, loan: loan
+      )
+
+      expect(presenter.current_repayment_duration_at_next_premium).
+        to eq(MonthDuration.new(90))
+    end
+  end
+
   describe '#save' do
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, :fully_drawn, repayment_duration: 60, repayment_frequency_id: 4) }
-    let(:presenter) { FactoryGirl.build(:capital_repayment_holiday_loan_change, created_by: user, loan: loan) }
     let(:user) { FactoryGirl.create(:lender_user) }
+    let(:presenter) {
+      FactoryGirl.build(
+        :capital_repayment_holiday_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        created_by: user,
+        loan: loan
+      )
+    }
 
     context 'success' do
       before do

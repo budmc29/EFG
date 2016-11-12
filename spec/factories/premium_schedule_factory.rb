@@ -6,6 +6,7 @@ FactoryGirl.define do
     repayment_duration 12
     calc_type 'S'
     legacy_premium_calculation true
+    repay_to_zero
 
     factory :rescheduled_premium_schedule do
       calc_type 'R'
@@ -17,6 +18,10 @@ FactoryGirl.define do
       initial_draw_amount { |o| o.loan.amount / 2 }
       second_draw_amount { |o| o.initial_draw_amount / 2 }
       second_draw_months 6
+    end
+
+    trait :repay_to_zero do
+      repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
     end
   end
 end

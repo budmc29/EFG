@@ -4,8 +4,18 @@ class DurationInput < SimpleForm::Inputs::Base
 
     template.content_tag(:div, class: 'input-append') do
       @builder.fields_for(attribute_name, duration) do |duration_fields|
-        duration_fields.text_field(:years, input_html_options) + add_on('years') + ' ' +
-        duration_fields.text_field(:months, input_html_options) + add_on('months')
+        [
+          duration_fields.text_field(
+            :years,
+            input_html_options.merge("data-duration-years" => "")
+          ),
+          add_on("years"),
+          duration_fields.text_field(
+            :months,
+            input_html_options.merge("data-duration-months" => "")
+          ),
+          add_on("months"),
+        ].join(" ").html_safe
       end
     end
   end

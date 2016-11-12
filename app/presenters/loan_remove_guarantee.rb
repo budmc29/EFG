@@ -14,6 +14,8 @@ class LoanRemoveGuarantee
 
   validate :remove_guarantee_on_is_not_before_initial_draw_date, if: :remove_guarantee_on
 
+  validate :remove_guarantee_on_is_not_in_the_future, if: :remove_guarantee_on
+
   private
 
   def remove_guarantee_outstanding_amount_is_not_greater_than_total_drawn_amount
@@ -23,8 +25,14 @@ class LoanRemoveGuarantee
   end
 
   def remove_guarantee_on_is_not_before_initial_draw_date
-    if remove_guarantee_on < loan.initial_draw_change.date_of_change
+    if remove_guarantee_on < loan.initial_draw_date
       errors.add(:remove_guarantee_on, :before_initial_draw_date)
+    end
+  end
+
+  def remove_guarantee_on_is_not_in_the_future
+    if remove_guarantee_on > Date.current
+      errors.add(:remove_guarantee_on, :cannot_be_in_the_future)
     end
   end
 

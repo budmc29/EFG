@@ -13,18 +13,20 @@ class LoanModification < ActiveRecord::Base
   format :amount, with: MoneyFormatter.new
   format :amount_drawn, with: MoneyFormatter.new
   format :date_of_change, with: QuickDateFormatter
+  format :fixed_repayment_amount, with: MoneyFormatter.new
   format :initial_draw_amount, with: MoneyFormatter.new
   format :initial_draw_date, with: QuickDateFormatter
   format :lump_sum_repayment, with: MoneyFormatter.new
   format :maturity_date, with: QuickDateFormatter
   format :modified_date, with: QuickDateFormatter
   format :old_amount, with: MoneyFormatter.new
+  format :old_fixed_repayment_amount, with: MoneyFormatter.new
   format :old_initial_draw_amount, with: MoneyFormatter.new
   format :old_initial_draw_date, with: QuickDateFormatter
   format :old_maturity_date, with: QuickDateFormatter
 
   def change_type
-    ChangeType.find(change_type_id)
+    ChangeType.find_by_id(change_type_id)
   end
 
   def change_type=(change_type)

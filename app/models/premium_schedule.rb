@@ -6,6 +6,13 @@ class PremiumSchedule < ActiveRecord::Base
   RESCHEDULE_TYPE = 'R'.freeze
   NOTIFIED_AID_TYPE = 'N'.freeze
 
+  FIXED_TERM_REPAYMENT_PROFILE = "fixed_term".freeze
+  FIXED_AMOUNT_REPAYMENT_PROFILE = "fixed_amount".freeze
+  REPAYMENT_PROFILES = [
+    FIXED_TERM_REPAYMENT_PROFILE,
+    FIXED_AMOUNT_REPAYMENT_PROFILE
+  ].freeze
+
   MAX_INITIAL_DRAW = Money.new(9_999_999_99)
 
   belongs_to :loan, inverse_of: :premium_schedules
@@ -14,15 +21,16 @@ class PremiumSchedule < ActiveRecord::Base
     :initial_capital_repayment_holiday,
     :second_draw_amount, :second_draw_months, :third_draw_amount,
     :third_draw_months, :fourth_draw_amount, :fourth_draw_months,
-    :loan_id, :premium_cheque_month
-
-  attr_readonly :legacy_premium_calculation
+    :loan_id, :premium_cheque_month, :repayment_profile,
+    :fixed_repayment_amount
 
   validates_presence_of :loan_id, strict: true
   validates_presence_of :repayment_duration
   validates_inclusion_of :calc_type, in: [ SCHEDULE_TYPE, RESCHEDULE_TYPE, NOTIFIED_AID_TYPE ]
   validates_presence_of :initial_draw_year, unless: :reschedule?
   validates_format_of :premium_cheque_month, with: /\A\d{2}\/\d{4}\z/, if: :reschedule?, message: :invalid_format
+
+  validates_with RepaymentProfileValidator
 
   %w(second_draw_months third_draw_months fourth_draw_months).each do |attr|
     validates_inclusion_of attr, in: 0..120, allow_blank: true, message: :invalid
@@ -32,11 +40,25 @@ class PremiumSchedule < ActiveRecord::Base
   validate :initial_draw_amount_is_within_limit
   validate :total_draw_amount_less_than_or_equal_to_loan_amount
   validate :validate_capital_repayment_holiday
+  validate :additional_draws_have_amount_and_month
+  validate :initial_draw_year_is_within_five_years
+
+  before_validation :calculate_repayment_duration
 
   format :initial_draw_amount, with: MoneyFormatter.new
   format :second_draw_amount, with: MoneyFormatter.new
   format :third_draw_amount, with: MoneyFormatter.new
   format :fourth_draw_amount, with: MoneyFormatter.new
+  format :fixed_repayment_amount, with: MoneyFormatter.new
+
+  def self.from_loan(loan)
+    loan.premium_schedules.build.tap do |ps|
+      ps.initial_draw_amount ||= loan.amount.dup
+      ps.repayment_profile ||= loan.repayment_profile
+      ps.fixed_repayment_amount ||= loan.fixed_repayment_amount
+      ps.repayment_duration = loan.repayment_duration.total_months
+    end
+  end
 
   def reschedule?
     calc_type == RESCHEDULE_TYPE
@@ -64,17 +86,20 @@ class PremiumSchedule < ActiveRecord::Base
 
   def premiums
     @premiums ||= loan_quarters.map do |loan_quarter|
-      outstanding_loan_value_at_quarter = drawdowns.inject(Money.new(0)) do |sum, drawdown|
-        sum + OutstandingDrawdownValue.new(
-          drawdown: drawdown,
+      outstanding_loan_value_at_quarter =
+        outstanding_value_class.new(
+          drawdowns: drawdowns,
           quarter: loan_quarter,
           repayment_frequency: repayment_frequency,
           repayment_duration: repayment_duration,
-          repayment_holiday: initial_capital_repayment_holiday
+          repayment_holiday: initial_capital_repayment_holiday,
+          fixed_repayment_amount: fixed_repayment_amount,
         ).amount
-      end
 
-      Money.new((outstanding_loan_value_at_quarter.to_d * 100) * premium_rate_per_quarter)
+      Money.new(
+        (outstanding_loan_value_at_quarter.to_d * 100) *
+        premium_rate_per_quarter
+      )
     end
   end
 
@@ -140,6 +165,18 @@ class PremiumSchedule < ActiveRecord::Base
 
   private
 
+  def fixed_amount_repayment_profile?
+    repayment_profile == FIXED_AMOUNT_REPAYMENT_PROFILE
+  end
+
+  def outstanding_value_class
+    if fixed_repayment_amount
+      FixedRepaymentAmountOutstandingLoanValue
+    else
+      FixedRepaymentDurationOutstandingLoanValue
+    end
+  end
+
     def initial_draw_amount_is_within_limit
       if initial_draw_amount.blank?
         errors.add(:initial_draw_amount, :required)
@@ -174,6 +211,9 @@ class PremiumSchedule < ActiveRecord::Base
       end
     end
 
+    # The legacy system rounded down which excludes the last quarter from the
+    # premium schedule. This is a bug as the last quarter should be in the
+    # schedule, but we are replicating it for now for data consistency.
     def number_of_loan_quarters
       @number_of_loan_quarters ||= begin
         if legacy_premium_calculation
@@ -181,7 +221,11 @@ class PremiumSchedule < ActiveRecord::Base
           quarters = 1 if quarters.zero?
           quarters
         else
-          (repayment_duration.to_f / 3).ceil
+          total_months = repayment_duration.to_f
+          if fixed_amount_repayment_profile?
+            total_months += initial_capital_repayment_holiday.to_f
+          end
+          (total_months / 3).ceil
         end
       end
     end
@@ -201,4 +245,32 @@ class PremiumSchedule < ActiveRecord::Base
         errors.add(:initial_capital_repayment_holiday, :must_be_lt_loan_duration)
       end
     end
+
+    def additional_draws_have_amount_and_month
+      %i(second_draw third_draw fourth_draw).each do |draw_number|
+        amount_attr = "#{draw_number}_amount"
+        month_attr = "#{draw_number}_months"
+        draw_amount = public_send(amount_attr)
+        draw_month = public_send(month_attr)
+
+        if draw_amount.present? && draw_month.blank?
+          errors.add(month_attr, :blank)
+        elsif draw_month.present? && draw_amount.blank?
+          errors.add(amount_attr, :blank)
+        end
+      end
+    end
+
+    def initial_draw_year_is_within_five_years
+      if initial_draw_year &&
+          initial_draw_year > Date.today.advance(years: 5).year
+        errors.add(:initial_draw_year, :too_far_in_the_future)
+      end
+    end
+
+  def calculate_repayment_duration
+    return unless repayment_profile == FIXED_AMOUNT_REPAYMENT_PROFILE
+
+    self.repayment_duration = (total_draw_amount / fixed_repayment_amount).floor
+  end
 end

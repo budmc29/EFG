@@ -33,6 +33,11 @@ describe Recovery do
       expect(recovery).not_to be_valid
     end
 
+    it "cannot have a recovered_on date in the future" do
+      recovery.recovered_on = 1.day.from_now
+      expect(recovery).not_to be_valid
+    end
+
     context 'EFG' do
       let(:loan) { FactoryGirl.build(:loan, :efg, :settled) }
 
@@ -50,6 +55,15 @@ describe Recovery do
           recovery.send("#{attr}=", '')
           expect(recovery).not_to be_valid
         end
+      end
+
+      it "outstanding_subsequent_non_efg_debt is not required existing
+          EFG recoveries" do
+        recovery.outstanding_subsequent_non_efg_debt = nil
+        recovery.valid?
+        recovery.save(validate: false)
+
+        expect(recovery.reload).to be_valid
       end
     end
 
@@ -99,8 +113,8 @@ describe Recovery do
 
         recovery.calculate
 
-        expect(recovery.realisations_attributable).to eq(Money.new(58_333_33))
-        expect(recovery.amount_due_to_dti).to eq(Money.new(6_250_00))
+        expect(recovery.realisations_attributable).to eq(Money.new(58_250_00))
+        expect(recovery.amount_due_to_dti).to eq(Money.new(43_687_50))
         expect(recovery.amount_due_to_sec_state).to eq(Money.new(0))
       end
 

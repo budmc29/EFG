@@ -29,5 +29,9 @@ FactoryGirl.define do
     factory :repayment_frequency_loan_change, class: RepaymentFrequencyLoanChange do
       repayment_frequency_id RepaymentFrequency::Annually.id
     end
+
+    factory :repayment_profile_loan_change, class: RepaymentProfileLoanChange do
+      repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+    end
   end
 end

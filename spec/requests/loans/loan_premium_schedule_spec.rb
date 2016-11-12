@@ -21,7 +21,7 @@ shared_examples_for 'a premium schedule viewer' do
   before do
     login_as(current_user, scope: :user)
     visit loan_path(loan)
-    click_link 'Generate Premium Schedule'
+    click_link "View Premium Schedule"
   end
 
   context 'when viewing a premium schedule' do

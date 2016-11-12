@@ -12,5 +12,10 @@ shared_examples_for 'LoanChangePresenter' do
       presenter.date_of_change = nil
       expect(presenter).not_to be_valid
     end
+
+    it "cannot have a date_of_change in the future" do
+      presenter.date_of_change = 1.day.from_now
+      expect(presenter).not_to be_valid
+    end
   end
 end

@@ -51,7 +51,14 @@ describe RepaymentFrequencyLoanChange do
   describe '#save' do
     let(:user) { FactoryGirl.create(:lender_user) }
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, repayment_duration: 60, repayment_frequency_id: RepaymentFrequency::Annually.id) }
-    let(:presenter) { FactoryGirl.build(:repayment_frequency_loan_change, created_by: user, loan: loan) }
+    let(:presenter) {
+      FactoryGirl.build(
+        :repayment_frequency_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        created_by: user,
+        loan: loan
+      )
+    }
 
     context 'success' do
       before do

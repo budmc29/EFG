@@ -28,6 +28,7 @@ module RequestSpecHelpers
     choose 'loan_eligibility_check_not_insolvent_true'
     fill_in 'loan_eligibility_check_amount', with: '50000.89'
     select lender.lending_limits.first.name, from: 'loan_eligibility_check_lending_limit_id'
+    choose "loan_eligibility_check_repayment_profile_fixed_term"
     fill_in_duration_input 'repayment_duration', 2, 6
     fill_in 'loan_eligibility_check_turnover', with: '1234567.89'
     fill_in 'loan_eligibility_check_trading_date', with: '31/1/2012'
@@ -63,12 +64,6 @@ module RequestSpecHelpers
     fill_in 'loan_entry_fees', with: '123.45'
   end
 
-  def fill_in_valid_loan_entry_details_phase_5(loan)
-    fill_in_valid_loan_entry_details(loan)
-    calculate_state_aid(loan)
-    check 'loan_entry_state_aid_is_valid'
-  end
-
   def fill_in_valid_loan_entry_details_phase_6(loan)
     fill_in_valid_loan_entry_details(loan)
     click_button 'State Aid Calculation'
@@ -83,9 +78,6 @@ module RequestSpecHelpers
 
   def calculate_state_aid(loan)
     click_button 'State Aid Calculation'
-    page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
-    page.fill_in 'premium_schedule_initial_draw_amount', with: (loan.amount - Money.new(1_000_00)).to_s
-    click_button 'Submit'
   end
 
   # Offer Facility
@@ -107,6 +99,10 @@ module RequestSpecHelpers
 
   # Loan Demand to Borrower
   def fill_in_valid_demand_to_borrower_details
+    fill_in(
+      "loan_demand_to_borrower_borrower_demand_outstanding",
+      with: "9000"
+    )
     fill_in 'loan_demand_to_borrower_amount_demanded', with: '10000'
     fill_in 'loan_demand_to_borrower_borrower_demanded_on', with: Date.current.to_s(:screen)
   end

@@ -13,6 +13,7 @@ class Recovery < ActiveRecord::Base
   validates_presence_of :recovered_on
 
   validate :validate_scheme_fields
+  validate :recovered_on_is_not_in_the_future, if: :recovered_on
   validate do
     if loan && recovered_on && recovered_on < loan.settled_on
       errors.add(:recovered_on, 'must not be before the loan was settled')
@@ -117,12 +118,31 @@ class Recovery < ActiveRecord::Base
       LoanStateChange.log(loan, LoanEvent::RecoveryMade, created_by)
     end
 
+    def recovered_on_is_not_in_the_future
+      if recovered_on > Date.current
+        errors.add(:recovered_on, :cannot_be_in_the_future)
+      end
+    end
+
     def validate_scheme_fields
-      required = if loan.efg_loan?
-        [:linked_security_proceeds, :outstanding_prior_non_efg_debt,
-         :outstanding_subsequent_non_efg_debt, :non_linked_security_proceeds]
+      if loan.efg_loan?
+        required = [
+          :linked_security_proceeds,
+          :outstanding_prior_non_efg_debt,
+          :non_linked_security_proceeds,
+        ]
+
+        # only newer recoveries require this field
+        # older, existing recoveries will have no value for this field
+        # so should still be valid
+        if new_record?
+          required << :outstanding_subsequent_non_efg_debt
+        end
       else
-        [:total_liabilities_behind, :total_liabilities_after_demand]
+        required = [
+          :total_liabilities_behind,
+          :total_liabilities_after_demand,
+        ]
       end
 
       required.each do |attribute|

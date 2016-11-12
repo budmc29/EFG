@@ -41,4 +41,5 @@
 
 $(document).ready(function() {
   $('.form-loan-entry').loanEntryForm()
+  $('.repayment-profile').repaymentProfile()
 })

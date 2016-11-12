@@ -13,6 +13,7 @@ gem "therubyracer", "0.12"
 # rails additions
 gem "protected_attributes", "1.0.8"
 gem "simple_form", "3.0.2"
+gem "static_association", "0.1.0"
 gem "useragent", "0.4.16"
 
 # types and conversions
@@ -63,14 +64,19 @@ gem "plek", "0.3.0"
 group :development, :test do
   gem "brakeman", "2.0.0"
   gem "ci_reporter", "1.8.4"
-  gem "parallel_tests", "0.16.10"
+  gem "dotenv-rails", "2.1.1"
+  gem "parallel_tests", "~> 2.7"
   gem "rspec-rails", "~> 3.4"
   gem "simplecov-rcov", "0.2.3"
+  gem "pry-rails"
 end
 
 group :test do
   gem "capybara"
+  gem "capybara-webkit"
+  gem "database_cleaner"
   gem "factory_girl_rails", "4.2.0"
+  gem "formulaic"
   gem "launchy", "2.1.0"
   gem "pdf-reader", "1.1.1"
   gem "rspec-collection_matchers"

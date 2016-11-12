@@ -83,6 +83,21 @@ describe LoanReportCsvExport do
       )
     }
 
+    let!(:realisation_adjustment) do
+      FactoryGirl.create(:realisation_adjustment,
+                         loan: loan,
+                         amount: Money.new(1_000_00),
+                         notes: "Recovery paid to BBB in error")
+    end
+
+    let!(:settlement_adjustment) do
+      FactoryGirl.create(:settlement_adjustment,
+                         loan: loan,
+                         amount: Money.new(5_000_00),
+                         notes: "Something changed.")
+    end
+
+
     let!(:loan) {
       FactoryGirl.create(:loan,
         ded_code: ded_code,
@@ -152,7 +167,11 @@ describe LoanReportCsvExport do
         debtor_book_coverage: 30,
         debtor_book_topup: 5,
         lender_reference: 'lenderref1',
-        sub_lender: 'Sub-lender 1'
+        sub_lender: "Sub-lender 1",
+        status_amendment_type: "Administrative",
+        status_amendment_notes: "Stuff happened.",
+        repayment_profile: PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE,
+        fixed_repayment_amount: Money.new(1_000_00),
       )
     }
 
@@ -243,9 +262,15 @@ describe LoanReportCsvExport do
           :settled_amount,
           :cumulative_pre_claim_limit_realised_amount,
           :cumulative_post_claim_limit_realised_amount,
+          :cumulative_pre_claim_realisation_adjustments,
+          :cumulative_settlement_adjustments,
           :scheme,
           :phase,
           :sub_lender,
+          :status_amendment_type,
+          :status_amendment_notes,
+          :repayment_profile,
+          :fixed_repayment_amount,
         ].map {|h| t(h) }
       )
     end
@@ -332,9 +357,15 @@ describe LoanReportCsvExport do
       expect(row[t(:settled_amount)]).to eq('1000.00')
       expect(row[t(:cumulative_pre_claim_limit_realised_amount)]).to eq('3000.00')
       expect(row[t(:cumulative_post_claim_limit_realised_amount)]).to eq('2000.00')
+      expect(row[t(:cumulative_pre_claim_realisation_adjustments)]).to eq("1000.00")
+      expect(row[t(:cumulative_settlement_adjustments)]).to eq("5000.00")
       expect(row[t(:scheme)]).to eq('EFG')
       expect(row[t(:phase)]).to eq('Phase 5 (FY 2013/14)')
       expect(row[t(:sub_lender)]).to eql('Sub-lender 1')
+      expect(row[t(:status_amendment_type)]).to eql("Administrative")
+      expect(row[t(:status_amendment_notes)]).to eql("Stuff happened.")
+      expect(row[t(:repayment_profile)]).to eql("Fixed amount")
+      expect(row[t(:fixed_repayment_amount)]).to eql("1000.00")
     end
 
     context "without guarantee rate on loan" do
@@ -354,6 +385,16 @@ describe LoanReportCsvExport do
 
       it "exports phase's premium rate" do
         expect(row[t(:premium_rate)]).to eq('2.0')
+      end
+    end
+
+    context "when loan has no repayment profile" do
+      before do
+        loan.update_column(:repayment_profile, nil)
+      end
+
+      it "exports a blank field for repayment profile" do
+        expect(row[t(:repayment_profile)]).to be_blank
       end
     end
   end

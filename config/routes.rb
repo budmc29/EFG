@@ -92,6 +92,8 @@ EFG::Application.routes.draw do
     resources :adjustments, only: [:index]
     resources :state_aid_letters, only: [:new, :create]
     resources :status_amendments, only: [:new, :create]
+    resource :amend_completed, only: [:new, :create],
+             controller: :amend_completed_loans
   end
 
   resources :documents, only: [] do
@@ -142,7 +144,6 @@ EFG::Application.routes.draw do
   end
 
   resources :loan_transfers, only: [:show, :new, :create]
-  resources :legacy_loan_transfers, only: [:show, :new, :create]
 
   resource :loan_report, only: [:new, :create]
 

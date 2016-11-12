@@ -1,20 +1,21 @@
 class OutstandingDrawdownValue
   def initialize(args)
-    @drawdown            = args[:drawdown]
-    @quarter             = args[:quarter]
-    @repayment_frequency = args[:repayment_frequency]
-    @repayment_duration  = args[:repayment_duration]
-    @repayment_holiday   = args[:repayment_holiday]
+    @drawdown               = args[:drawdown]
+    @quarter                = args[:quarter]
+    @repayment_frequency    = args[:repayment_frequency]
+    @repayment_duration     = args[:repayment_duration]
+    @repayment_holiday      = args[:repayment_holiday]
+    @fixed_repayment_amount = args[:fixed_repayment_amount]
   end
 
   def amount
     return Money.new(0) if drawdown.month > quarter.last_month
-    drawdown.amount - amount_of_drawdown_repaid
+    [Money.new(0), drawdown.amount - amount_of_drawdown_repaid].max
   end
 
   private
 
-  attr_reader :drawdown, :quarter, :repayment_frequency
+  attr_reader :drawdown, :quarter, :repayment_frequency, :fixed_repayment_amount
 
   def amount_of_drawdown_repaid
     if repayment_holiday_active?

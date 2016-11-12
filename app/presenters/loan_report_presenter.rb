@@ -98,7 +98,7 @@ class LoanReportPresenter
   end
 
   def phases=(phase_ids)
-    @phases = phase_ids.map {|id| Phase.find(id.to_i) }.compact
+    @phases = phase_ids.map {|id| Phase.find_by_id(id.to_i) }.compact
   end
 
   def states=(states)

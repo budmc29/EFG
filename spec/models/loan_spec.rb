@@ -206,17 +206,22 @@ describe Loan do
 
   describe "#created_from_transfer?" do
     it "returns true when a loan has been transferred from another loan" do
-      loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-02')
+      loan = FactoryGirl.build(:loan, :sflg, reference: "Q9HTDF7-02")
       expect(loan).to be_created_from_transfer
     end
 
     it "returns false when loan with next incremented loan reference does not exist" do
-      loan = FactoryGirl.build(:loan, reference: 'Q9HTDF7-01')
+      loan = FactoryGirl.build(:loan, :sflg, reference: "Q9HTDF7-01")
       expect(loan).not_to be_created_from_transfer
     end
 
     it "returns false when loan has no reference" do
       expect(Loan.new).to_not be_created_from_transfer
+    end
+
+    it "returns false when loan is not in SFLG scheme" do
+      loan = FactoryGirl.build(:loan, :efg, reference: "Q9HTDF7-02")
+      expect(loan).not_to be_created_from_transfer
     end
   end
 
@@ -642,7 +647,7 @@ describe Loan do
 
     context 'SFLG' do
       let(:loan) { FactoryGirl.build(:loan, :sflg) }
-      it { should eql(Phase5Rules) }
+      it { should eql(Phase8Rules) }
     end
 
     context 'EFG' do
@@ -659,6 +664,20 @@ describe Loan do
         let(:phase_id) { 6 }
         it { should eql(Phase6Rules) }
       end
+    end
+
+    it "uses current date's Phase rules when loan is new" do
+      loan = Loan.new
+      phase = Phase.find(7)
+      allow(Phase).to receive(:for_date).and_return(phase)
+
+      expect(loan.rules).to eql(phase.rules)
+    end
+
+    it "falls back to Phase 1 rules when existing loan
+        has no lending limit" do
+      loan = FactoryGirl.build_stubbed(:loan, lending_limit: nil)
+      expect(loan.rules).to eql(Phase.find(1).rules)
     end
   end
 
@@ -780,7 +799,20 @@ describe Loan do
       )
 
       expect(loan).not_to have_status_amendment
+    end
+  end
 
+  describe "#initial_draw_date" do
+    it "returns nil when loan is not yet guaranteed" do
+      loan = build(:loan, :completed)
+      expect(loan.initial_draw_date).to be_nil
+    end
+
+    it "returns the initial draw date when loan is guaranteed" do
+      loan = create(:loan, :guaranteed)
+      loan.initial_draw_change.update_column(:date_of_change, 1.day.ago)
+
+      expect(loan.initial_draw_date).to eq(1.day.ago.to_date)
     end
   end
 end

@@ -5,6 +5,7 @@ class IncorrectLoanStateError < StandardError; end
 
 class Loan < ActiveRecord::Base
   include FormatterConcern
+  extend StaticAssociation::AssociationHelpers
 
   Rejected = 'rejected'.freeze
   Eligible = 'eligible'.freeze
@@ -39,6 +40,15 @@ class Loan < ActiveRecord::Base
   # All new loans have SFLG source
   SFLG_SOURCE = 'S'
   LEGACY_SFLG_SOURCE = 'L'
+
+  belongs_to_static :cancelled_reason, class_name: "CancelReason"
+  belongs_to_static :interest_rate_type
+  belongs_to_static :legal_form
+  belongs_to_static :loan_category
+  belongs_to_static :loan_category
+  belongs_to_static :loan_sub_category
+  belongs_to_static :reason, class_name: "LoanReason"
+  belongs_to_static :repayment_frequency
 
   belongs_to :lender
   belongs_to :lending_limit
@@ -129,6 +139,7 @@ class Loan < ActiveRecord::Base
   format :recovery_on, with: QuickDateFormatter
   format :settled_amount, with: MoneyFormatter.new
   format :postcode, with: PostcodeFormatter
+  format :fixed_repayment_amount, with: MoneyFormatter.new
 
   before_create :set_reference
 
@@ -161,10 +172,6 @@ class Loan < ActiveRecord::Base
 
   def fully_drawn?
     cumulative_drawn_amount >= amount
-  end
-
-  def cancelled_reason
-    CancelReason.find(cancelled_reason_id)
   end
 
   def cumulative_adjusted_realised_amount
@@ -215,6 +222,10 @@ class Loan < ActiveRecord::Base
     amount > cumulative_drawn_amount
   end
 
+  def initial_draw_date
+    initial_draw_change && initial_draw_change.date_of_change
+  end
+
   def last_realisation_amount
     loan_realisations.present? ? loan_realisations.last.realised_amount : Money.new(0)
   end
@@ -237,30 +248,6 @@ class Loan < ActiveRecord::Base
 
   def has_state?(*states)
     states.include?(state)
-  end
-
-  def loan_category
-    LoanCategory.find(loan_category_id)
-  end
-
-  def loan_sub_category
-    LoanSubCategory.find(loan_sub_category_id)
-  end
-
-  def reason
-    LoanReason.find(reason_id)
-  end
-
-  def interest_rate_type
-    InterestRateType.find(interest_rate_type_id)
-  end
-
-  def legal_form
-    LegalForm.find(legal_form_id)
-  end
-
-  def repayment_frequency
-    RepaymentFrequency.find(repayment_frequency_id)
   end
 
   def loan_security_types
@@ -286,6 +273,7 @@ class Loan < ActiveRecord::Base
 
   def created_from_transfer?
     return false if reference.blank?
+    return false if efg_loan? # only SFLG loans can be transferred
     reference[-2,2].to_i > 1
   end
 
@@ -337,11 +325,9 @@ class Loan < ActiveRecord::Base
   end
 
   def rules
-    if lending_limit.try(:phase)
-      lending_limit.phase.rules
-    else
-      Phase1Rules
-    end
+    return lending_limit.phase.rules if lending_limit.try(:phase)
+    return Phase.for_date(Date.today).rules if new_record?
+    Phase.find(1).rules
   end
 
   def settled_amount

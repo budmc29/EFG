@@ -24,12 +24,34 @@ shared_examples_for 'a draw amount validator' do
       before do
         loan.amount = Money.new(7_000_00)
         subject.fourth_draw_amount = nil
+        subject.fourth_draw_months = nil
       end
 
       it 'is valid' do
         expect(subject).to be_valid
       end
     end
+
+    context "but a draw month is missing" do
+      before do
+        subject.second_draw_months = nil
+      end
+
+      it "is not valid" do
+        expect(subject).not_to be_valid
+      end
+    end
+
+    context "but a draw amount is missing" do
+      before do
+        subject.second_draw_amount = nil
+      end
+
+      it "is not valid" do
+        expect(subject).not_to be_valid
+      end
+    end
+
   end
 
   context 'when the total of all draw amounts is less than the loan amount' do
@@ -41,8 +63,11 @@ shared_examples_for 'a draw amount validator' do
       end
     end
 
-    context 'and there are nil draw amounts' do
-      before { subject.fourth_draw_amount = nil }
+    context 'and there are nil draws' do
+      before do
+        subject.fourth_draw_amount = nil
+        subject.fourth_draw_months = nil
+      end
 
       it 'is valid' do
         expect(subject).to be_valid
@@ -60,7 +85,10 @@ shared_examples_for 'a draw amount validator' do
     end
 
     context 'and there are nil draw amounts' do
-      before { subject.fourth_draw_amount = nil }
+      before do
+        subject.fourth_draw_amount = nil
+        subject.fourth_draw_months = nil
+      end
 
       it 'is not valid' do
         expect(subject).not_to be_valid
@@ -98,6 +126,11 @@ describe PremiumSchedule do
       end
     end
 
+    it "must have an initial draw year not too far in the future" do
+      premium_schedule.initial_draw_year = Date.today.advance(years: 5)
+      expect(premium_schedule).not_to be_valid
+    end
+
     it 'requires initial draw amount to be more than zero' do
       premium_schedule.initial_draw_amount = 0
       expect(premium_schedule).not_to be_valid
@@ -130,33 +163,64 @@ describe PremiumSchedule do
       expect(premium_schedule).to be_valid
     end
 
+    it "validates repayment profile" do
+      expect(premium_schedule).to validate_with(RepaymentProfileValidator)
+    end
+
     %w(
-      second_draw_months
-      third_draw_months
-      fourth_draw_months
+      second_draw
+      third_draw
+      fourth_draw
     ).each do |attr|
-      it "does not require #{attr} if not set" do
-        premium_schedule.send("#{attr}=", nil)
+      it "requires #{attr} months to be 0 or greater if set" do
+        premium_schedule.send("#{attr}_amount=", Money.new(0))
+        premium_schedule.send("#{attr}_months=", -1)
+        expect(premium_schedule).not_to be_valid
+        premium_schedule.send("#{attr}_months=", 0)
         expect(premium_schedule).to be_valid
       end
 
-      it "requires #{attr} to be 0 or greater if set" do
-        premium_schedule.send("#{attr}=", -1)
+      it "requires #{attr} months to be 120 or less if set" do
+        premium_schedule.send("#{attr}_amount=", Money.new(0))
+        premium_schedule.send("#{attr}_months=", 121)
         expect(premium_schedule).not_to be_valid
-        premium_schedule.send("#{attr}=", 0)
-        expect(premium_schedule).to be_valid
-      end
-
-      it "requires #{attr} to be 120 or less if set" do
-        premium_schedule.send("#{attr}=", 121)
-        expect(premium_schedule).not_to be_valid
-        premium_schedule.send("#{attr}=", 120)
+        premium_schedule.send("#{attr}_months=", 120)
         expect(premium_schedule).to be_valid
       end
     end
 
     it_should_behave_like 'a draw amount validator' do
       subject { premium_schedule }
+    end
+
+    describe "#repayment_duration" do
+      it "is auto-calculated when repayment profile is fixed amount" do
+        premium_schedule.
+          repayment_profile = PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE
+        premium_schedule.initial_draw_amount = Money.new(10_000_00)
+        premium_schedule.second_draw_amount = Money.new(2_000_00)
+        premium_schedule.second_draw_months = 3
+        premium_schedule.third_draw_amount = Money.new(3_000_00)
+        premium_schedule.third_draw_months = 6
+        premium_schedule.fourth_draw_amount = Money.new(4_500_00)
+        premium_schedule.fourth_draw_months = 9
+        premium_schedule.fixed_repayment_amount = Money.new(1_000_00)
+
+        premium_schedule.valid?
+
+        expect(premium_schedule.repayment_duration).to eq(19)
+      end
+
+      it "does not change repayment duration when repayment profile is
+          fixed term" do
+        premium_schedule.
+          repayment_profile = PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
+        premium_schedule.repayment_duration = 10
+
+        premium_schedule.valid?
+
+        expect(premium_schedule.repayment_duration).to eq(10)
+      end
     end
 
     context 'when rescheduling' do

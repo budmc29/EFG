@@ -17,6 +17,8 @@ class LoanOffer
 
   validate :facility_letter_date_within_lending_limit_dates, if: :not_legacy_or_transferred_loan?
 
+  validate :facility_letter_date_is_not_in_the_future, if: :not_legacy_or_transferred_loan?
+
   validate do
     errors.add(:facility_letter_sent, :accepted) unless self.facility_letter_sent
   end
@@ -35,6 +37,12 @@ class LoanOffer
     return if facility_letter_date.blank?
     unless facility_letter_date.between?(lending_limit.starts_on, lending_limit.ends_on)
       errors.add(:facility_letter_date, :outside_lending_limit_dates)
+    end
+  end
+
+  def facility_letter_date_is_not_in_the_future
+    if facility_letter_date && facility_letter_date > Date.today
+      errors.add(:facility_letter_date, :cannot_be_in_the_future)
     end
   end
 

@@ -7,14 +7,14 @@ class LoanReportCsvRow
   def to_a
     [
       row['reference'],
-      LegalForm.find(row['legal_form_id']).try(:name),
+      LegalForm.find_by_id(row['legal_form_id']).try(:name),
       row['postcode'],
       Money.new(row['turnover'] || 0).to_s,
       row['trading_date'].try(:strftime, '%d-%m-%Y'),
       row['sic_code'],
       row['sic_desc'],
       row['sic_parent_desc'],
-      LoanReason.find(row['reason_id']).try(:name),
+      LoanReason.find_by_id(row['reason_id']).try(:name),
       Money.new(row['amount'] || 0).to_s,
       row.guarantee_rate.to_s,
       row.premium_rate.to_s,
@@ -22,14 +22,14 @@ class LoanReportCsvRow
       row['lender_organisation_reference_code'],
       LoanStateFormatter.humanize(row['state']),
       row['repayment_duration'],
-      RepaymentFrequency.find(row['repayment_frequency_id']).try(:name),
+      RepaymentFrequency.find_by_id(row['repayment_frequency_id']).try(:name),
       row['maturity_date'].try(:strftime, '%d-%m-%Y'),
       row['generic1'],
       row['generic2'],
       row['generic3'],
       row['generic4'],
       row['generic5'],
-      CancelReason.find(row['cancelled_reason_id']).try(:name),
+      CancelReason.find_by_id(row['cancelled_reason_id']).try(:name),
       row['cancelled_comment'],
       row['cancelled_on'].try(:strftime, '%d-%m-%Y'),
       row['facility_letter_date'].try(:strftime, '%d-%m-%Y'),
@@ -65,9 +65,9 @@ class LoanReportCsvRow
       Money.new(row['state_aid'] || 0).to_s, # if SIC is notified aid output 'not applicable'
       row['settled_on'].try(:strftime, '%d-%m-%Y'),
       row['invoice_reference'],
-      LoanCategory.find(row['loan_category_id']).try(:name),
-      LoanSubCategory.find(row['loan_sub_category_id']).try(:name),
-      InterestRateType.find(row['interest_rate_type_id']).try(:name),
+      LoanCategory.find_by_id(row['loan_category_id']).try(:name),
+      LoanSubCategory.find_by_id(row['loan_sub_category_id']).try(:name),
+      InterestRateType.find_by_id(row['interest_rate_type_id']).try(:name),
       row['interest_rate'],
       Money.new(row['fees'] || 0).to_s,
       boolean_as_text(row['private_residence_charge_required']),
@@ -87,9 +87,15 @@ class LoanReportCsvRow
       Money.new(row['settled_amount'] || 0).to_s,
       Money.new(row['cumulative_pre_claim_limit_realised_amount'] || 0).to_s,
       Money.new(row['cumulative_post_claim_limit_realised_amount'] || 0).to_s,
+      Money.new(row["cumulative_pre_claim_realisation_adjustments"] || 0).to_s,
+      Money.new(row["cumulative_settlement_adjustments"] || 0).to_s,
       scheme_name(row['loan_scheme'], row['loan_source']),
       phase_name(row['lending_limit_phase_id']),
       row['sub_lender'],
+      row["status_amendment_type"],
+      row["status_amendment_notes"],
+      row["repayment_profile"].try(:humanize),
+      row["fixed_repayment_amount"] ? Money.new(row["fixed_repayment_amount"]).to_s : nil,
     ]
   end
 
@@ -106,6 +112,6 @@ class LoanReportCsvRow
   end
 
   def phase_name(phase_id)
-    Phase.find(phase_id).try(:name)
+    Phase.find_by_id(phase_id).try(:name)
   end
 end

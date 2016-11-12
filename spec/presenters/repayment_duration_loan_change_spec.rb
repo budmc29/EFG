@@ -55,7 +55,13 @@ describe RepaymentDurationLoanChange do
 
       context 'calculated #repayment_duration_at_next_premium' do
         let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, repayment_duration: 24) }
-        let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, loan: loan) }
+        let(:presenter) {
+          FactoryGirl.build(
+            :repayment_duration_loan_change,
+            date_of_change: Date.new(2010, 4, 1),
+            loan: loan
+          )
+        }
 
         around do |example|
           loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
@@ -78,7 +84,13 @@ describe RepaymentDurationLoanChange do
 
     context 'phase < 6' do
       context 'calculated #repayment_duration' do
-        let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, loan: loan) }
+        let(:presenter) {
+          FactoryGirl.build(
+            :repayment_duration_loan_change,
+            date_of_change: Date.new(2010, 2, 1),
+            loan: loan
+          )
+        }
 
         around do |example|
           loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
@@ -152,7 +164,14 @@ describe RepaymentDurationLoanChange do
       let(:lending_limit) { FactoryGirl.create(:lending_limit, :phase_6) }
       let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, amount: amount, repayment_duration: repayment_duration, lending_limit: lending_limit) }
 
-      subject { FactoryGirl.build(:repayment_duration_loan_change, loan: loan, added_months: added_months) }
+      subject {
+        FactoryGirl.build(
+          :repayment_duration_loan_change,
+          date_of_change: Date.new(2010, 4, 1),
+          loan: loan,
+          added_months: added_months
+        )
+      }
 
       around do |example|
         loan.initial_draw_change.update_column(:date_of_change, Date.new(2010, 1, 1))
@@ -203,7 +222,15 @@ describe RepaymentDurationLoanChange do
   describe '#save' do
     let(:user) { FactoryGirl.create(:lender_user) }
     let(:loan) { FactoryGirl.create(:loan, :guaranteed, :with_premium_schedule, maturity_date: Date.new(2015, 3, 2), repayment_duration: 60) }
-    let(:presenter) { FactoryGirl.build(:repayment_duration_loan_change, created_by: user, loan: loan) }
+
+    let(:presenter) {
+      FactoryGirl.build(
+        :repayment_duration_loan_change,
+        date_of_change: Date.new(2013, 3, 1),
+        created_by: user,
+        loan: loan
+      )
+    }
 
     context 'success' do
       around do |example|

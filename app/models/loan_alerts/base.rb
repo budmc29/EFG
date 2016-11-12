@@ -85,7 +85,7 @@ class LoanAlerts::Base
       @loans = opts.fetch(:loans)
       @priority = opts.fetch(:priority)
       @method_name = opts.fetch(:method_name)
-      @start_date = opts.fetch(:start_date)
+      @start_date = opts.fetch(:start_date).last_weekday
       @end_date = opts.fetch(:end_date)
     end
 

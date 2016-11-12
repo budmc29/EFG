@@ -27,6 +27,11 @@ describe LoanOffer do
       expect(loan_offer).not_to be_valid
     end
 
+    it "cannot have a facility letter date in the future" do
+      loan_offer.facility_letter_date = 1.day.from_now
+      expect(loan_offer).not_to be_valid
+    end
+
     it "should be invalid if loan's lending limit is inactive" do
       lending_limit.active = false
       expect(loan_offer).not_to be_valid
@@ -41,9 +46,13 @@ describe LoanOffer do
       expect(loan_offer).to be_valid
     end
 
-    it "should be invalid if facility letter date is after loan's lending limit end dates" do
+    it "should be invalid if facility letter date is after loan's
+        lending limit end dates" do
+      lending_limit.ends_on = 1.week.ago
+
       loan_offer.facility_letter_date = lending_limit.ends_on + 1.day
       expect(loan_offer).not_to be_valid
+
       loan_offer.facility_letter_date = lending_limit.ends_on
       expect(loan_offer).to be_valid
     end
@@ -63,6 +72,8 @@ describe LoanOffer do
     end
 
     it "should be valid when a transferred loan without a lending limit" do
+      loan.loan_source = Loan::SFLG_SOURCE
+      loan.loan_scheme = Loan::SFLG_SCHEME
       loan.reference = 'ABCDEFG+02'
       loan.lending_limit = nil
 

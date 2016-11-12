@@ -17,20 +17,13 @@ describe 'Loan lifecycle' do
       lender.lending_limits.first.update_attribute(:phase_id, phase)
     end
 
-    context "phase 5" do
-      let(:phase) { 5 }
-
-      it "can progress through to realised" do
-        phase_5_loan_lifecycle_steps
-      end
-    end
-
     context 'phase 6' do
       let(:phase) { 6 }
 
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -41,6 +34,7 @@ describe 'Loan lifecycle' do
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -51,6 +45,7 @@ describe 'Loan lifecycle' do
       it "can progress through to realised" do
         loan = loan_lifecycle_steps_up_to_complete
         generate_premium_schedule(loan)
+        open_loan_summary(loan)
         loan_lifecycle_steps_from_offered(loan)
       end
     end
@@ -152,7 +147,7 @@ describe 'Loan lifecycle' do
 
     expect(current_url).to eq(loan_url(loan))
 
-    click_link 'Generate Premium Schedule'
+    click_link "View Premium Schedule"
     expect(page).to have_content('£9,876.54')
     click_link "Loan #{loan.reference}"
   end
@@ -239,11 +234,6 @@ describe 'Loan lifecycle' do
     click_button 'Submit'
   end
 
-  def phase_5_loan_lifecycle_steps
-    loan = loan_lifecycle_steps_up_to_complete
-    loan_lifecycle_steps_from_offered(loan)
-  end
-
   def loan_lifecycle_steps_up_to_complete
     visit root_path
     login_as_lender_user
@@ -273,10 +263,14 @@ describe 'Loan lifecycle' do
 
   def generate_premium_schedule(loan)
     click_link "Generate Premium Schedule"
-    page.fill_in 'premium_schedule_initial_draw_year', with: Date.current.year
-    page.fill_in 'premium_schedule_initial_draw_amount',
-      with: (loan.amount - Money.new(1_000_00)).to_s
-    click_button 'Submit'
+    fill_in "premium_schedule_initial_draw_year", with: Date.current.year
+    fill_in "premium_schedule_initial_draw_amount",
+            with: (loan.amount - Money.new(1_000_00)).to_s
+    click_button "Submit"
+  end
+
+  def open_loan_summary(loan)
+    click_link "Loan #{loan.reference}"
   end
 
   def loan_lifecycle_steps_from_offered(loan)

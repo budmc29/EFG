@@ -25,6 +25,10 @@ en:
               inclusion: "a sub-lender must be chosen"
         loan_change:
           attributes:
+            current_repayment_duration_at_next_premium:
+              exceeds_threshold: "New loan term exceeds the maximum allowed %{max_months} months. %{months_so_far} months of the loan term have already passed, leaving a maximum of %{max_remaining_months} months remaining."
+            date_of_change:
+              cannot_be_in_the_future: "cannot be in the future"
             added_months:
               required: "can't be blank"
               must_not_be_zero: "cannot be zero"
@@ -44,6 +48,10 @@ en:
               greater_than_max_repayment_duration: Maturity date must not be more than than ten years (or 2 years for Type E and 3 years for Type F loans) after the date of initial draw of funds
             repayment_frequency_id:
               must_be_changed: Repayment Frequency has not changed
+            repayment_profile:
+              must_change: "must be changed from existing repayment profile"
+            initial_draw_amount:
+              exceeds_amount_remaining: "is more than the amount remaining on the loan"
             second_draw_amount:
               no_skipping: "must not be skipped"
             second_draw_months:
@@ -59,6 +67,8 @@ en:
             borrower_demanded_on:
               must_be_after_loan_initial_draw_date: 'Demand date cannot be before initial draw date'
               cannot_be_in_the_future: 'cannot be in the future'
+            borrower_demand_outstanding:
+              too_high: "should be less than or equal to the amount for which the demand was made on the borrower, as recorded on the demand letter"
         loan_eligibility_check:
           attributes:
             sic_code:
@@ -75,7 +85,7 @@ en:
               accepted: A customer declaration must have been received before a loan can be entered.
             state_aid:
               blank: must be calculated
-              recalculate: must be re-calculated when you change the loan term
+              recalculate: must be re-calculated when you change the loan term or amount
               exceeds_sic_threshold: 'calculated state aid exceeds the allowed amount of %{threshold}'
             loan_security_types:
               present: choose at least one security
@@ -97,6 +107,7 @@ en:
               lending_limit_expired: The lending limit expired more than 6 months ago
             facility_letter_date:
               outside_lending_limit_dates: The facility letter date is not within the lending limit start and end dates
+              cannot_be_in_the_future: The facility letter date cannot be in the future.
             facility_letter_sent:
               accepted: The Facility letter and supporting documentation must have been sent to the Applicant.
         loan_guarantee:
@@ -116,6 +127,7 @@ en:
           attributes:
             dti_demanded_on:
               before_borrower_demand_date: Date that demand is made to the government cannot be before the date of borrower demand
+              cannot_be_in_the_future: "cannot be in the future"
             dti_demand_outstanding:
               greater_than_total_drawn_amount: Outstanding balance must be less than or equal to the current total amount drawn
         loan_remove_guarantee:
@@ -124,6 +136,7 @@ en:
               greater_than_total_drawn_amount: Outstanding balance must be less than or equal to the current total amount drawn
             remove_guarantee_on:
               before_initial_draw_date: Date of removal of guarantee must not be before the date of initial draw of funds
+              cannot_be_in_the_future: "cannot be in the future"
         loan_repay:
           attributes:
             repaid_on:
@@ -133,11 +146,13 @@ en:
           attributes:
             cancelled_on:
               before_loan_creation_date: Cancel date cannot be before the loan was created
+              cannot_be_in_the_future: "cannot be in the future"
         loan_no_claim:
           attributes:
             no_claim_on:
               must_be_gte_last_demand_to_borrower: 'Date of decision that no claim will be made cannot be before the most recent date of borrower demand'
-        loan_transfer/sflg: &loan_transfer
+              cannot_be_in_the_future: "cannot be in the future"
+        loan_transfer:
           attributes:
             base:
               cannot_be_transferred: 'A suitable loan matching these criteria could not be found. Please note that all details supplied about the original loan must be correct, and it must be an SFLG scheme loan in one of the following states: "Guaranteed", "Lender demand" or "Repaid".'
@@ -146,8 +161,6 @@ en:
               cannot_be_greater: cannot exceed the original loan amount
             declaration_signed:
               accepted: A customer declaration must have been received before a loan can be transferred
-        loan_transfer/legacy_sflg:
-          <<: *loan_transfer
         transferred_loan_entry:
           attributes:
             state_aid:
@@ -224,6 +237,8 @@ en:
               required: 'must not be blank'
               must_be_positive: 'must be more than £0.00'
               invalid: 'must be less than £9,999,999.99'
+            initial_draw_year:
+              too_far_in_the_future: "is too far in the future"
             initial_capital_repayment_holiday:
               must_be_lt_loan_duration: "must be less than the loan's term"
             second_draw_months:
@@ -239,6 +254,9 @@ en:
             fourth_draw_amount:
               <<: *draw_amount
         recovery:
+          attributes:
+            recovered_on:
+              cannot_be_in_the_future: "cannot be in the future"
           recovery_too_high: Amount to be recovered added to Value of proceeds of any previous recoveries paid to the government is greater than Value of settlement previously made
 
   loan_alerts:

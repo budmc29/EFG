@@ -24,7 +24,7 @@ class RepaymentDurationLoanChange < LoanChangePresenter
     end
 
     def maturity_date
-      initial_draw_date = loan.initial_draw_change.date_of_change
+      initial_draw_date = loan.initial_draw_date
       initial_draw_date.advance(months: repayment_duration.total_months)
     end
 

@@ -58,7 +58,7 @@ describe RecoveriesReportCsvExport do
   subject(:export) { RecoveriesReportCsvExport.new(report.recoveries) }
 
   its(:generate) { should == %Q[Lender Name,Loan Reference,Loan Scheme,Loan Phase,Amount,Recovered On,Realised?
-Lender 1,zyxwvu9876,EFG,5,345.89,2015-04-08,realised
+Lender 1,zyxwvu9876,EFG,8,345.89,2015-04-08,realised
 Lender 2,abcde1234,New,,123.45,2015-04-07,not realised
 ] }
 

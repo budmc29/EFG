@@ -7,7 +7,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -26,7 +27,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -37,7 +39,7 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.amount_due_to_dti).to eq(Money.new(0))
+      expect(calculator.amount_due_to_dti).to eq(Money.new(37_500_00))
     end
   end
 
@@ -73,7 +75,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -84,7 +87,7 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.realisations_attributable).to eq(Money.new(58_333_33))
+      expect(calculator.realisations_attributable).to eq(Money.new(58_250_00))
     end
 
     it "reduces the amount due to DTI relative to non-EFG debt" do
@@ -92,7 +95,8 @@ describe EfgRecoveryCalculator do
         :loan, :settled,
         amount: Money.new(100_000_00),
         dti_demand_outstanding: Money.new(100_000_00),
-        dti_amount_claimed: Money.new(0))
+        dti_amount_claimed: Money.new(0)
+      )
 
       recovery = setup_recovery(
         loan: loan,
@@ -103,7 +107,30 @@ describe EfgRecoveryCalculator do
       )
       calculator = described_class.new(recovery)
 
-      expect(calculator.amount_due_to_dti).to eq(Money.new(6_250_00))
+      expect(calculator.amount_due_to_dti).to eq(Money.new(43_687_50))
+    end
+  end
+
+  context "with remaining non-linked securities" do
+    it "calculates the correct amount due to DTI" do
+      loan = FactoryGirl.build(
+        :loan, :settled,
+        amount: Money.new(70_000_00),
+        dti_demand_outstanding: Money.new(57_166_74),
+        dti_amount_claimed: Money.new(42_875_05),
+      )
+
+      recovery = setup_recovery(
+        loan: loan,
+        outstanding_prior_non_efg_debt: Money.new(50_000_00),
+        outstanding_subsequent_non_efg_debt: Money.new(30_000_00),
+        non_linked_security_proceeds: Money.new(70_000_00),
+        linked_security_proceeds: Money.new(20_000_00),
+      )
+
+      calculator = described_class.new(recovery)
+
+      expect(calculator.amount_due_to_dti).to eq(Money.new(23_250_00))
     end
   end
 
@@ -111,7 +138,8 @@ describe EfgRecoveryCalculator do
     loan = opts[:loan]
     outstanding_prior_non_efg_debt = opts.fetch(:outstanding_prior_non_efg_debt)
     outstanding_subsequent_non_efg_debt = opts.fetch(
-      :outstanding_subsequent_non_efg_debt)
+      :outstanding_subsequent_non_efg_debt
+    )
     non_linked_security_proceeds = opts.fetch(:non_linked_security_proceeds)
     linked_security_proceeds = opts.fetch(:linked_security_proceeds)
 
@@ -119,7 +147,8 @@ describe EfgRecoveryCalculator do
       :loan, :settled,
       amount: Money.new(50_000_00),
       dti_demand_outstanding: Money.new(25_000_00),
-      dti_amount_claimed: Money.new(18_750_00))
+      dti_amount_claimed: Money.new(18_750_00)
+    )
 
     FactoryGirl.build(
       :recovery,
@@ -127,6 +156,7 @@ describe EfgRecoveryCalculator do
       outstanding_prior_non_efg_debt: outstanding_prior_non_efg_debt,
       outstanding_subsequent_non_efg_debt: outstanding_subsequent_non_efg_debt,
       non_linked_security_proceeds: non_linked_security_proceeds,
-      linked_security_proceeds: linked_security_proceeds)
+      linked_security_proceeds: linked_security_proceeds
+    )
   end
 end

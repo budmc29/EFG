@@ -5,7 +5,7 @@ FactoryGirl.define do
     date_of_change '1/2/12'
     change_type ChangeType::RecordAgreedDraw
     modified_date '3/4/12'
-    amount_drawn Money.new(1_000_00)
+    amount_drawn Money.new(20_000_00)
 
     trait :capital_repayment_holiday do
       change_type ChangeType::CapitalRepaymentHoliday
@@ -41,6 +41,5 @@ FactoryGirl.define do
         FactoryGirl.attributes_for(:rescheduled_premium_schedule, loan: loan_change.loan)
       }
     end
-
   end
 end

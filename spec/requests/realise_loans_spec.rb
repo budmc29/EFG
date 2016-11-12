@@ -34,7 +34,12 @@ describe 'Realise loans' do
     recovery2 = FactoryGirl.create(:recovery, loan: loan2, recovered_on: Date.new(2011, 2, 20))
     recovery3 = FactoryGirl.create(:recovery, loan: loan3, recovered_on: Date.new(2012, 5, 5))
     recovery5 = FactoryGirl.create(:recovery, loan: loan5, recovered_on: Date.new(2012, 5, 5))
-    recovery6 = FactoryGirl.create(:recovery, loan: loan6, recovered_on: Date.new(2011, 2, 20))
+
+    # older EFG recovery before
+    # outstanding_subsequent_non_efg_debt was introduced
+    recovery6 = FactoryGirl.build(:recovery, loan: loan6, recovered_on: Date.new(2011, 2, 20), outstanding_subsequent_non_efg_debt: nil, seq: 0)
+    recovery6.valid?
+    recovery6.save(validate: false)
 
     select_loans
 
@@ -106,7 +111,7 @@ describe 'Realise loans' do
   end
 
   it 'should show error text when there are no loans to recover' do
-    loan = FactoryGirl.create(:loan, :recovered, id: 1, recovery_on: Date.new(2011, 2, 20))
+    loan = FactoryGirl.create(:loan, :recovered, recovery_on: Date.new(2011, 2, 20))
 
     navigate_to_form # go back to form so new loan record lender is in form
     select loan.lender.name, from: 'realisation_statement_received_lender_id'

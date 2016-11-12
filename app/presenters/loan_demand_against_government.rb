@@ -21,6 +21,8 @@ class LoanDemandAgainstGovernment
 
   validate :dti_demanded_on_is_not_before_borrower_demanded_on, if: :dti_demanded_on
 
+  validate :dti_demanded_on_is_not_in_the_future, if: :dti_demanded_on
+
   delegate :efg_loan?, to: :loan
 
   before_save :set_dti_amount_claimed
@@ -36,6 +38,12 @@ class LoanDemandAgainstGovernment
   def dti_demanded_on_is_not_before_borrower_demanded_on
     if dti_demanded_on < loan.borrower_demanded_on
       errors.add(:dti_demanded_on, :before_borrower_demand_date)
+    end
+  end
+
+  def dti_demanded_on_is_not_in_the_future
+    if dti_demanded_on > Date.current
+      errors.add(:dti_demanded_on, :cannot_be_in_the_future)
     end
   end
 

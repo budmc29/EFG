@@ -11,6 +11,7 @@ FactoryGirl.define do
     turnover '12345'
     state_aid 3560
     state_aid_is_valid true
+    repayment_profile PremiumSchedule::FIXED_TERM_REPAYMENT_PROFILE
 
     initialize_with {
       loan = FactoryGirl.build(:loan, :eligible)

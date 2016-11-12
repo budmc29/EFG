@@ -22,6 +22,11 @@ describe LoanDemandAgainstGovernment do
       expect(loan_demand_against_government).not_to be_valid
     end
 
+    it "cannot have a dti_demanded_on date in the future" do
+      loan_demand_against_government.dti_demanded_on = 1.day.from_now
+      expect(loan_demand_against_government).not_to be_valid
+    end
+
     it 'should be invalid without a DED code' do
       loan_demand_against_government.dti_ded_code = ''
       expect(loan_demand_against_government).not_to be_valid

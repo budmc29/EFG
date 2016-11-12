@@ -1,0 +1,32 @@
+<%= breadcrumbs_for_loan(@loan) %>
+
+<div class="page-header">
+  <h1>Amend Loan Details</h1>
+</div>
+
+<p>Please confirm you wish to amend the loan entry details for loan <%= @amend_completed_loan.reference %>.</p>
+
+<p>If you proceed, the following changes will be made:</p>
+
+<ul>
+  <li>Loan <%= @amend_completed_loan.reference %> will be cancelled.</li>
+  <li>A duplicate loan with a new reference of <%= @amend_completed_loan.new_reference %> will be created.</li>
+  <li>The new loan will be in a state of "Incomplete".</li>
+  <li>You will be taken directly to the Loan Entry form for the new loan where you can amend its details.</li>
+</ul>
+
+<%= simple_form_for(:amend_completed_loan,
+                    url: loan_amend_completed_path(@amend_completed_loan.loan),
+                    html: {
+                      class: "form-horizontal form-amend-completed-loan"
+                    }) do |f| %>
+
+  <div class="form-actions">
+    <%= f.button :submit,
+                 value: "Confirm",
+                 class: "btn-primary",
+                 data: { "disable-with" => "Submitting..." } %>
+
+    <%= link_to "Cancel", loan_path(@amend_completed_loan.loan), class: "btn" %>
+  </div>
+<% end %>

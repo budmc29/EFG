@@ -21,6 +21,10 @@ module LoanHelper
     title
   end
 
+  def loan_lender_name(loan)
+    loan.sub_lender.present? ?  loan.sub_lender : loan.lender.name
+  end
+
   def loan_business_name(loan)
     loan.business_name.present? ? loan.business_name : '<not assigned>'
   end
@@ -31,11 +35,22 @@ module LoanHelper
   end
 
   def link_to_premium_schedule(loan)
-    return unless current_user.can_view?(PremiumSchedule)
+    if !loan.premium_schedule &&
+       !current_user.can_create?(PremiumSchedule)
+      return disabled_premium_schedule_button
+    end
 
-    path = loan.premium_schedule ? loan_premium_schedule_path(loan) : edit_loan_premium_schedule_path(loan)
+    if loan.premium_schedule
+      link_to("View Premium Schedule",
+              loan_premium_schedule_path(loan), class: 'btn btn-info')
+    else
+      link_to("Generate Premium Schedule",
+              edit_loan_premium_schedule_path(loan), class: 'btn btn-info')
+    end
+  end
 
-    link_to('Generate Premium Schedule', path, class: 'btn btn-info')
+  def disabled_premium_schedule_button
+    content_tag(:span, "View Premium Schedule", class: "btn btn-info disabled")
   end
 
   def link_to_loan_entry(loan, options = {})

@@ -1,0 +1,24 @@
+<%= simple_form_row "Current repayment frequency", f.object.repayment_frequency.name %>
+
+<%= f.input :repayment_profile,
+            as: :radio_buttons,
+            collection: repayment_profile_options,
+            wrapper_html: {
+              class: "radio-buttons-inline",
+              "data-repayment-profile" => "",
+            } %>
+
+<%= f.input :fixed_repayment_amount,
+            as: :currency,
+            wrapper_html: { "data-repayment-amount" => "" } %>
+
+<% content_for :additional_term_fields do %>
+  <%= f.input :maturity_date,
+              as: :quick_date,
+              disabled: true,
+              input_html: {
+                "data-repayment-profile-maturity-date" => "",
+                "data-loan-term-months-so-far" => f.object.months_from_loan_start_to_next_premium_collection,
+                "data-initial-draw-date" => f.object.initial_draw_date.to_s(:screen),
+              } %>
+<% end %>

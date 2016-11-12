@@ -4,6 +4,7 @@ class LoanChangesController < ApplicationController
     'lump_sum_repayment' => LumpSumRepaymentLoanChange,
     'repayment_duration' => RepaymentDurationLoanChange,
     'repayment_frequency' => RepaymentFrequencyLoanChange,
+    "repayment_profile" => RepaymentProfileLoanChange,
     'reprofile_draws' => ReprofileDrawsLoanChange,
   }
 
@@ -22,7 +23,7 @@ class LoanChangesController < ApplicationController
     @presenter.attributes = params.fetch(:loan_change, {})
 
     if @presenter.save
-      redirect_to loan_url(@loan)
+      redirect_to loan_url(@loan), notice: "Loan change applied."
     else
       render :new
     end

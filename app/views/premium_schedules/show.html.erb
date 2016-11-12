@@ -67,6 +67,16 @@
       <td><%= @premium_schedule.initial_draw_year %></td>
     </tr>
     <tr>
+      <th>Repayment Profile</th>
+      <td><%= repayment_profile_name(@premium_schedule.repayment_profile) %></td>
+    </tr>
+    <% if @premium_schedule.repayment_profile == PremiumSchedule::FIXED_AMOUNT_REPAYMENT_PROFILE %>
+    <tr>
+      <th>Amount of monthly repayment</th>
+      <td><%= @premium_schedule.fixed_repayment_amount.format %></td>
+    </tr>
+    <% end %>
+    <tr>
       <th>What is the date of the Premium Collection point from which this schedule applies?</th>
       <td><%= @premium_schedule.reschedule? ? @premium_schedule.premium_cheque_month : @premium_schedule.initial_draw_date.try(:to_s, :screen) %></td>
     </tr>

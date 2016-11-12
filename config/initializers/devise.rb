@@ -2,8 +2,12 @@
 # Many of these configuration options can be set straight in your model.
 require "statsd"
 
+if ENV['DEVISE_SECRET_KEY'].blank? or ENV['DEVISE_PEPPER'].blank?
+  raise 'Required Devise secrets are not present in the environment'
+end
+
 Devise.setup do |config|
-  config.secret_key = '806c5d2b0b90591ae631ba67d69357b3c960af9dff04bdf3b8c10b98be7e6014ea41e6740f610a332ec034ae6f3f84a2365e129ef8c53e7290dddaeadd46bd83'
+  config.secret_key = ENV['DEVISE_SECRET_KEY']
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -86,7 +90,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 1000
 
   # Setup a pepper to generate the encrypted password.
-  # config.pepper = "28da3608e63709e887d73b8c73e293362bdfde6a34a9ca94419534bcbffc6eefd4d9e9254c20597047ebd6a0a20f14aba717e934066cfa4bd8ac1c9c13c8a3f5"
+  config.pepper = ENV['DEVISE_PEPPER']
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without

@@ -16,7 +16,7 @@ describe RepaymentDuration do
 
       describe '#max_months' do
         it "should return maximum number of loans months based on loan category minimum term months" do
-          expect(repayment_duration.max_months).to eq(24)
+          expect(repayment_duration.max_months).to eq(36)
         end
       end
     end
@@ -61,16 +61,16 @@ describe RepaymentDuration do
   end
 
   context 'with transferred loan' do
-    let(:loan) { FactoryGirl.build(:loan, :transferred) }
+    let(:loan) { FactoryGirl.build(:loan, :sflg, :transferred) }
 
     describe '#min_months' do
-      it "should return 0 transferred loans have no start date limit" do
+      it "should return 0 transferred loans as they have no start date limit" do
         expect(repayment_duration.min_months).to eq(0)
       end
     end
 
     describe '#max_months' do
-      it "should return default maximum number of loans months for EFG loan" do
+      it "should return default maximum number of loans months" do
         expect(repayment_duration.max_months).to eq(120)
       end
     end

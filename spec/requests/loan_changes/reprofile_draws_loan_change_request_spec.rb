@@ -3,9 +3,6 @@ require 'rails_helper'
 describe 'Reprofile draws loan change' do
   include LoanChangeSpecHelper
 
-  it_behaves_like "loan change on loan with capital repayment holiday"
-  it_behaves_like "loan change on loan with no premium schedule"
-
   before do
     loan.initial_draw_change.update_column(:date_of_change, Date.new(2009, 12, 25))
   end
@@ -30,7 +27,7 @@ describe 'Reprofile draws loan change' do
 
       loan_change = loan.loan_changes.last!
       expect(loan_change.change_type).to eq(ChangeType::ReprofileDraws)
-      expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 11))
+      expect(loan_change.date_of_change).to eq(Date.new(2010, 9, 1))
 
       premium_schedule = loan.premium_schedules.last!
 
@@ -63,9 +60,7 @@ describe 'Reprofile draws loan change' do
       fill_in :second_draw_amount, '5,000.00'
       fill_in :second_draw_months, '6'
 
-      Timecop.freeze(2010, 9, 1) do
-        click_button 'Submit'
-      end
+      click_button "Submit"
 
       within '.loan_change_initial_draw_amount' do
         expect(page).to have_content("must not be blank")
@@ -81,7 +76,7 @@ describe 'Reprofile draws loan change' do
     click_link 'Change Amount or Terms'
     click_link 'Reprofile Draws'
 
-    fill_in :date_of_change, '11/9/10'
+    fill_in :date_of_change, '1/9/10'
     fill_in :initial_draw_amount, '65,432.10'
     fill_in :second_draw_amount, '5,000.00'
     fill_in :second_draw_months, '6'
