@@ -10,6 +10,9 @@ en:
       # html: '<abbr title="required">*</abbr>'
     error_notification:
       default_message: "Please review the problems below:"
+    hints:
+      lender:
+        allow_alert_process: "If not enabled, loans for this lender will not be auto-updated by the system (e.g. auto-cancelled, auto-removed etc)"
     labels:
       agreed_draw:
         date_of_change: Date of tranche drawdown
@@ -324,3 +327,7 @@ en:
       loan_status_amendment:
         status_amendment_type: "Type of amendment"
         status_amendment_notes: "Notes"
+
+      lender:
+        allow_alert_process: "Enable loan auto-updating"
+

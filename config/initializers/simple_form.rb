@@ -48,6 +48,7 @@ SimpleForm.setup do |config|
   config.wrappers :checkbox, :tag => 'div', :class => 'control-group', :error_class => 'error' do |b|
     b.wrapper :tag => 'div', :class => 'controls' do |input|
       input.use :label_input
+      input.use :hint, :wrap_with => { tag: :span, class: :hint }
     end
   end
 

@@ -81,6 +81,7 @@ describe 'lenders' do
       fill_in 'primary_contact_phone', '987654321'
       fill_in 'primary_contact_email', 'flob@example.com'
       check 'can_use_add_cap'
+      uncheck "allow_alert_process"
 
       click_button 'Update Lender'
 
@@ -91,6 +92,7 @@ describe 'lenders' do
       expect(lender.primary_contact_name).to eq('Flob Bemming')
       expect(lender.primary_contact_phone).to eq('987654321')
       expect(lender.primary_contact_email).to eq('flob@example.com')
+      expect(lender.allow_alert_process).to eq(false)
       expect(lender.can_use_add_cap).to eq(true)
 
       admin_audit = AdminAudit.last!
@@ -148,6 +150,10 @@ describe 'lenders' do
   private
     def check(attribute)
       page.check "lender_#{attribute}"
+    end
+
+    def uncheck(attribute)
+      page.uncheck "lender_#{attribute}"
     end
 
     def fill_in(attribute, value)
