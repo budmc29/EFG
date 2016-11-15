@@ -306,4 +306,10 @@ describe LenderUserPermissions do
   context "LoanStatusAmendment" do
     it { refute user.can_create?(LoanStatusAmendment) }
   end
+
+  context "SicCode" do
+    it { refute user.can_create?(SicCode) }
+    it { refute user.can_update?(SicCode) }
+    it { refute user.can_view?(SicCode) }
+  end
 end

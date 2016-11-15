@@ -282,4 +282,10 @@ describe CfeAdminPermissions do
   context "LoanStatusAmendment" do
     it { refute user.can_create?(LoanStatusAmendment) }
   end
+
+  context "SicCode" do
+    it { assert user.can_create?(SicCode) }
+    it { assert user.can_update?(SicCode) }
+    it { assert user.can_view?(SicCode) }
+  end
 end

@@ -8,6 +8,7 @@ module CfeAdminPermissions
       LendingLimit,
       Phase,
       PremiumCollectorUser,
+      SicCode,
       SubLender,
     ].include?(resource)
   end
@@ -27,6 +28,7 @@ module CfeAdminPermissions
       LendingLimit,
       Phase,
       PremiumCollectorUser,
+      SicCode,
       SubLender,
     ].include?(resource)
   end
@@ -53,6 +55,7 @@ module CfeAdminPermissions
       LendingLimit,
       Phase,
       PremiumCollectorUser,
+      SicCode,
       SubLender,
     ].include?(resource)
   end

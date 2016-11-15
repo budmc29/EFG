@@ -1,0 +1,16 @@
+<%= simple_form_for @sic_code do |f| %>
+  <div class="row">
+    <div class="span6">
+      <%= f.input :code %>
+      <%= f.input :description, input_html: { class: "input-xxlarge" } %>
+      <%= f.input :state_aid_threshold, as: :currency %>
+      <%= f.input :eligible, wrapper: :checkbox %>
+      <%= f.input :active, wrapper: :checkbox %>
+      <%= f.input :public_sector_restricted, wrapper: :checkbox %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, class: "btn btn-primary", data: { "disable-with" => "Submitting..." } %>
+  </div>
+<% end %>

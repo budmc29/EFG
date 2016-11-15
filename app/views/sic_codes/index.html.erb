@@ -1,0 +1,38 @@
+<%= breadcrumbs %>
+
+<div class="page-header">
+  <h1>Manage SIC Codes</h1>
+</div>
+
+<div class="actions">
+  <%= link_to %{<i class="icon-plus"></i> New SIC Code}.html_safe, new_sic_code_path, class: 'btn' %>
+</div>
+
+<%= will_paginate @sic_codes %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+      <th class="center">Eligible</th>
+      <th class="center">Active</th>
+      <th class="center">Public Sector Restricted</th>
+      <th class="right-align">State Aid Threshold</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sic_codes.each do |sic_code| %>
+      <tr id="<%= dom_id(sic_code) %>">
+        <td><%= link_to sic_code.code, edit_sic_code_path(sic_code) %></td>
+        <td><%= truncate(sic_code.description, length: 70) %></td>
+        <td class="center"><%= friendly_boolean(sic_code.eligible) %></td>
+        <td class="center"><%= friendly_boolean(sic_code.active) %></td>
+        <td class="center"><%= friendly_boolean(sic_code.public_sector_restricted) %></td>
+        <td class="right-align"><%= sic_code.state_aid_threshold.format %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @sic_codes %>
