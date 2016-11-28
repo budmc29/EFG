@@ -258,6 +258,8 @@ class Extractor
           whitelist "ar_insert_timestamp"
           whitelist "created_by_id"
           whitelist "modified_by_id"
+          whitelist "allowed_facility_types"
+          whitelist "new_legal_agreement_signed"
         end
 
         table 'lending_limits' do
@@ -522,8 +524,34 @@ class Extractor
           whitelist "euro_conversion_rate"
           whitelist "loan_sub_category_id"
           whitelist "status_amendment_type"
+          whitelist "turnover_allowed"
+          whitelist "within_efg_limits"
+          whitelist "within_excluded_sector"
+          whitelist "within_excluded_sub_sector"
+          whitelist "within_restricted_sector"
+          whitelist "operating_outside_uk"
+          whitelist "received_other_state_aid"
+          whitelist "additional_security"
+          whitelist "additional_security_amount"
+          whitelist "additional_security_included_in_guarantee"
+          whitelist "guarantee_will_amortise"
+          whitelist "security_classification"
+          whitelist "facility_amount"
+          whitelist "deposit_amount"
+          whitelist "end_of_finance_payment_amount"
+          whitelist "agreement_type"
+          whitelist "invoice_book_debt_amount"
+          whitelist "invoice_prepayment_topup_amount"
+          whitelist "cost_of_asset_amount"
+          whitelist "finance_facility_amount"
+          whitelist "revolving_credit_facility_amount"
+          whitelist "invoice_prepayment_coverage_percentage"
+          whitelist "invoice_prepayment_topup_percentage"
+          whitelist "facility_type"
           whitelist "repayment_profile"
           whitelist "fixed_repayment_amount"
+          whitelist "amount_percentage"
+          whitelist "override_amount_percentage"
         end
 
         table 'premium_schedules' do
