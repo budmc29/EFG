@@ -53,7 +53,7 @@ describe LoanCsvExport do
         borrower_demanded_on sortcode business_name cancelled_comment
         cancelled_on cancelled_reason collateral_exhausted
         company_registration created_at created_by current_refinanced_amount
-        debtor_book_coverage debtor_book_topup declaration_signed
+        invoice_prepayment_coverage_percentage invoice_prepayment_topup_percentage declaration_signed
         dti_break_costs dti_amount_claimed dti_ded_code
         dti_demand_outstanding dti_demanded_on dti_interest dti_reason
         facility_letter_date facility_letter_sent fees final_refinanced_amount
@@ -95,8 +95,8 @@ describe LoanCsvExport do
       expect(row['created_at']).to eq('01/10/2012 16:23:45')
       expect(row['created_by']).to eq('Joe Bloggs')
       expect(row['current_refinanced_amount']).to eq('')
-      expect(row['debtor_book_coverage']).to eq('')
-      expect(row['debtor_book_topup']).to eq('')
+      expect(row['invoice_prepayment_coverage_percentage']).to eq('')
+      expect(row['invoice_prepayment_topup_percentage']).to eq('')
       expect(row['declaration_signed']).to eq('')
       expect(row['dti_break_costs']).to eq('')
       expect(row['dti_amount_claimed']).to eq('123.45')

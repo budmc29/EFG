@@ -16,7 +16,8 @@ class Lender < ActiveRecord::Base
 
   attr_accessible :can_use_add_cap, :name,
     :organisation_reference_code, :primary_contact_email,
-    :primary_contact_name, :primary_contact_phone, :loan_scheme
+    :primary_contact_name, :primary_contact_phone, :loan_scheme,
+    :allow_alert_process, :new_legal_agreement_signed
 
   validates_inclusion_of :can_use_add_cap, in: [true, false]
   validates_inclusion_of :loan_scheme, in: [ EFG_SCHEME ], allow_blank: true

@@ -52,8 +52,8 @@ class LoanEntry
   attribute :overdraft_limit
   attribute :overdraft_maintained
   attribute :invoice_discount_limit
-  attribute :debtor_book_coverage
-  attribute :debtor_book_topup
+  attribute :invoice_prepayment_coverage_percentage
+  attribute :invoice_prepayment_topup_percentage
   attribute :sub_lender
   attribute :repayment_profile
   attribute :fixed_repayment_amount
@@ -109,7 +109,7 @@ class LoanEntry
   end
 
   def total_prepayment
-    (debtor_book_coverage || 0) + (debtor_book_topup || 0)
+    (invoice_prepayment_coverage_percentage || 0) + (invoice_prepayment_topup_percentage || 0)
   end
 
   private

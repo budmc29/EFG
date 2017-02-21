@@ -161,9 +161,13 @@ EFG::Application.routes.draw do
 
   resource :account_locked, controller: 'account_locked'
 
+  resource :new_portal, controller: "new_portal"
+
   resource :change_password, controller: 'change_password'
 
   resource :usernames_reminder, only: [:new, :create], controller: 'usernames_reminder'
 
   resources :bulk_lending_limits, only: [:new, :create]
+
+  resources :sic_codes, except: [:show, :delete]
 end

@@ -62,8 +62,8 @@ FactoryGirl.define do
 
     factory :loan_entry_type_f do
       invoice_discount_limit 1000000
-      debtor_book_coverage 5.0
-      debtor_book_topup 20.0
+      invoice_prepayment_coverage_percentage 5.0
+      invoice_prepayment_topup_percentage 20.0
 
       initialize_with {
         loan = FactoryGirl.build(:loan, :eligible, loan_category_id: LoanCategory::TypeF.id)

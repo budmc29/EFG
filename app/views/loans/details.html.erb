@@ -121,8 +121,8 @@
 
   <% for_loan_in_categories(@loan, 6) do %>
     <%= table.row 'invoice_discount_limit', header: t('simple_form.labels.loan_entry.invoice_discount_limit') %>
-    <%= table.row 'debtor_book_coverage', header: t('simple_form.labels.loan_entry.debtor_book_coverage') %>
-    <%= table.row 'debtor_book_topup', header: t('simple_form.labels.loan_entry.debtor_book_topup') %>
+    <%= table.row 'invoice_prepayment_coverage_percentage', header: t('simple_form.labels.loan_entry.invoice_prepayment_coverage_percentage') %>
+    <%= table.row 'invoice_prepayment_topup_percentage', header: t('simple_form.labels.loan_entry.invoice_prepayment_topup_percentage') %>
   <% end %>
 
   <% if loan_ineligible?(@loan) %>

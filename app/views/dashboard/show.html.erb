@@ -32,6 +32,9 @@
     <% if current_user.can_create?(LendingLimit) %>
       <li><%= link_to 'Bulk Create Lending Limits', new_bulk_lending_limit_path, class: 'btn btn-info' %></li>
     <% end %>
+    <% if current_user.can_create?(SicCode) %>
+      <li><%= link_to "Manage SIC Codes", sic_codes_path, class: 'btn btn-info' %></li>
+    <% end %>
   </ul>
 </div>
 

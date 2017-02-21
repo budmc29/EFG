@@ -103,8 +103,8 @@
 
     <% for_loan_in_categories(@loan_entry, LoanCategory::TypeF.id, LoanCategory::TypeH.id) do %>
       <%= f.input :invoice_discount_limit, as: :currency %>
-      <%= f.input :debtor_book_coverage, as: :percentage %>
-      <%= f.input :debtor_book_topup, as: :percentage %>
+      <%= f.input :invoice_prepayment_coverage_percentage, as: :percentage %>
+      <%= f.input :invoice_prepayment_topup_percentage, as: :percentage %>
 
       <%= render_attribute_errors(f, :total_prepayment).html_safe %>
     <% end %>

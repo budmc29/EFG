@@ -139,3 +139,9 @@ fieldset .label {
     width: 500px;
   }
 }
+
+.boolean .hint {
+  color: $medium_grey;
+  display: inline-block;
+  margin-left: 1.5em;
+}

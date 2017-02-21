@@ -6,9 +6,10 @@ class ChangePasswordController < ApplicationController
   def update
     current_user.password = params[user_type][:password]
     current_user.password_confirmation = params[user_type][:password_confirmation]
-    sign_in(current_user, bypass: true) # refresh session credentials so user stays logged in
 
     if current_user.save
+      # refresh session credentials so user stays logged in
+      sign_in(current_user, bypass: true)
       track_password_change
       redirect_to root_url, notice: 'Your password has been successfully changed'
     else

@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!
   before_filter :redirect_disabled_user
   before_filter :redirect_locked_user
+  before_filter :redirect_user_on_new_legal_agreement
 
   before_filter do
     headers["X-Frame-Options"] = "SAMEORIGIN"
@@ -30,6 +31,16 @@ class ApplicationController < ActionController::Base
   def redirect_locked_user
     if signed_in? && current_user.locked? && !devise_controller?
       redirect_to account_locked_url and return
+    end
+  end
+
+  # users for lenders on new legal agreement cannot use legacy portal
+  def redirect_user_on_new_legal_agreement
+    if signed_in? &&
+       !devise_controller? &&
+       current_lender &&
+       current_lender.new_legal_agreement_signed?
+      redirect_to new_portal_url and return
     end
   end
 

@@ -133,7 +133,7 @@ describe 'loan entry' do
 
     visit new_loan_entry_path(loan)
 
-    should_show_only_loan_category_fields(:invoice_discount_limit, :debtor_book_coverage, :debtor_book_topup)
+    should_show_only_loan_category_fields(:invoice_discount_limit, :invoice_prepayment_coverage_percentage, :invoice_prepayment_topup_percentage)
   end
 
   it "should require recalculation of state aid when the loan repayment duration is changed" do
@@ -227,8 +227,8 @@ describe 'loan entry' do
         :overdraft_limit,
         :overdraft_maintained,
         :invoice_discount_limit,
-        :debtor_book_coverage,
-        :debtor_book_topup
+        :invoice_prepayment_coverage_percentage,
+        :invoice_prepayment_topup_percentage
       ]
 
       field_names.all? do |field_name|

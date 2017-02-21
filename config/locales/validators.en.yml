@@ -38,9 +38,9 @@ en:
         invalid: 'must be 0% or greater and less than 100%'
       refinance_security_proportion:
         invalid: 'must be greater than 0% and no more than 100%'
-      debtor_book_coverage:
+      invoice_prepayment_coverage_percentage:
         invalid: 'must be greater than 0% and less than 100%'
-      debtor_book_topup:
+      invoice_prepayment_topup_percentage:
         invalid: 'must be between 1% and 30%'
       total_prepayment:
         invalid: 'The sum of the Guaranteed Pre-payment Percentage and non-EFG Pre-payment Percentage must be no more than 100%'

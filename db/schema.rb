@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160926155411) do
+ActiveRecord::Schema.define(version: 20161108123644) do
 
   create_table "adjustments", force: true do |t|
     t.integer  "loan_id",                          null: false
@@ -176,6 +176,8 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.datetime "ar_insert_timestamp"
     t.integer  "created_by_id",                               null: false
     t.integer  "modified_by_id",                              null: false
+    t.text     "allowed_facility_types"
+    t.boolean  "new_legal_agreement_signed",  default: false
   end
 
   add_index "lenders", ["legacy_id"], name: "index_lenders_on_legacy_id", unique: true, using: :btree
@@ -300,23 +302,23 @@ ActiveRecord::Schema.define(version: 20160926155411) do
   add_index "loan_state_changes", ["loan_id", "modified_at"], name: "loan_association", using: :btree
 
   create_table "loans", force: true do |t|
-    t.boolean  "viable_proposition",                                                                       null: false
-    t.boolean  "would_you_lend",                                                                           null: false
-    t.boolean  "collateral_exhausted",                                                                     null: false
-    t.integer  "amount",                              limit: 8,                                            null: false
+    t.boolean  "viable_proposition",                                                                             null: false
+    t.boolean  "would_you_lend",                                                                                 null: false
+    t.boolean  "collateral_exhausted",                                                                           null: false
+    t.integer  "amount",                                    limit: 8
     t.integer  "lender_cap_id"
-    t.integer  "repayment_duration",                                                                       null: false
-    t.integer  "turnover",                            limit: 8
+    t.integer  "repayment_duration"
+    t.integer  "turnover",                                  limit: 8
     t.date     "trading_date"
-    t.string   "sic_code",                                                                                 null: false
+    t.string   "sic_code"
     t.integer  "loan_category_id"
     t.integer  "reason_id"
-    t.boolean  "previous_borrowing",                                                                       null: false
+    t.boolean  "previous_borrowing",                                                                             null: false
     t.boolean  "private_residence_charge_required"
     t.boolean  "personal_guarantee_required"
-    t.datetime "created_at",                                                                               null: false
-    t.datetime "updated_at",                                                                               null: false
-    t.integer  "lender_id",                                                                                null: false
+    t.datetime "created_at",                                                                                     null: false
+    t.datetime "updated_at",                                                                                     null: false
+    t.integer  "lender_id",                                                                                      null: false
     t.boolean  "declaration_signed"
     t.string   "business_name"
     t.string   "trading_name"
@@ -331,8 +333,8 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.string   "generic5"
     t.string   "town"
     t.integer  "interest_rate_type_id"
-    t.decimal  "interest_rate",                                  precision: 5,  scale: 2
-    t.integer  "fees",                                limit: 8
+    t.decimal  "interest_rate",                                        precision: 5,  scale: 2
+    t.integer  "fees",                                      limit: 8
     t.boolean  "state_aid_is_valid"
     t.boolean  "facility_letter_sent"
     t.date     "facility_letter_date"
@@ -340,18 +342,18 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.boolean  "signed_direct_debit_received"
     t.boolean  "first_pp_received"
     t.date     "maturity_date"
-    t.string   "state",                                                                                    null: false
+    t.string   "state",                                                                                          null: false
     t.integer  "legal_form_id"
     t.integer  "repayment_frequency_id"
     t.date     "cancelled_on"
     t.integer  "cancelled_reason_id"
     t.text     "cancelled_comment"
     t.date     "borrower_demanded_on"
-    t.integer  "amount_demanded",                     limit: 8
+    t.integer  "amount_demanded",                           limit: 8
     t.date     "repaid_on"
     t.date     "no_claim_on"
     t.date     "dti_demanded_on"
-    t.integer  "dti_demand_outstanding",              limit: 8
+    t.integer  "dti_demand_outstanding",                    limit: 8
     t.text     "dti_reason"
     t.string   "dti_ded_code"
     t.integer  "legacy_id"
@@ -361,20 +363,20 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.date     "guaranteed_on"
     t.string   "modified_by_legacy_id"
     t.integer  "lender_legacy_id"
-    t.integer  "outstanding_amount",                  limit: 8
+    t.integer  "outstanding_amount",                        limit: 8
     t.boolean  "standard_cap"
     t.integer  "next_change_history_seq"
-    t.integer  "borrower_demand_outstanding",         limit: 8
+    t.integer  "borrower_demand_outstanding",               limit: 8
     t.date     "realised_money_date"
     t.integer  "event_legacy_id"
-    t.integer  "state_aid",                           limit: 8
+    t.integer  "state_aid",                                 limit: 8
     t.datetime "ar_timestamp"
     t.datetime "ar_insert_timestamp"
-    t.integer  "notified_aid",                                                             default: 0,     null: false
-    t.integer  "remove_guarantee_outstanding_amount", limit: 8
+    t.integer  "notified_aid",                                                                   default: 0,     null: false
+    t.integer  "remove_guarantee_outstanding_amount",       limit: 8
     t.date     "remove_guarantee_on"
     t.string   "remove_guarantee_reason"
-    t.integer  "dti_amount_claimed",                  limit: 8
+    t.integer  "dti_amount_claimed",                        limit: 8
     t.integer  "invoice_legacy_id"
     t.date     "settled_on"
     t.integer  "next_borrower_demand_seq"
@@ -382,53 +384,78 @@ ActiveRecord::Schema.define(version: 20160926155411) do
     t.string   "sic_parent_desc"
     t.boolean  "sic_notified_aid"
     t.boolean  "sic_eligible"
-    t.string   "non_val_postcode",                    limit: 10
+    t.string   "non_val_postcode",                          limit: 10
     t.integer  "transferred_from_legacy_id"
     t.integer  "next_in_calc_seq"
-    t.string   "loan_source",                         limit: 1
-    t.integer  "dti_break_costs",                     limit: 8
-    t.decimal  "guarantee_rate",                                 precision: 16, scale: 2
-    t.decimal  "premium_rate",                                   precision: 16, scale: 2
-    t.boolean  "legacy_small_loan",                                                        default: false, null: false
+    t.string   "loan_source",                               limit: 1
+    t.integer  "dti_break_costs",                           limit: 8
+    t.decimal  "guarantee_rate",                                       precision: 16, scale: 2
+    t.decimal  "premium_rate",                                         precision: 16, scale: 2
+    t.boolean  "legacy_small_loan",                                                              default: false, null: false
     t.integer  "next_in_realise_seq"
     t.integer  "next_in_recover_seq"
     t.date     "recovery_on"
     t.integer  "recovery_statement_legacy_id"
-    t.integer  "dti_interest",                        limit: 8
-    t.string   "loan_scheme",                         limit: 1
-    t.decimal  "security_proportion",                            precision: 5,  scale: 2
-    t.integer  "current_refinanced_amount",           limit: 8
-    t.integer  "final_refinanced_amount",             limit: 8
-    t.decimal  "original_overdraft_proportion",                  precision: 5,  scale: 2
-    t.decimal  "refinance_security_proportion",                  precision: 5,  scale: 2
-    t.integer  "overdraft_limit",                     limit: 8
+    t.integer  "dti_interest",                              limit: 8
+    t.string   "loan_scheme",                               limit: 1
+    t.decimal  "security_proportion",                                  precision: 5,  scale: 2
+    t.integer  "current_refinanced_amount",                 limit: 8
+    t.integer  "final_refinanced_amount",                   limit: 8
+    t.decimal  "original_overdraft_proportion",                        precision: 5,  scale: 2
+    t.decimal  "refinance_security_proportion",                        precision: 5,  scale: 2
+    t.integer  "overdraft_limit",                           limit: 8
     t.boolean  "overdraft_maintained"
-    t.integer  "invoice_discount_limit",              limit: 8
-    t.decimal  "debtor_book_coverage",                           precision: 5,  scale: 2
-    t.decimal  "debtor_book_topup",                              precision: 5,  scale: 2
+    t.integer  "invoice_discount_limit",                    limit: 8
+    t.decimal  "invoice_prepayment_coverage_percentage",               precision: 5,  scale: 2
+    t.decimal  "invoice_prepayment_topup_percentage",                  precision: 5,  scale: 2
     t.integer  "lending_limit_id"
     t.integer  "invoice_id"
     t.integer  "transferred_from_id"
-    t.integer  "created_by_id",                                                                            null: false
-    t.integer  "modified_by_id",                                                                           null: false
+    t.integer  "created_by_id",                                                                                  null: false
+    t.integer  "modified_by_id",                                                                                 null: false
     t.string   "legacy_sic_code"
     t.string   "legacy_sic_desc"
     t.string   "legacy_sic_parent_desc"
-    t.boolean  "legacy_sic_notified_aid",                                                  default: false
-    t.boolean  "legacy_sic_eligible",                                                      default: false
+    t.boolean  "legacy_sic_notified_aid",                                                        default: false
+    t.boolean  "legacy_sic_eligible",                                                            default: false
     t.integer  "settled_amount"
     t.string   "lender_reference"
     t.datetime "last_modified_at"
     t.boolean  "not_insolvent"
-    t.decimal  "euro_conversion_rate",                           precision: 17, scale: 14
+    t.decimal  "euro_conversion_rate",                                 precision: 17, scale: 14
     t.integer  "loan_sub_category_id"
     t.string   "sub_lender"
     t.string   "status_amendment_type"
     t.text     "status_amendment_notes"
     t.string   "repayment_profile"
-    t.integer  "fixed_repayment_amount",              limit: 8
+    t.integer  "fixed_repayment_amount",                    limit: 8
+    t.string   "facility_type"
+    t.boolean  "turnover_allowed"
+    t.boolean  "within_efg_limits"
+    t.boolean  "within_excluded_sector"
+    t.boolean  "within_restricted_sector"
+    t.boolean  "operating_outside_uk"
+    t.boolean  "received_other_state_aid"
+    t.boolean  "additional_security"
+    t.integer  "additional_security_amount",                limit: 8
+    t.boolean  "additional_security_included_in_guarantee"
+    t.boolean  "guarantee_will_amortise"
+    t.string   "security_classification"
+    t.integer  "facility_amount",                           limit: 8
+    t.integer  "deposit_amount",                            limit: 8
+    t.integer  "end_of_finance_payment_amount",             limit: 8
+    t.string   "agreement_type"
+    t.integer  "invoice_book_debt_amount",                  limit: 8
+    t.integer  "invoice_prepayment_topup_amount",           limit: 8
+    t.integer  "cost_of_asset_amount",                      limit: 8
+    t.integer  "finance_facility_amount",                   limit: 8
+    t.integer  "revolving_credit_facility_amount",          limit: 8
+    t.boolean  "within_excluded_sub_sector"
+    t.decimal  "amount_percentage",                                    precision: 5,  scale: 2
+    t.boolean  "override_amount_percentage",                                                     default: false
   end
 
+  add_index "loans", ["facility_type"], name: "index_loans_on_facility_type", using: :btree
   add_index "loans", ["legacy_id"], name: "index_loans_on_legacy_id", unique: true, using: :btree
   add_index "loans", ["lender_id"], name: "index_loans_on_lender_id", using: :btree
   add_index "loans", ["lending_limit_id"], name: "index_loans_on_lending_limit_id", using: :btree

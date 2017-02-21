@@ -266,34 +266,34 @@ describe LoanEntry do
       end
 
       it "should require debtor book coverage greater than or equal to 1" do
-        loan_entry.debtor_book_coverage = 0.9
+        loan_entry.invoice_prepayment_coverage_percentage = 0.9
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book coverage less than 100" do
-        loan_entry.debtor_book_coverage = 100
+        loan_entry.invoice_prepayment_coverage_percentage = 100
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book topup greater than or equal to 1" do
-        loan_entry.debtor_book_topup = 0.9
+        loan_entry.invoice_prepayment_topup_percentage = 0.9
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book topup less than or equal to 30" do
-        loan_entry.debtor_book_topup = 30.1
+        loan_entry.invoice_prepayment_topup_percentage = 30.1
         expect(loan_entry).not_to be_valid
       end
 
       it "should require a total prepayment no greater than 100" do
-        loan_entry.debtor_book_topup = 30
-        loan_entry.debtor_book_coverage = 80
+        loan_entry.invoice_prepayment_topup_percentage = 30
+        loan_entry.invoice_prepayment_coverage_percentage = 80
         expect(loan_entry).not_to be_valid
       end
 
       it "should require a total prepayment greater than or equal to 0" do
-        loan_entry.debtor_book_topup = 0
-        loan_entry.debtor_book_coverage = -1
+        loan_entry.invoice_prepayment_topup_percentage = 0
+        loan_entry.invoice_prepayment_coverage_percentage = -1
         expect(loan_entry).not_to be_valid
       end
     end
@@ -311,22 +311,22 @@ describe LoanEntry do
       end
 
       it "should require debtor book coverage greater than or equal to 1" do
-        loan_entry.debtor_book_coverage = 0.9
+        loan_entry.invoice_prepayment_coverage_percentage = 0.9
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book coverage less than 100" do
-        loan_entry.debtor_book_coverage = 100
+        loan_entry.invoice_prepayment_coverage_percentage = 100
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book topup greater than or equal to 1" do
-        loan_entry.debtor_book_topup = 0.9
+        loan_entry.invoice_prepayment_topup_percentage = 0.9
         expect(loan_entry).not_to be_valid
       end
 
       it "should require debtor book topup less than or equal to 30" do
-        loan_entry.debtor_book_topup = 30.1
+        loan_entry.invoice_prepayment_topup_percentage = 30.1
         expect(loan_entry).not_to be_valid
       end
     end

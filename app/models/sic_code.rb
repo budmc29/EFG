@@ -1,7 +1,8 @@
 class SicCode < ActiveRecord::Base
   include FormatterConcern
 
-  attr_accessible :code, :description, :eligible, :public_sector_restricted, :active
+  attr_accessible :code, :description, :eligible, :public_sector_restricted,
+                  :active, :state_aid_threshold
 
   validates_presence_of :code, :description, :state_aid_threshold
   validates_uniqueness_of :code
